@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">セミナー詳細 | Patent Hub</title>
+    <meta name="description" id="pageDescription" content="知的財産業界の専門セミナー詳細情報">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* セミナー詳細専用スタイル */
+        .seminar-detail-body {
+            background: #f8f9fa;
+        }
+        
+        /* ページヘッダー */
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+        }
+        
+        /* セミナー詳細カード */
+        .seminar-main {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .seminar-hero {
+            padding: 2.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .seminar-status-badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.popular {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .status-badge.online {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-badge.free {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .status-badge.full {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .seminar-meta {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .meta-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .seminar-content {
+            padding: 2.5rem;
+        }
+        
+        .content-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .description-text {
+            line-height: 1.8;
+            color: #495057;
+            font-size: 1.05rem;
+        }
+        
+        .seminar-agenda {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .agenda-item {
+            background: #f8f9fa;
+            margin-bottom: 1rem;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 4px solid #1e3c72;
+        }
+        
+        .agenda-time {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .agenda-topic {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .agenda-description {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .speaker-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .speaker-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .speaker-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .speaker-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: #2c3e50;
+        }
+        
+        .speaker-title {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .speaker-bio {
+            color: #495057;
+            line-height: 1.6;
+        }
+        
+        /* サイドバー */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        /* 申込カード */
+        .application-info {
+            text-align: center;
+        }
+        
+        .price-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-display.free {
+            color: #28a745;
+        }
+        
+        .price-note {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .participants-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .participants-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .participants-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .apply-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .apply-btn.full {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .apply-btn.full:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .favorite-btn {
+            width: 100%;
+            background: transparent;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .favorite-btn:hover,
+        .favorite-btn.active {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* セミナー情報カード */
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            color: #6c757d;
+        }
+        
+        /* 関連セミナー */
+        .related-seminars {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .related-seminar {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .related-seminar:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .related-seminar h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .related-seminar a {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+        
+        .related-seminar a:hover {
+            text-decoration: underline;
+        }
+        
+        .related-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .seminar-hero,
+            .seminar-content {
+                padding: 2rem;
+            }
+            
+            .speaker-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .seminar-meta {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .meta-label {
+                margin-bottom: 0.25rem;
+            }
+        }
+        
+        /* 申込モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body class="seminar-detail-body">
+    <!-- ヘッダー（共通） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link active">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">ホーム</a>
+                <span>›</span>
+                <a href="seminars.html">セミナー</a>
+                <span>›</span>
+                <span id="breadcrumbTitle">セミナー詳細</span>
+            </div>
+            <h1 class="page-title" id="seminarTitle">セミナー詳細を読み込み中...</h1>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <!-- セミナー詳細 -->
+        <main class="seminar-main">
+            <div class="seminar-hero">
+                <div class="seminar-status-badges" id="statusBadges">
+                    <!-- バッジはJavaScriptで動的生成 -->
+                </div>
+                
+                <div class="seminar-meta" id="seminarMeta">
+                    <!-- メタ情報はJavaScriptで動的生成 -->
+                </div>
+            </div>
+            
+            <div class="seminar-content">
+                <section class="content-section">
+                    <h2 class="section-title">📋 セミナー概要</h2>
+                    <div class="description-text" id="seminarDescription">
+                        <!-- 概要はJavaScriptで動的生成 -->
+                    </div>
+                </section>
+                
+                <section class="content-section">
+                    <h2 class="section-title">📅 プログラム</h2>
+                    <ul class="seminar-agenda" id="seminarAgenda">
+                        <!-- アジェンダはJavaScriptで動的生成 -->
+                    </ul>
+                </section>
+                
+                <section class="content-section">
+                    <h2 class="section-title">🎤 講師紹介</h2>
+                    <div id="speakerInfo">
+                        <!-- 講師情報はJavaScriptで動的生成 -->
+                    </div>
+                </section>
+                
+                <section class="content-section">
+                    <h2 class="section-title">📝 対象者・参加要件</h2>
+                    <div id="targetAudience">
+                        <!-- 対象者情報はJavaScriptで動的生成 -->
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <!-- サイドバー -->
+        <aside class="sidebar">
+            <!-- 申込情報カード -->
+            <div class="sidebar-card">
+                <h3 class="card-title">💰 参加申込</h3>
+                <div class="application-info">
+                    <div class="price-display" id="priceDisplay">読み込み中...</div>
+                    <div class="price-note" id="priceNote"></div>
+                    
+                    <div class="participants-info">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>📊 参加状況</span>
+                            <span id="participantsCount">-/-</span>
+                        </div>
+                        <div class="participants-bar">
+                            <div class="participants-fill" id="participantsFill"></div>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #6c757d;" id="participantsText">参加者募集中</div>
+                    </div>
+                    
+                    <a href="https://example.com/seminar/registration" target="_blank" class="apply-btn" id="applyBtn">
+                        開催元で詳細確認・申込
+                    </a>
+                    
+                    <button class="favorite-btn" id="favoriteBtn" onclick="toggleFavorite()">
+                        ♡ お気に入り
+                    </button>
+                </div>
+            </div>
+            
+            <!-- セミナー情報カード -->
+            <div class="sidebar-card">
+                <h3 class="card-title">ℹ️ 開催情報</h3>
+                <ul class="info-list" id="seminarInfo">
+                    <!-- セミナー情報はJavaScriptで動的生成 -->
+                </ul>
+            </div>
+            
+            <!-- 関連セミナーカード -->
+            <div class="sidebar-card">
+                <h3 class="card-title">🔗 関連セミナー</h3>
+                <ul class="related-seminars" id="relatedSeminars">
+                    <!-- 関連セミナーはJavaScriptで動的生成 -->
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+
+    <script>
+        // セミナー詳細機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('セミナー詳細画面が読み込まれました');
+            
+            // URLパラメータからセミナーIDを取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const seminarId = urlParams.get('id');
+            
+            if (seminarId) {
+                loadSeminarDetail(seminarId);
+            } else {
+                showError('セミナーIDが指定されていません');
+            }
+            
+            console.log('✅ セミナー詳細画面の初期化が完了しました');
+        });
+        
+        let currentSeminar = null;
+        
+        // セミナー詳細データ（実際のシステムでは API から取得）
+        const seminarsDetailData = {
+            'SEM001': {
+                id: 'SEM001',
+                title: 'AI時代の特許戦略セミナー',
+                organizer: '日本知財学会',
+                date: '2025-08-15',
+                startTime: '14:00',
+                endTime: '17:00',
+                format: 'online',
+                price: 0,
+                maxParticipants: 100,
+                currentParticipants: 45,
+                location: 'オンライン開催（Zoom使用）',
+                category: 'AI・IT',
+                description: 'AI技術の急速な発展に対応した特許戦略について、最新の動向と実践的なアプローチを学びます。生成AI、機械学習、深層学習などの技術領域における特許出願の留意点から、企業が取るべき戦略的アプローチまで、豊富な事例を交えて解説します。',
+                tags: ['AI特許', '戦略', '実務'],
+                popular: true,
+                full: false,
+                agenda: [
+                    {
+                        time: '14:00-14:15',
+                        topic: '開会・趣旨説明',
+                        description: 'AI時代における特許戦略の重要性について概観'
+                    },
+                    {
+                        time: '14:15-15:00',
+                        topic: 'AI技術の特許出願動向',
+                        description: '生成AI、機械学習の特許出願統計と主要企業の戦略分析'
+                    },
+                    {
+                        time: '15:15-16:00',
+                        topic: 'AI特許の審査実務と留意点',
+                        description: '審査基準の変更点と実際の審査事例の解説'
+                    },
+                    {
+                        time: '16:00-16:45',
+                        topic: '企業のAI特許戦略構築',
+                        description: '防御戦略から攻撃的戦略まで、実践的アプローチ'
+                    },
+                    {
+                        time: '16:45-17:00',
+                        topic: 'Q&A・総括',
+                        description: '参加者との質疑応答と今後の展望'
+                    }
+                ],
+                speakers: [
+                    {
+                        name: '田中 知財',
+                        title: '日本知財学会 理事・弁理士',
+                        organization: 'AI特許法律事務所',
+                        bio: 'AI・IT分野の特許実務に20年以上従事。大手IT企業の知財部長を経て現職。AI関連特許の審査委員も歴任し、実務と理論の両面から特許戦略を指導。',
+                        avatar: '田'
+                    }
+                ],
+                targetAudience: [
+                    '企業の知財担当者・研究開発者',
+                    'AI技術を扱うスタートアップ経営者',
+                    '弁理士・知財コンサルタント',
+                    'AI技術の特許戦略に関心のある方'
+                ],
+                requirements: [
+                    'インターネット接続可能な環境',
+                    'Zoomアプリケーション（事前インストール推奨）',
+                    '知的財産の基礎知識があると理解が深まります'
+                ],
+                benefits: [
+                    'AI特許の最新動向を把握できる',
+                    '実践的な特許戦略を学べる',
+                    '専門家とのネットワークを構築できる',
+                    '参加証明書を発行'
+                ]
+            },
+            'SEM002': {
+                id: 'SEM002',
+                title: '商標権侵害の最新判例研究',
+                organizer: '弁理士会東京会',
+                date: '2025-08-20',
+                startTime: '13:30',
+                endTime: '16:30',
+                format: 'hybrid',
+                price: 5000,
+                maxParticipants: 80,
+                currentParticipants: 65,
+                location: '弁理士会館+オンライン併用',
+                category: '商標',
+                description: '近年の商標権侵害事件の重要判例を詳細に分析し、実務における留意点を解説します。',
+                tags: ['商標', '判例', '侵害'],
+                popular: false,
+                full: false,
+                agenda: [
+                    {
+                        time: '13:30-14:15',
+                        topic: '令和6年重要判例の概観',
+                        description: '過去1年間の主要判例の整理と分析'
+                    },
+                    {
+                        time: '14:30-15:15',
+                        topic: '商標の類似性判断の新基準',
+                        description: '最高裁判例を踏まえた類似性判断の実務'
+                    },
+                    {
+                        time: '15:30-16:15',
+                        topic: '損害賠償の算定実務',
+                        description: '逸失利益と使用料相当額の算定方法'
+                    },
+                    {
+                        time: '16:15-16:30',
+                        topic: '質疑応答',
+                        description: '参加者からの質問に回答'
+                    }
+                ],
+                speakers: [
+                    {
+                        name: '山田 弁理',
+                        title: '弁理士会東京会 副会長',
+                        organization: '東京商標法律事務所',
+                        bio: '商標実務30年のベテラン弁理士。知財高裁での商標事件を多数手がけ、判例研究の第一人者。',
+                        avatar: '山'
+                    }
+                ],
+                targetAudience: [
+                    '弁理士・特許事務所スタッフ',
+                    '企業法務・知財担当者',
+                    '商標実務に携わる方'
+                ],
+                requirements: [
+                    '商標法の基礎知識',
+                    'ハイブリッド開催：会場参加またはオンライン参加',
+                    '事前配布資料の確認推奨'
+                ],
+                benefits: [
+                    '最新判例の実務への活用方法を習得',
+                    '商標侵害事件の対応力向上',
+                    '専門家同士の情報交換'
+                ]
+            }
+        };
+        
+        // セミナー詳細を読み込み
+        function loadSeminarDetail(seminarId) {
+            console.log('セミナー詳細を読み込み中:', seminarId);
+            
+            const seminar = seminarsDetailData[seminarId];
+            if (!seminar) {
+                showError('指定されたセミナーが見つかりません');
+                return;
+            }
+            
+            currentSeminar = seminar;
+            displaySeminarDetail(seminar);
+            loadRelatedSeminars(seminar);
+        }
+        
+        // セミナー詳細を表示
+        function displaySeminarDetail(seminar) {
+            // ページタイトル更新
+            document.getElementById('pageTitle').textContent = `${seminar.title} | Patent Hub`;
+            document.getElementById('pageDescription').content = seminar.description;
+            document.getElementById('seminarTitle').textContent = seminar.title;
+            document.getElementById('breadcrumbTitle').textContent = seminar.title;
+            
+            // ステータスバッジ
+            const badgesHtml = [];
+            if (seminar.popular) badgesHtml.push('<span class="status-badge popular">人気</span>');
+            if (seminar.format === 'online') badgesHtml.push('<span class="status-badge online">オンライン</span>');
+            if (seminar.price === 0) badgesHtml.push('<span class="status-badge free">無料</span>');
+            if (seminar.full) badgesHtml.push('<span class="status-badge full">満席</span>');
+            document.getElementById('statusBadges').innerHTML = badgesHtml.join('');
+            
+            // メタ情報
+            const seminarDate = new Date(seminar.date);
+            const formatText = seminar.format === 'online' ? 'オンライン' : 
+                             seminar.format === 'offline' ? '会場開催' : 'ハイブリッド';
+            
+            document.getElementById('seminarMeta').innerHTML = `
+                <span class="meta-label">主催者:</span>
+                <span>${seminar.organizer}</span>
+                <span class="meta-label">開催日:</span>
+                <span>${seminar.date} (${seminarDate.toLocaleDateString('ja-JP', { weekday: 'short' })}) ${seminar.startTime}-${seminar.endTime}</span>
+                <span class="meta-label">形式:</span>
+                <span>${formatText}</span>
+                <span class="meta-label">カテゴリ:</span>
+                <span>${seminar.category}</span>
+            `;
+            
+            // セミナー概要
+            document.getElementById('seminarDescription').textContent = seminar.description;
+            
+            // プログラム
+            document.getElementById('seminarAgenda').innerHTML = seminar.agenda.map(item => `
+                <li class="agenda-item">
+                    <div class="agenda-time">${item.time}</div>
+                    <div class="agenda-topic">${item.topic}</div>
+                    <div class="agenda-description">${item.description}</div>
+                </li>
+            `).join('');
+            
+            // 講師情報
+            document.getElementById('speakerInfo').innerHTML = seminar.speakers.map(speaker => `
+                <div class="speaker-info">
+                    <div class="speaker-header">
+                        <div class="speaker-avatar">${speaker.avatar}</div>
+                        <div class="speaker-details">
+                            <h4>${speaker.name}</h4>
+                            <div class="speaker-title">${speaker.title}</div>
+                        </div>
+                    </div>
+                    <div class="speaker-bio">${speaker.bio}</div>
+                </div>
+            `).join('');
+            
+            // 対象者・参加要件
+            document.getElementById('targetAudience').innerHTML = `
+                <h4>📍 対象者</h4>
+                <ul style="margin-bottom: 2rem;">
+                    ${seminar.targetAudience.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                
+                <h4>📋 参加要件</h4>
+                <ul style="margin-bottom: 2rem;">
+                    ${seminar.requirements.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                
+                <h4>🎯 期待できる効果</h4>
+                <ul>
+                    ${seminar.benefits.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            
+            // サイドバー情報
+            displaySidebarInfo(seminar);
+        }
+        
+        // サイドバー情報を表示
+        function displaySidebarInfo(seminar) {
+            // 価格表示
+            const priceDisplay = document.getElementById('priceDisplay');
+            if (seminar.price === 0) {
+                priceDisplay.textContent = '無料';
+                priceDisplay.classList.add('free');
+                document.getElementById('priceNote').textContent = '参加費無料でご受講いただけます';
+            } else {
+                priceDisplay.textContent = `¥${seminar.price.toLocaleString()}`;
+                priceDisplay.classList.remove('free');
+                document.getElementById('priceNote').textContent = '(税込)';
+            }
+            
+            // 参加者情報
+            const participantsPercentage = (seminar.currentParticipants / seminar.maxParticipants) * 100;
+            document.getElementById('participantsCount').textContent = `${seminar.currentParticipants}/${seminar.maxParticipants}名`;
+            document.getElementById('participantsFill').style.width = `${participantsPercentage}%`;
+            
+            if (seminar.full) {
+                document.getElementById('participantsText').textContent = '満席となりました';
+                document.getElementById('applyBtn').textContent = '満席';
+                document.getElementById('applyBtn').classList.add('full');
+                document.getElementById('applyBtn').style.pointerEvents = 'none';
+            } else {
+                const remaining = seminar.maxParticipants - seminar.currentParticipants;
+                document.getElementById('participantsText').textContent = `残り${remaining}名募集中`;
+            }
+            
+            // セミナー情報
+            const formatIcon = seminar.format === 'online' ? '💻' : 
+                              seminar.format === 'offline' ? '📍' : '🔄';
+            
+            document.getElementById('seminarInfo').innerHTML = `
+                <li class="info-item">
+                    <span class="info-icon">📅</span>
+                    <div class="info-content">
+                        <div class="info-label">開催日時</div>
+                        <div class="info-value">${seminar.date}<br>${seminar.startTime}-${seminar.endTime}</div>
+                    </div>
+                </li>
+                <li class="info-item">
+                    <span class="info-icon">${formatIcon}</span>
+                    <div class="info-content">
+                        <div class="info-label">開催形式</div>
+                        <div class="info-value">${seminar.location}</div>
+                    </div>
+                </li>
+                <li class="info-item">
+                    <span class="info-icon">🏢</span>
+                    <div class="info-content">
+                        <div class="info-label">主催者</div>
+                        <div class="info-value">${seminar.organizer}</div>
+                    </div>
+                </li>
+                <li class="info-item">
+                    <span class="info-icon">🏷️</span>
+                    <div class="info-content">
+                        <div class="info-label">カテゴリ</div>
+                        <div class="info-value">${seminar.category}</div>
+                    </div>
+                </li>
+                <li class="info-item">
+                    <span class="info-icon">🔖</span>
+                    <div class="info-content">
+                        <div class="info-label">タグ</div>
+                        <div class="info-value">${seminar.tags.join(', ')}</div>
+                    </div>
+                </li>
+            `;
+            
+            // お気に入り状態の復元
+            restoreFavoriteState(seminar.id);
+        }
+        
+        // 関連セミナーを読み込み
+        function loadRelatedSeminars(currentSeminar) {
+            // 同カテゴリまたは類似タグのセミナーを検索
+            const related = Object.values(seminarsDetailData)
+                .filter(seminar => 
+                    seminar.id !== currentSeminar.id && 
+                    (seminar.category === currentSeminar.category || 
+                     seminar.tags.some(tag => currentSeminar.tags.includes(tag)))
+                )
+                .slice(0, 3);
+            
+            if (related.length === 0) {
+                document.getElementById('relatedSeminars').innerHTML = 
+                    '<li style="color: #6c757d; text-align: center; padding: 2rem;">関連セミナーはありません</li>';
+                return;
+            }
+            
+            document.getElementById('relatedSeminars').innerHTML = related.map(seminar => `
+                <li class="related-seminar">
+                    <h4><a href="seminar-detail.html?id=${seminar.id}">${seminar.title}</a></h4>
+                    <div class="related-date">${seminar.date} | ${seminar.organizer}</div>
+                </li>
+            `).join('');
+        }
+        
+        
+        // お気に入り機能
+        function toggleFavorite() {
+            if (!currentSeminar) return;
+            
+            const btn = document.getElementById('favoriteBtn');
+            const isActive = btn.classList.contains('active');
+            
+            let favorites = JSON.parse(localStorage.getItem('favorite_seminars') || '[]');
+            
+            if (isActive) {
+                // お気に入りから削除
+                btn.classList.remove('active');
+                btn.innerHTML = '♡ お気に入り';
+                favorites = favorites.filter(id => id !== currentSeminar.id);
+            } else {
+                // お気に入りに追加
+                btn.classList.add('active');
+                btn.innerHTML = '♥ お気に入り済み';
+                if (!favorites.includes(currentSeminar.id)) {
+                    favorites.push(currentSeminar.id);
+                }
+            }
+            
+            localStorage.setItem('favorite_seminars', JSON.stringify(favorites));
+        }
+        
+        // お気に入り状態の復元
+        function restoreFavoriteState(seminarId) {
+            const favorites = JSON.parse(localStorage.getItem('favorite_seminars') || '[]');
+            const btn = document.getElementById('favoriteBtn');
+            
+            if (favorites.includes(seminarId)) {
+                btn.classList.add('active');
+                btn.innerHTML = '♥ お気に入り済み';
+            }
+        }
+        
+        // エラー表示
+        function showError(message) {
+            document.getElementById('seminarTitle').textContent = 'エラー';
+            document.querySelector('.main-content').innerHTML = `
+                <div style="text-align: center; padding: 4rem; color: #6c757d;">
+                    <div style="font-size: 4rem; margin-bottom: 2rem;">⚠️</div>
+                    <h2>エラーが発生しました</h2>
+                    <p>${message}</p>
+                    <a href="seminars.html" style="color: #1e3c72; text-decoration: underline;">セミナー一覧に戻る</a>
+                </div>
+            `;
+        }
+        
+        
+        console.log('🎓 Patent Hub セミナー詳細 - 初期化完了');
+    </script>
+</body>
+</html>

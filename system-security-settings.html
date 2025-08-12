@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>セキュリティ設定・監査ログ | Patent Hub システム管理</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - セキュリティ設定と監査ログの管理">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ヘッダー（システム管理者専用テーマ） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .breadcrumb-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #e74c3c;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* セキュリティ警告 */
+        .security-warning {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+            border: 2px solid #e74c3c;
+        }
+
+        /* セクション共通 */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        /* セキュリティ設定グリッド */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .setting-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .setting-card:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
+        }
+
+        .setting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .setting-title {
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-toggle {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .setting-toggle.active {
+            background: #e74c3c;
+        }
+
+        .setting-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .setting-toggle.active::after {
+            transform: translateX(26px);
+        }
+
+        .setting-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .setting-value {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        /* 監査ログ */
+        .log-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .log-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .log-filter label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .log-filter select,
+        .log-filter input {
+            padding: 0.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .log-container {
+            background: #2c3e50;
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-timestamp {
+            color: #95a5a6;
+            min-width: 140px;
+            font-weight: 600;
+        }
+
+        .log-level {
+            min-width: 80px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .log-level.critical {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .log-level.warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .log-level.info {
+            background: #3498db;
+            color: white;
+        }
+
+        .log-level.security {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .log-message {
+            color: #ecf0f1;
+            flex: 1;
+        }
+
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.threats {
+            border-left-color: #e74c3c;
+        }
+
+        .stat-card.blocks {
+            border-left-color: #f39c12;
+        }
+
+        .stat-card.logins {
+            border-left-color: #3498db;
+        }
+
+        .stat-card.sessions {
+            border-left-color: #27ae60;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* アクションボタン */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main,
+            .breadcrumb-list {
+                padding: 0 1rem;
+            }
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .log-controls {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: white; font-weight: 600;">システム管理者</span>
+                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+        <ul class="breadcrumb-list">
+            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
+            <li>›</li>
+            <li class="breadcrumb-current">セキュリティ設定・監査ログ</li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">🔒 セキュリティ設定・監査ログ</h1>
+            <p class="page-subtitle">システムセキュリティの設定と監査ログの管理</p>
+        </div>
+
+        <!-- セキュリティ警告 -->
+        <div class="security-warning">
+            🚨 重要: セキュリティ設定の変更はシステム全体に影響します。慎重に操作してください。
+        </div>
+
+        <!-- セキュリティ統計 -->
+        <div class="stats-grid">
+            <div class="stat-card threats">
+                <div class="stat-icon">🚨</div>
+                <span class="stat-number" id="threatCount">23</span>
+                <div class="stat-label">今日の脅威検出</div>
+            </div>
+            
+            <div class="stat-card blocks">
+                <div class="stat-icon">🛡️</div>
+                <span class="stat-number" id="blockCount">156</span>
+                <div class="stat-label">不正アクセスブロック</div>
+            </div>
+            
+            <div class="stat-card logins">
+                <div class="stat-icon">🔑</div>
+                <span class="stat-number" id="loginCount">89</span>
+                <div class="stat-label">今日のログイン試行</div>
+            </div>
+            
+            <div class="stat-card sessions">
+                <div class="stat-icon">👥</div>
+                <span class="stat-number" id="sessionCount">42</span>
+                <div class="stat-label">アクティブセッション</div>
+            </div>
+        </div>
+
+        <!-- セキュリティ設定 -->
+        <div class="section">
+            <h2 class="section-title">
+                ⚙️ セキュリティ設定
+            </h2>
+            
+            <div class="settings-grid">
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            🔐 二要素認証強制
+                        </div>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        すべての管理者アカウントに二要素認証を必須とします
+                    </div>
+                    <div class="setting-value">
+                        有効 - TOTP/SMS認証必須
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            🕒 セッション時間制限
+                        </div>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        非アクティブ状態でのセッション自動切断時間
+                    </div>
+                    <div class="setting-value">
+                        30分で自動ログアウト
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            🚫 IP制限
+                        </div>
+                        <div class="setting-toggle" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        特定のIPアドレスからのみアクセスを許可
+                    </div>
+                    <div class="setting-value">
+                        無効 - 全IPからアクセス可能
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            🔍 侵入検知システム
+                        </div>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        不審なアクティビティを自動検知・ブロック
+                    </div>
+                    <div class="setting-value">
+                        有効 - リアルタイム監視中
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            📧 セキュリティアラート
+                        </div>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        セキュリティインシデント時の自動通知
+                    </div>
+                    <div class="setting-value">
+                        有効 - admin@patent-hub.com
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-title">
+                            🔐 パスワードポリシー
+                        </div>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-description">
+                        強力なパスワード要件の強制
+                    </div>
+                    <div class="setting-value">
+                        12文字以上、複合文字必須
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 監査ログ -->
+        <div class="section">
+            <h2 class="section-title">
+                📋 監査ログ
+            </h2>
+            
+            <!-- ログフィルター -->
+            <div class="log-controls">
+                <div class="log-filter">
+                    <label>レベル</label>
+                    <select id="logLevelFilter" onchange="filterLogs()">
+                        <option value="">すべて</option>
+                        <option value="critical">Critical</option>
+                        <option value="warning">Warning</option>
+                        <option value="info">Info</option>
+                        <option value="security">Security</option>
+                    </select>
+                </div>
+                
+                <div class="log-filter">
+                    <label>ユーザー</label>
+                    <select id="logUserFilter" onchange="filterLogs()">
+                        <option value="">すべて</option>
+                        <option value="system-admin">system-admin</option>
+                        <option value="master-admin">master-admin</option>
+                        <option value="system">system</option>
+                    </select>
+                </div>
+                
+                <div class="log-filter">
+                    <label>キーワード</label>
+                    <input type="text" id="logSearchInput" placeholder="検索..." onkeyup="filterLogs()">
+                </div>
+                
+                <div class="log-filter">
+                    <label>期間</label>
+                    <input type="date" id="logDateFilter" onchange="filterLogs()">
+                </div>
+            </div>
+
+            <!-- ログコンテナ -->
+            <div class="log-container" id="logContainer">
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 15:45:23</div>
+                    <div class="log-level critical">CRITICAL</div>
+                    <div class="log-message">🚨 不正アクセス試行を検出・ブロック - IP: 192.168.1.100</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 15:32:10</div>
+                    <div class="log-level security">SECURITY</div>
+                    <div class="log-message">🔐 システム管理者ログイン成功 - user: system-admin</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 15:30:45</div>
+                    <div class="log-level warning">WARNING</div>
+                    <div class="log-message">⚠️ 複数回のログイン失敗 - IP: 203.104.15.22 (5回)</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 15:15:32</div>
+                    <div class="log-level info">INFO</div>
+                    <div class="log-message">💼 企業アカウント新規登録 - グローバル特許事務所</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 15:00:18</div>
+                    <div class="log-level security">SECURITY</div>
+                    <div class="log-message">🔒 セッション期限切れによる自動ログアウト - user: admin-user</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 14:45:55</div>
+                    <div class="log-level warning">WARNING</div>
+                    <div class="log-message">🛡️ 異常なトラフィックパターンを検出 - 自動レート制限実行</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 14:30:12</div>
+                    <div class="log-level info">INFO</div>
+                    <div class="log-message">📊 定期バックアップ実行完了 - サイズ: 2.3GB</div>
+                </div>
+                
+                <div class="log-entry">
+                    <div class="log-timestamp">2025-08-11 14:15:04</div>
+                    <div class="log-level critical">CRITICAL</div>
+                    <div class="log-message">🚨 SQLインジェクション攻撃を検出・遮断</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="action-buttons">
+            <button class="action-btn btn-primary" onclick="exportLogs()">
+                📥 ログエクスポート
+            </button>
+            <button class="action-btn btn-secondary" onclick="refreshLogs()">
+                🔄 ログ更新
+            </button>
+            <button class="action-btn btn-danger" onclick="clearOldLogs()">
+                🗑️ 古いログ削除
+            </button>
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // セキュリティ設定・監査ログ管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('セキュリティ設定画面が読み込まれました');
+            checkSystemAuthentication();
+            updateSecurityStats();
+            startLogUpdates();
+        });
+
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+
+        // セキュリティ統計更新
+        function updateSecurityStats() {
+            const currentHour = new Date().getHours();
+            
+            document.getElementById('threatCount').textContent = 20 + (currentHour % 5);
+            document.getElementById('blockCount').textContent = 150 + (currentHour * 2);
+            document.getElementById('loginCount').textContent = 80 + (currentHour % 15);
+            document.getElementById('sessionCount').textContent = 35 + (currentHour % 10);
+        }
+
+        // セキュリティ設定トグル
+        function toggleSetting(toggle) {
+            const isActive = toggle.classList.contains('active');
+            const settingCard = toggle.closest('.setting-card');
+            const settingTitle = settingCard.querySelector('.setting-title').textContent.trim();
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                showNotification(`${settingTitle} を無効にしました`, 'warning');
+            } else {
+                toggle.classList.add('active');
+                showNotification(`${settingTitle} を有効にしました`, 'success');
+            }
+            
+            logSecurityEvent(`設定変更: ${settingTitle} ${isActive ? '無効化' : '有効化'}`, 'SECURITY');
+        }
+
+        // ログフィルター
+        function filterLogs() {
+            const level = document.getElementById('logLevelFilter').value.toLowerCase();
+            const user = document.getElementById('logUserFilter').value.toLowerCase();
+            const search = document.getElementById('logSearchInput').value.toLowerCase();
+            const date = document.getElementById('logDateFilter').value;
+            
+            const logEntries = document.querySelectorAll('.log-entry');
+            
+            logEntries.forEach(entry => {
+                const entryLevel = entry.querySelector('.log-level').textContent.toLowerCase();
+                const entryMessage = entry.querySelector('.log-message').textContent.toLowerCase();
+                const entryTimestamp = entry.querySelector('.log-timestamp').textContent;
+                
+                const levelMatch = !level || entryLevel.includes(level);
+                const userMatch = !user || entryMessage.includes(user);
+                const searchMatch = !search || entryMessage.includes(search);
+                const dateMatch = !date || entryTimestamp.includes(date);
+                
+                if (levelMatch && userMatch && searchMatch && dateMatch) {
+                    entry.style.display = 'flex';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+        }
+
+        // ログエクスポート
+        function exportLogs() {
+            if (!confirm('監査ログをCSV形式でエクスポートしますか？')) return;
+            
+            showNotification('ログエクスポートを開始しました', 'info');
+            logSecurityEvent('監査ログエクスポート実行', 'SECURITY');
+            
+            // 実際の実装ではログデータをCSVとして生成・ダウンロード
+            setTimeout(() => {
+                showNotification('ログエクスポートが完了しました', 'success');
+            }, 2000);
+        }
+
+        // ログ更新
+        function refreshLogs() {
+            showNotification('ログを更新しています...', 'info');
+            
+            // 新しいログエントリを追加（デモ用）
+            setTimeout(() => {
+                addNewLogEntry();
+                showNotification('ログを更新しました', 'success');
+            }, 1000);
+        }
+
+        // 古いログ削除
+        function clearOldLogs() {
+            if (!confirm('⚠️ 30日以上古いログを削除しますか？この操作は取り消せません。')) return;
+            
+            showNotification('古いログを削除しています...', 'warning');
+            logSecurityEvent('古い監査ログ削除実行', 'SECURITY');
+            
+            setTimeout(() => {
+                showNotification('古いログを削除しました', 'success');
+            }, 2000);
+        }
+
+        // 新しいログエントリ追加
+        function addNewLogEntry() {
+            const logTypes = [
+                { level: 'info', message: '🔄 システム正常動作確認' },
+                { level: 'warning', message: '⚠️ 異常なアクセスパターン検出' },
+                { level: 'security', message: '🔐 管理者権限でのファイルアクセス' },
+                { level: 'critical', message: '🚨 不審なファイルアップロード試行をブロック' }
+            ];
+            
+            const randomLog = logTypes[Math.floor(Math.random() * logTypes.length)];
+            const timestamp = new Date().toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).replace(/\//g, '-');
+            
+            const newLogHTML = `
+                <div class="log-entry">
+                    <div class="log-timestamp">${timestamp}</div>
+                    <div class="log-level ${randomLog.level}">${randomLog.level.toUpperCase()}</div>
+                    <div class="log-message">${randomLog.message}</div>
+                </div>
+            `;
+            
+            const logContainer = document.getElementById('logContainer');
+            logContainer.insertAdjacentHTML('afterbegin', newLogHTML);
+            
+            // 最新20件のログのみ表示
+            const logEntries = logContainer.querySelectorAll('.log-entry');
+            if (logEntries.length > 20) {
+                logEntries[logEntries.length - 1].remove();
+            }
+        }
+
+        // ログ自動更新開始
+        function startLogUpdates() {
+            // 30秒ごとに新しいログを追加（ランダム）
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30%の確率
+                    addNewLogEntry();
+                }
+            }, 30000);
+        }
+
+        // セキュリティイベントログ
+        function logSecurityEvent(action, level) {
+            console.log(`🛡️ [${level}] ${new Date().toLocaleString()}: ${action}`);
+            
+            // 実際の実装では監査ログDBに記録
+            const auditLog = {
+                timestamp: new Date().toISOString(),
+                action: action,
+                level: level,
+                adminId: 'system-admin',
+                ip: 'xxx.xxx.xxx.xxx'
+            };
+            
+            const existingLogs = JSON.parse(localStorage.getItem('system_audit_logs') || '[]');
+            existingLogs.unshift(auditLog);
+            
+            if (existingLogs.length > 100) {
+                existingLogs.splice(100);
+            }
+            
+            localStorage.setItem('system_audit_logs', JSON.stringify(existingLogs));
+        }
+
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                logSecurityEvent('システム管理者ログアウト', 'SECURITY');
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+            `;
+
+            const colors = {
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'warning': '#f39c12',
+                'info': '#3498db'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        console.log('🔒 Patent Hub セキュリティ設定・監査ログ - 初期化完了');
+    </script>
+</body>
+</html>

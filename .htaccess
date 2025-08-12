@@ -1,0 +1,45 @@
+# Patent Hub - 404エラーページ設定
+ErrorDocument 404 /404.html
+
+# セキュリティ設定
+Options -Indexes
+
+# MIMEタイプ設定
+AddType text/html .html
+AddType text/css .css
+AddType text/javascript .js
+
+# キャッシュ設定
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # HTML files - 1時間
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # CSS files - 1週間
+    ExpiresByType text/css "access plus 1 week"
+    
+    # JavaScript files - 1週間
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    
+    # Image files - 1ヶ月
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
+
+# GZIP圧縮設定
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# リダイレクト設定（必要に応じて）
+# Redirect 301 /old-page.html /new-page.html

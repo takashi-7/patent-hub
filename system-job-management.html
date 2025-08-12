@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム求人管理 | Patent Hub</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - 全求人の統制・品質管理">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（システム管理者専用デザイン） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .system-admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .system-nav-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .system-nav-link:hover,
+        .system-nav-link.active {
+            color: #e74c3c;
+        }
+        
+        .system-admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        
+        .system-user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .system-logout-btn {
+            background: transparent;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .system-logout-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* セキュリティ警告バー */
+        .security-warning-bar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .jobs-count {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .back-to-dashboard {
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-to-dashboard:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        /* 管理統制パネル */
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .control-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .control-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            border-color: #e74c3c;
+            background: #fff5f5;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .control-btn.danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .control-btn.warning {
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .control-btn.warning:hover {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* 検索・フィルターパネル */
+        .search-filters {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .filters-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .search-input {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+        }
+        
+        /* 求人一覧 */
+        .jobs-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .job-item {
+            border-bottom: 1px solid #f8f9fa;
+            padding: 2rem;
+            transition: background 0.3s;
+        }
+        
+        .job-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .job-item:last-child {
+            border-bottom: none;
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .job-info {
+            flex: 1;
+        }
+        
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-company {
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 2rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .job-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .stat-views {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .stat-applications {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .stat-quality {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .job-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .status-active {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-suspended {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-expired {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .action-btn:hover {
+            background: #f8f9fa;
+            border-color: #e74c3c;
+        }
+        
+        .action-btn.primary {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .action-btn.primary:hover {
+            background: #c0392b;
+        }
+        
+        .action-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .action-btn.danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.warning {
+            color: #856404;
+            border-color: #ffc107;
+        }
+        
+        .action-btn.warning:hover {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* 詳細モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+        
+        .detail-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .detail-content {
+            color: #495057;
+            line-height: 1.6;
+        }
+        
+        .status-update {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .status-select {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .admin-notes {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .modal-footer {
+            padding: 2rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 1200px) {
+            .filters-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main {
+                padding: 0 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .job-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .job-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .job-actions {
+                flex-wrap: wrap;
+            }
+            
+            .system-admin-nav {
+                display: none;
+            }
+            
+            .control-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- セキュリティ警告バー -->
+    <div class="security-warning-bar">
+        🛡️ システム管理者権限 - 求人統制・品質管理画面
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <div class="system-admin-logo">
+                <div class="system-admin-logo-icon">💼</div>
+                <span>求人統制管理</span>
+            </div>
+            <nav class="system-admin-nav">
+                <a href="system-admin-dashboard.html" class="system-nav-link">ダッシュボード</a>
+                <a href="#" class="system-nav-link">企業管理</a>
+                <a href="#" class="system-nav-link active">求人統制</a>
+                <a href="#" class="system-nav-link">分析レポート</a>
+                <a href="#" class="system-nav-link">システム設定</a>
+            </nav>
+            <div class="system-admin-user-info">
+                <div class="system-user-avatar" id="systemUserAvatar">S</div>
+                <span id="systemUserName">システム管理者</span>
+                <button class="system-logout-btn" onclick="systemLogout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">
+                💼 システム求人管理
+                <span class="jobs-count" id="jobsCount">0件</span>
+            </h1>
+            <a href="system-admin-dashboard.html" class="back-to-dashboard">
+                ← ダッシュボードに戻る
+            </a>
+        </div>
+
+        <!-- 管理統制パネル -->
+        <div class="control-panel">
+            <h2 class="control-title">
+                🛠️ 求人統制・品質管理
+            </h2>
+            <div class="control-actions">
+                <button class="control-btn" onclick="bulkApprove()">
+                    ✅ 一括承認
+                </button>
+                
+                <button class="control-btn warning" onclick="bulkSuspend()">
+                    ⏸️ 一括停止
+                </button>
+                
+                <button class="control-btn danger" onclick="bulkDelete()">
+                    🗑️ 一括削除
+                </button>
+                
+                <button class="control-btn" onclick="qualityCheck()">
+                    🔍 品質チェック実行
+                </button>
+                
+                <button class="control-btn" onclick="exportData()">
+                    📊 データエクスポート
+                </button>
+                
+                <button class="control-btn" onclick="showViolations()">
+                    ⚠️ 違反求人表示
+                </button>
+            </div>
+        </div>
+
+        <!-- 検索・フィルター -->
+        <div class="search-filters">
+            <div class="filters-row">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="求人タイトル、企業名で検索..."
+                    id="searchInput"
+                >
+                <select class="filter-select" id="companyFilter">
+                    <option value="">すべての企業</option>
+                    <option value="特許事務所ABC">特許事務所ABC</option>
+                    <option value="株式会社XYZ知財部">株式会社XYZ知財部</option>
+                    <option value="グローバル特許事務所">グローバル特許事務所</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">すべてのステータス</option>
+                    <option value="active">公開中</option>
+                    <option value="pending">承認待ち</option>
+                    <option value="suspended">停止中</option>
+                    <option value="expired">期限切れ</option>
+                </select>
+                <select class="filter-select" id="qualityFilter">
+                    <option value="">品質スコア</option>
+                    <option value="high">高品質(80%+)</option>
+                    <option value="medium">標準(60-79%)</option>
+                    <option value="low">要改善(60%未満)</option>
+                </select>
+                <button class="refresh-btn" onclick="refreshJobsList()">
+                    🔄 更新
+                </button>
+            </div>
+        </div>
+
+        <!-- 求人一覧 -->
+        <div class="jobs-list" id="jobsList">
+            <!-- 求人データはJavaScriptで動的に生成 -->
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 求人詳細・管理モーダル -->
+    <div class="modal-overlay" id="jobDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">求人詳細・管理</h3>
+                <button class="modal-close" onclick="closeJobDetailModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 詳細内容はJavaScriptで生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" onclick="closeJobDetailModal()">閉じる</button>
+                <button class="action-btn primary" onclick="saveJobChanges()">変更を保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // システム求人管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('システム求人管理画面が読み込まれました');
+            
+            // システム管理者認証チェック
+            checkSystemAuthentication();
+            
+            // ユーザー情報を表示
+            loadSystemUserInfo();
+            
+            // 求人データを初期化
+            initializeJobsData();
+            
+            // 求人一覧を表示
+            displayJobsList();
+            
+            // 検索・フィルター機能を初期化
+            initializeFilters();
+            
+            console.log('✅ システム求人管理画面の初期化が完了しました');
+        });
+        
+        // 求人データ
+        let jobsData = [];
+        
+        // 求人データの初期化
+        function initializeJobsData() {
+            jobsData = [
+                {
+                    id: 'JOB001',
+                    title: '特許技術者（機械・電気）',
+                    company: '特許事務所ABC',
+                    companyId: 'COMPANY_ABC',
+                    status: 'active',
+                    postDate: '2025-08-07',
+                    expiryDate: '2025-09-07',
+                    views: 245,
+                    applications: 12,
+                    qualityScore: 85,
+                    salary: '年収400-600万円',
+                    location: '東京都港区',
+                    adminNotes: '',
+                    violations: []
+                },
+                {
+                    id: 'JOB002',
+                    title: '弁理士（パートナー候補）',
+                    company: '特許事務所ABC',
+                    companyId: 'COMPANY_ABC',
+                    status: 'active',
+                    postDate: '2025-08-05',
+                    expiryDate: '2025-09-05',
+                    views: 189,
+                    applications: 8,
+                    qualityScore: 92,
+                    salary: '年収800万円〜',
+                    location: '東京都港区',
+                    adminNotes: '優良求人として推奨',
+                    violations: []
+                },
+                {
+                    id: 'JOB003',
+                    title: '知財事務スタッフ',
+                    company: 'グローバル特許事務所',
+                    companyId: 'COMPANY_GLOBAL',
+                    status: 'pending',
+                    postDate: '2025-08-09',
+                    expiryDate: '2025-09-09',
+                    views: 56,
+                    applications: 3,
+                    qualityScore: 72,
+                    salary: '年収350-450万円',
+                    location: '東京都千代田区',
+                    adminNotes: '承認待ち - 内容確認中',
+                    violations: []
+                },
+                {
+                    id: 'JOB004',
+                    title: '知財部マネージャー',
+                    company: '株式会社XYZ知財部',
+                    companyId: 'COMPANY_XYZ',
+                    status: 'suspended',
+                    postDate: '2025-08-01',
+                    expiryDate: '2025-09-01',
+                    views: 312,
+                    applications: 15,
+                    qualityScore: 45,
+                    salary: '応相談',
+                    location: '大阪府大阪市',
+                    adminNotes: '求人内容が不十分のため停止',
+                    violations: ['不適切な表現', '詳細不足']
+                },
+                {
+                    id: 'JOB005',
+                    title: 'IP戦略コンサルタント',
+                    company: 'グローバル特許事務所',
+                    companyId: 'COMPANY_GLOBAL',
+                    status: 'expired',
+                    postDate: '2025-07-10',
+                    expiryDate: '2025-08-10',
+                    views: 423,
+                    applications: 22,
+                    qualityScore: 88,
+                    salary: '年収600-900万円',
+                    location: '東京都千代田区',
+                    adminNotes: '期限切れ - 優秀な求人でした',
+                    violations: []
+                }
+            ];
+            
+            updateJobsCount();
+        }
+        
+        // 求人一覧の表示
+        function displayJobsList(filteredData = null) {
+            const dataToShow = filteredData || jobsData;
+            const listContainer = document.getElementById('jobsList');
+            
+            if (dataToShow.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #6c757d;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h3>該当する求人がありません</h3>
+                        <p>検索条件を変更してお試しください</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = dataToShow.map(job => `
+                <div class="job-item">
+                    <div class="job-header">
+                        <div class="job-info">
+                            <h3 class="job-title">${job.title}</h3>
+                            <div class="job-company">${job.company}</div>
+                            <div class="job-meta">
+                                <span>📅 投稿: ${job.postDate}</span>
+                                <span>⏰ 期限: ${job.expiryDate}</span>
+                                <span>💰 ${job.salary}</span>
+                                <span>📍 ${job.location}</span>
+                            </div>
+                            <div class="job-stats">
+                                <div class="stat-badge stat-views">👀 ${job.views}回表示</div>
+                                <div class="stat-badge stat-applications">📧 ${job.applications}件応募</div>
+                                <div class="stat-badge stat-quality">📊 品質${job.qualityScore}%</div>
+                                ${job.violations.length > 0 ? `<div class="stat-badge" style="background: #ffebee; color: #c62828;">⚠️ ${job.violations.length}件違反</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="job-status status-${job.status}">
+                            ${getStatusText(job.status)}
+                        </div>
+                    </div>
+                    
+                    <div class="job-actions">
+                        <button class="action-btn primary" onclick="showJobDetail('${job.id}')">
+                            詳細・管理
+                        </button>
+                        
+                        ${job.status === 'pending' ? `
+                            <button class="action-btn" onclick="approveJob('${job.id}')" style="background: #28a745; color: white;">
+                                承認
+                            </button>
+                        ` : ''}
+                        
+                        ${job.status === 'active' ? `
+                            <button class="action-btn warning" onclick="suspendJob('${job.id}')">
+                                停止
+                            </button>
+                        ` : ''}
+                        
+                        ${job.status === 'suspended' ? `
+                            <button class="action-btn" onclick="reactivateJob('${job.id}')" style="background: #17a2b8; color: white;">
+                                再開
+                            </button>
+                        ` : ''}
+                        
+                        <button class="action-btn danger" onclick="deleteJob('${job.id}')">
+                            削除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ステータステキストの取得
+        function getStatusText(status) {
+            const statusMap = {
+                'active': '公開中',
+                'pending': '承認待ち',
+                'suspended': '停止中',
+                'expired': '期限切れ'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // 求人数の更新
+        function updateJobsCount(count = null) {
+            const countElement = document.getElementById('jobsCount');
+            const totalCount = count !== null ? count : jobsData.length;
+            countElement.textContent = `${totalCount}件`;
+        }
+        
+        // 検索・フィルター機能の初期化
+        function initializeFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const companyFilter = document.getElementById('companyFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const qualityFilter = document.getElementById('qualityFilter');
+            
+            [searchInput, companyFilter, statusFilter, qualityFilter].forEach(element => {
+                element.addEventListener('change', applyFilters);
+                element.addEventListener('input', applyFilters);
+            });
+        }
+        
+        // フィルターの適用
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const companyFilter = document.getElementById('companyFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const qualityFilter = document.getElementById('qualityFilter').value;
+            
+            let filtered = jobsData.filter(job => {
+                const matchesSearch = job.title.toLowerCase().includes(searchTerm) || 
+                                    job.company.toLowerCase().includes(searchTerm);
+                const matchesCompany = !companyFilter || job.company === companyFilter;
+                const matchesStatus = !statusFilter || job.status === statusFilter;
+                const matchesQuality = !qualityFilter || 
+                    (qualityFilter === 'high' && job.qualityScore >= 80) ||
+                    (qualityFilter === 'medium' && job.qualityScore >= 60 && job.qualityScore < 80) ||
+                    (qualityFilter === 'low' && job.qualityScore < 60);
+                
+                return matchesSearch && matchesCompany && matchesStatus && matchesQuality;
+            });
+            
+            displayJobsList(filtered);
+            updateJobsCount(filtered.length);
+        }
+        
+        // 求人詳細の表示
+        function showJobDetail(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            if (!job) return;
+            
+            const modal = document.getElementById('jobDetailModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `${job.title} - システム管理`;
+            
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-title">📋 基本情報</div>
+                    <div class="detail-content">
+                        <strong>求人ID:</strong> ${job.id}<br>
+                        <strong>企業:</strong> ${job.company}<br>
+                        <strong>投稿日:</strong> ${job.postDate}<br>
+                        <strong>有効期限:</strong> ${job.expiryDate}<br>
+                        <strong>給与:</strong> ${job.salary}<br>
+                        <strong>勤務地:</strong> ${job.location}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">📊 パフォーマンス指標</div>
+                    <div class="detail-content">
+                        <strong>表示回数:</strong> ${job.views}回<br>
+                        <strong>応募数:</strong> ${job.applications}件<br>
+                        <strong>品質スコア:</strong> ${job.qualityScore}%<br>
+                        <strong>応募率:</strong> ${((job.applications / job.views) * 100).toFixed(1)}%
+                    </div>
+                </div>
+                
+                ${job.violations.length > 0 ? `
+                    <div class="detail-section">
+                        <div class="detail-title">⚠️ 違反・問題点</div>
+                        <div class="detail-content" style="color: #dc3545;">
+                            ${job.violations.map(v => `• ${v}`).join('<br>')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="detail-section">
+                    <div class="detail-title">🔧 ステータス管理</div>
+                    <div class="status-update">
+                        <select class="status-select" id="statusSelect">
+                            <option value="pending" ${job.status === 'pending' ? 'selected' : ''}>承認待ち</option>
+                            <option value="active" ${job.status === 'active' ? 'selected' : ''}>公開中</option>
+                            <option value="suspended" ${job.status === 'suspended' ? 'selected' : ''}>停止中</option>
+                            <option value="expired" ${job.status === 'expired' ? 'selected' : ''}>期限切れ</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">📝 管理者メモ</div>
+                    <textarea class="admin-notes" id="adminNotes" placeholder="管理者向けメモを入力...">${job.adminNotes}</textarea>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            window.currentJobId = jobId;
+            
+            logSecurityEvent(`求人詳細確認: ${job.id}`, 'INFO');
+        }
+        
+        // モーダルを閉じる
+        function closeJobDetailModal() {
+            document.getElementById('jobDetailModal').style.display = 'none';
+        }
+        
+        // 求人の変更を保存
+        function saveJobChanges() {
+            const jobId = window.currentJobId;
+            const newStatus = document.getElementById('statusSelect').value;
+            const notes = document.getElementById('adminNotes').value;
+            
+            // データを更新
+            const jobIndex = jobsData.findIndex(job => job.id === jobId);
+            if (jobIndex !== -1) {
+                const oldStatus = jobsData[jobIndex].status;
+                jobsData[jobIndex].status = newStatus;
+                jobsData[jobIndex].adminNotes = notes;
+                
+                logSecurityEvent(`求人ステータス変更: ${jobId} (${oldStatus} → ${newStatus})`, 'ADMIN');
+            }
+            
+            // 画面を更新
+            displayJobsList();
+            closeJobDetailModal();
+            
+            showNotification('求人情報を更新しました', 'success');
+        }
+        
+        // 求人管理機能
+        function approveJob(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            if (job && job.status === 'pending') {
+                job.status = 'active';
+                displayJobsList();
+                showNotification(`求人「${job.title}」を承認しました`, 'success');
+                logSecurityEvent(`求人承認: ${jobId}`, 'ADMIN');
+            }
+        }
+        
+        function suspendJob(jobId) {
+            if (!confirm('この求人を停止しますか？')) return;
+            
+            const job = jobsData.find(j => j.id === jobId);
+            if (job && job.status === 'active') {
+                job.status = 'suspended';
+                displayJobsList();
+                showNotification(`求人「${job.title}」を停止しました`, 'warning');
+                logSecurityEvent(`求人停止: ${jobId}`, 'ADMIN');
+            }
+        }
+        
+        function reactivateJob(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            if (job && job.status === 'suspended') {
+                job.status = 'active';
+                displayJobsList();
+                showNotification(`求人「${job.title}」を再開しました`, 'success');
+                logSecurityEvent(`求人再開: ${jobId}`, 'ADMIN');
+            }
+        }
+        
+        function deleteJob(jobId) {
+            if (!confirm('⚠️ この求人を完全に削除しますか？この操作は元に戻せません。')) return;
+            
+            const jobIndex = jobsData.findIndex(j => j.id === jobId);
+            if (jobIndex !== -1) {
+                const job = jobsData[jobIndex];
+                jobsData.splice(jobIndex, 1);
+                displayJobsList();
+                updateJobsCount();
+                showNotification(`求人「${job.title}」を削除しました`, 'error');
+                logSecurityEvent(`求人削除: ${jobId}`, 'CRITICAL');
+            }
+        }
+        
+        // 一括操作機能
+        function bulkApprove() {
+            const pendingJobs = jobsData.filter(job => job.status === 'pending');
+            if (pendingJobs.length === 0) {
+                showNotification('承認待ちの求人がありません', 'info');
+                return;
+            }
+            
+            if (!confirm(`${pendingJobs.length}件の求人を一括承認しますか？`)) return;
+            
+            pendingJobs.forEach(job => job.status = 'active');
+            displayJobsList();
+            showNotification(`${pendingJobs.length}件の求人を一括承認しました`, 'success');
+            logSecurityEvent(`一括承認実行: ${pendingJobs.length}件`, 'ADMIN');
+        }
+        
+        function bulkSuspend() {
+            const activeJobs = jobsData.filter(job => job.status === 'active');
+            if (activeJobs.length === 0) {
+                showNotification('公開中の求人がありません', 'info');
+                return;
+            }
+            
+            if (!confirm(`⚠️ ${activeJobs.length}件の求人を一括停止しますか？`)) return;
+            
+            activeJobs.forEach(job => job.status = 'suspended');
+            displayJobsList();
+            showNotification(`${activeJobs.length}件の求人を一括停止しました`, 'warning');
+            logSecurityEvent(`一括停止実行: ${activeJobs.length}件`, 'ADMIN');
+        }
+        
+        function bulkDelete() {
+            if (!confirm('⚠️ すべての求人を一括削除しますか？この操作は元に戻せません。')) return;
+            if (!confirm('⚠️ 本当に削除しますか？最終確認です。')) return;
+            
+            const count = jobsData.length;
+            jobsData = [];
+            displayJobsList();
+            updateJobsCount();
+            showNotification(`${count}件の求人を一括削除しました`, 'error');
+            logSecurityEvent(`一括削除実行: ${count}件`, 'CRITICAL');
+        }
+        
+        function qualityCheck() {
+            showNotification('品質チェックを実行中...', 'info');
+            
+            setTimeout(() => {
+                const lowQualityJobs = jobsData.filter(job => job.qualityScore < 70);
+                showNotification(`品質チェック完了: ${lowQualityJobs.length}件の求人で改善が必要です`, 
+                    lowQualityJobs.length > 0 ? 'warning' : 'success');
+                logSecurityEvent(`品質チェック実行: 要改善${lowQualityJobs.length}件`, 'SYSTEM');
+            }, 2000);
+        }
+        
+        function exportData() {
+            const csvData = jobsData.map(job => 
+                `${job.id},${job.title},${job.company},${job.status},${job.qualityScore},${job.views},${job.applications}`
+            ).join('\n');
+            
+            showNotification('求人データをエクスポートしました', 'success');
+            logSecurityEvent('求人データエクスポート実行', 'ADMIN');
+        }
+        
+        function showViolations() {
+            const violationJobs = jobsData.filter(job => job.violations.length > 0);
+            
+            if (violationJobs.length === 0) {
+                showNotification('違反求人は見つかりませんでした', 'success');
+                return;
+            }
+            
+            displayJobsList(violationJobs);
+            updateJobsCount(violationJobs.length);
+            showNotification(`${violationJobs.length}件の違反求人を表示しています`, 'warning');
+            logSecurityEvent(`違反求人表示: ${violationJobs.length}件`, 'ADMIN');
+        }
+        
+        function refreshJobsList() {
+            showNotification('求人一覧を更新中...', 'info');
+            
+            setTimeout(() => {
+                // 実際のシステムではAPIから最新データを取得
+                displayJobsList();
+                showNotification('求人一覧を更新しました', 'success');
+                logSecurityEvent('求人一覧更新', 'SYSTEM');
+            }, 1000);
+        }
+        
+        // システム管理者認証・共通機能
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+        
+        function loadSystemUserInfo() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            document.getElementById('systemUserName').textContent = session.adminName;
+            document.getElementById('systemUserAvatar').textContent = session.adminName.charAt(0);
+        }
+        
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                logSecurityEvent('システム管理者ログアウト', 'SECURITY');
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+        
+        // セキュリティログ機能
+        function logSecurityEvent(action, level) {
+            const timestamp = new Date().toLocaleString('ja-JP');
+            console.log(`🛡️ [${level}] ${timestamp}: ${action}`);
+            
+            // 実際の実装では監査ログに記録
+        }
+        
+        // 通知機能
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            `;
+            
+            const colors = {
+                'success': 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)',
+                'error': 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
+                'warning': 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                'info': 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('jobDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeJobDetailModal();
+            }
+        });
+        
+        console.log('💼 Patent Hub システム求人管理 - 初期化完了');
+    </script>
+</body>
+</html>

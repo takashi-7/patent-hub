@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業管理ダッシュボード | Patent Hub</title>
+    <meta name="description" content="Patent Hub 企業管理ダッシュボード。求人管理、求人投稿、企業情報編集が可能です。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 管理画面専用スタイル */
+        .admin-body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー */
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            background: #6c757d;
+            color: white;
+        }
+        
+        /* メインコンテンツ */
+        .admin-main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card.jobs {
+            border-top-color: #1e3c72;
+        }
+        
+        .stat-card.applications {
+            border-top-color: #28a745;
+        }
+        
+        .stat-card.views {
+            border-top-color: #17a2b8;
+        }
+        
+        .stat-card.interviews {
+            border-top-color: #ffc107;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* クイックアクション */
+        .quick-actions {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #e9ecef;
+            border-color: #1e3c72;
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .action-title {
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* 最近のアクティビティ */
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .activity-icon.job {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        
+        .activity-icon.application {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .activity-icon.view {
+            background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-text {
+            color: #495057;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .admin-header .container {
+                padding: 0 1rem;
+            }
+            
+            .admin-main {
+                padding: 0 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+            
+            .admin-user-info {
+                gap: 0.5rem;
+            }
+            
+            .user-name {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="container">
+            <a href="index.html" class="admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="admin-logo-icon">🏢</div>
+                <span>Patent Hub 管理画面</span>
+            </a>
+            <div class="admin-user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <span class="user-name" id="userName">特許事務所ABC</span>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+        <!-- ウェルカムカード -->
+        <div class="welcome-card">
+            <h1 class="welcome-title">お疲れ様です！</h1>
+            <p class="welcome-subtitle">本日も Patent Hub 管理画面をご利用いただき、ありがとうございます</p>
+        </div>
+
+        <!-- 統計情報 -->
+        <div class="stats-grid">
+            <div class="stat-card jobs">
+                <div class="stat-icon">💼</div>
+                <span class="stat-number" id="totalJobs">5</span>
+                <div class="stat-label">掲載中の求人</div>
+            </div>
+            
+            <div class="stat-card active">
+                <div class="stat-icon">✅</div>
+                <span class="stat-number" id="activeJobs">4</span>
+                <div class="stat-label">公開中</div>
+            </div>
+            
+            <div class="stat-card paused">
+                <div class="stat-icon">⏸️</div>
+                <span class="stat-number" id="pausedJobs">1</span>
+                <div class="stat-label">一時停止中</div>
+            </div>
+            
+            <div class="stat-card closed">
+                <div class="stat-icon">❌</div>
+                <span class="stat-number" id="closedJobs">0</span>
+                <div class="stat-label">募集終了</div>
+            </div>
+        </div>
+
+        <!-- クイックアクション -->
+        <div class="quick-actions">
+            <h2 class="section-title">
+                🚀 クイックアクション
+            </h2>
+            <div class="action-grid">
+                <a href="admin-job-post.html" class="action-btn">
+                    <div class="action-icon">📝</div>
+                    <div class="action-title">新しい求人を投稿</div>
+                </a>
+                
+                <a href="admin-jobs.html" class="action-btn">
+                    <div class="action-icon">💼</div>
+                    <div class="action-title">求人を管理</div>
+                </a>
+                
+                <a href="admin-company.html" class="action-btn">
+                    <div class="action-icon">🏢</div>
+                    <div class="action-title">企業情報を編集</div>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 管理画面ダッシュボード機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('企業管理ダッシュボードが読み込まれました');
+            
+            // 認証チェック
+            checkAuthentication();
+            
+            // ユーザー情報を表示
+            loadUserInfo();
+            
+            // 統計データを更新
+            updateStats();
+            
+            console.log('✅ ダッシュボードの初期化が完了しました');
+        });
+        
+        // 認証チェック
+        function checkAuthentication() {
+            const sessionData = localStorage.getItem('admin_session');
+            
+            if (!sessionData) {
+                // セッション情報がない場合はログイン画面へ
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            try {
+                const session = JSON.parse(sessionData);
+                
+                // セッション期限チェック（24時間）
+                const loginTime = new Date(session.loginTime);
+                const currentTime = new Date();
+                const timeDiff = currentTime - loginTime;
+                const hoursDiff = timeDiff / (1000 * 60 * 60);
+                
+                if (hoursDiff > 24 && !session.rememberMe) {
+                    // セッション期限切れ
+                    localStorage.removeItem('admin_session');
+                    alert('セッションの有効期限が切れました。再度ログインしてください。');
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+                
+                console.log(`認証済み: ${session.companyName}`);
+            } catch (error) {
+                console.error('セッション情報の解析に失敗:', error);
+                localStorage.removeItem('admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // ユーザー情報を表示
+        function loadUserInfo() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            
+            // ユーザー名を表示
+            document.getElementById('userName').textContent = session.companyName;
+            
+            // アバターに企業名の頭文字を表示
+            const firstChar = session.companyName.charAt(0);
+            document.getElementById('userAvatar').textContent = firstChar;
+        }
+        
+        // 統計データを更新（実際のサイトではAPIから取得）
+        function updateStats() {
+            // シミュレーション：時間に基づいて変動する統計データ
+            const baseTime = new Date().getHours();
+            
+            document.getElementById('totalJobs').textContent = 5;
+            document.getElementById('totalApplications').textContent = 20 + (baseTime % 10);
+            document.getElementById('totalViews').textContent = (1200 + (baseTime * 15)).toLocaleString();
+            document.getElementById('totalInterviews').textContent = 8 + (baseTime % 5);
+            
+            // 数値カウントアップアニメーション
+            animateCounters();
+        }
+        
+        // カウンターアニメーション
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/,/g, ''));
+                const increment = target / 30;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 50);
+            });
+        }
+        
+        // ログアウト機能
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                localStorage.removeItem('admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // リアルタイム時計
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ja-JP');
+            
+            // 時計表示エリアがあれば更新（将来的に追加可能）
+            const clockElement = document.getElementById('currentTime');
+            if (clockElement) {
+                clockElement.textContent = timeString;
+            }
+        }
+        
+        // 1秒ごとに時計を更新
+        setInterval(updateClock, 1000);
+        
+        
+        // 統計データの定期更新
+        setInterval(updateStats, 10 * 60 * 1000); // 10分ごと
+        
+        console.log('🚀 Patent Hub 企業管理ダッシュボード - 初期化完了');
+    </script>
+</body>
+</html>

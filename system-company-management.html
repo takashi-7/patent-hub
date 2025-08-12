@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業アカウント管理 | Patent Hub システム管理</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - 企業アカウントの管理・監督・統制">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ヘッダー（システム管理者専用テーマ） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .breadcrumb-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #e74c3c;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.total { border-left-color: #3498db; }
+        .stat-card.active { border-left-color: #27ae60; }
+        .stat-card.pending { border-left-color: #f39c12; }
+        .stat-card.suspended { border-left-color: #e74c3c; }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        /* 検索・フィルター */
+        .controls-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 企業テーブル */
+        .companies-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .companies-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .companies-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .companies-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .companies-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .company-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .company-details p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-suspended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* アクションボタン */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-suspend {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-activate {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 1200px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main,
+            .breadcrumb-list {
+                padding: 0 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companies-table {
+                font-size: 0.9rem;
+            }
+
+            .companies-table th,
+            .companies-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: white; font-weight: 600;">システム管理者</span>
+                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+        <ul class="breadcrumb-list">
+            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
+            <li>›</li>
+            <li class="breadcrumb-current">企業アカウント管理</li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">🏢 企業アカウント管理</h1>
+            <p class="page-subtitle">登録企業の管理・監督・統制</p>
+        </div>
+
+        <!-- 統計情報 -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-icon">🏢</div>
+                <span class="stat-number" id="totalCompanies">12</span>
+                <div class="stat-label">総企業数</div>
+            </div>
+            
+            <div class="stat-card active">
+                <div class="stat-icon">✅</div>
+                <span class="stat-number" id="activeCompanies">10</span>
+                <div class="stat-label">活動中</div>
+            </div>
+            
+            <div class="stat-card pending">
+                <div class="stat-icon">⏳</div>
+                <span class="stat-number" id="pendingCompanies">1</span>
+                <div class="stat-label">審査待ち</div>
+            </div>
+            
+            <div class="stat-card suspended">
+                <div class="stat-icon">⚠️</div>
+                <span class="stat-number" id="suspendedCompanies">1</span>
+                <div class="stat-label">停止中</div>
+            </div>
+        </div>
+
+        <!-- 検索・フィルター -->
+        <div class="controls-section">
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label class="form-label">企業名・キーワード検索</label>
+                    <input type="text" class="form-input" placeholder="企業名、担当者名、メールアドレスなど..." id="searchInput">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ステータス</label>
+                    <select class="form-select" id="statusFilter">
+                        <option value="">すべて</option>
+                        <option value="active">活動中</option>
+                        <option value="pending">審査待ち</option>
+                        <option value="suspended">停止中</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">企業種別</label>
+                    <select class="form-select" id="typeFilter">
+                        <option value="">すべて</option>
+                        <option value="特許事務所">特許事務所</option>
+                        <option value="法律事務所">法律事務所</option>
+                        <option value="一般企業">一般企業</option>
+                    </select>
+                </div>
+                
+                <button class="search-btn" onclick="searchCompanies()">
+                    🔍 検索
+                </button>
+            </div>
+        </div>
+
+        <!-- 企業一覧 -->
+        <div class="companies-section">
+            <h2 class="section-title">
+                🏢 企業一覧
+            </h2>
+            
+            <table class="companies-table" id="companiesTable">
+                <thead>
+                    <tr>
+                        <th>企業情報</th>
+                        <th>登録日</th>
+                        <th>求人数</th>
+                        <th>ステータス</th>
+                        <th>最終ログイン</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody id="companiesTableBody">
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <div class="company-logo">A</div>
+                                <div class="company-details">
+                                    <h4>特許事務所ABC</h4>
+                                    <p>contact@abc-patent.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>2024-12-15</td>
+                        <td>5</td>
+                        <td><span class="status-badge status-active">活動中</span></td>
+                        <td>2025-08-09 14:30</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-view" onclick="viewCompany(1)" title="詳細表示">
+                                    👁️ 詳細
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editCompany(1)" title="編集">
+                                    ✏️ 編集
+                                </button>
+                                <button class="action-btn btn-suspend" onclick="suspendCompany(1)" title="停止">
+                                    ⏸️ 停止
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <div class="company-logo">X</div>
+                                <div class="company-details">
+                                    <h4>株式会社XYZ知財部</h4>
+                                    <p>ip@xyz-corp.co.jp</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>2024-11-20</td>
+                        <td>3</td>
+                        <td><span class="status-badge status-active">活動中</span></td>
+                        <td>2025-08-08 10:15</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-view" onclick="viewCompany(2)">
+                                    👁️ 詳細
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editCompany(2)">
+                                    ✏️ 編集
+                                </button>
+                                <button class="action-btn btn-suspend" onclick="suspendCompany(2)">
+                                    ⏸️ 停止
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <div class="company-logo">G</div>
+                                <div class="company-details">
+                                    <h4>グローバル特許事務所</h4>
+                                    <p>info@global-patent.jp</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>2025-08-05</td>
+                        <td>0</td>
+                        <td><span class="status-badge status-pending">審査待ち</span></td>
+                        <td>-</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-view" onclick="viewCompany(3)">
+                                    👁️ 詳細
+                                </button>
+                                <button class="action-btn btn-activate" onclick="approveCompany(3)">
+                                    ✅ 承認
+                                </button>
+                                <button class="action-btn btn-suspend" onclick="rejectCompany(3)">
+                                    ❌ 拒否
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="company-info">
+                                <div class="company-logo">T</div>
+                                <div class="company-details">
+                                    <h4>テスト法律事務所</h4>
+                                    <p>test@test-law.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>2024-10-01</td>
+                        <td>2</td>
+                        <td><span class="status-badge status-suspended">停止中</span></td>
+                        <td>2024-12-20 16:45</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-view" onclick="viewCompany(4)">
+                                    👁️ 詳細
+                                </button>
+                                <button class="action-btn btn-activate" onclick="activateCompany(4)">
+                                    ▶️ 再開
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 企業詳細モーダル -->
+    <div id="companyDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">企業詳細情報</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="companyDetailContent">
+                <!-- 動的に生成される詳細情報 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 企業管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('企業アカウント管理画面が読み込まれました');
+            checkSystemAuthentication();
+            updateStats();
+        });
+
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+
+        // 統計更新
+        function updateStats() {
+            const companies = getCompaniesData();
+            
+            document.getElementById('totalCompanies').textContent = companies.length;
+            document.getElementById('activeCompanies').textContent = companies.filter(c => c.status === 'active').length;
+            document.getElementById('pendingCompanies').textContent = companies.filter(c => c.status === 'pending').length;
+            document.getElementById('suspendedCompanies').textContent = companies.filter(c => c.status === 'suspended').length;
+        }
+
+        // 企業データ取得（モック）
+        function getCompaniesData() {
+            return [
+                { id: 1, name: '特許事務所ABC', email: 'contact@abc-patent.com', status: 'active', jobs: 5, lastLogin: '2025-08-09 14:30' },
+                { id: 2, name: '株式会社XYZ知財部', email: 'ip@xyz-corp.co.jp', status: 'active', jobs: 3, lastLogin: '2025-08-08 10:15' },
+                { id: 3, name: 'グローバル特許事務所', email: 'info@global-patent.jp', status: 'pending', jobs: 0, lastLogin: '-' },
+                { id: 4, name: 'テスト法律事務所', email: 'test@test-law.com', status: 'suspended', jobs: 2, lastLogin: '2024-12-20 16:45' }
+            ];
+        }
+
+        // 企業検索
+        function searchCompanies() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            
+            const rows = document.querySelectorAll('#companiesTableBody tr');
+            
+            rows.forEach(row => {
+                const companyName = row.querySelector('.company-details h4').textContent.toLowerCase();
+                const companyEmail = row.querySelector('.company-details p').textContent.toLowerCase();
+                const companyStatus = row.querySelector('.status-badge').textContent.toLowerCase();
+                
+                const searchMatch = !search || companyName.includes(search) || companyEmail.includes(search);
+                const statusMatch = !status || companyStatus.includes(status);
+                
+                if (searchMatch && statusMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            showNotification('検索を実行しました', 'info');
+        }
+
+        // 企業詳細表示
+        function viewCompany(companyId) {
+            const companies = getCompaniesData();
+            const company = companies.find(c => c.id === companyId);
+            
+            if (!company) return;
+
+            const content = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3>基本情報</h3>
+                        <p><strong>企業名:</strong> ${company.name}</p>
+                        <p><strong>メール:</strong> ${company.email}</p>
+                        <p><strong>ステータス:</strong> ${company.status}</p>
+                        <p><strong>求人数:</strong> ${company.jobs}件</p>
+                    </div>
+                    <div>
+                        <h3>活動状況</h3>
+                        <p><strong>最終ログイン:</strong> ${company.lastLogin}</p>
+                        <p><strong>月間ビュー:</strong> ${Math.floor(Math.random() * 1000) + 500}回</p>
+                        <p><strong>応募受付:</strong> ${Math.floor(Math.random() * 50) + 10}件</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <h3>システムログ</h3>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem;">
+                        2025-08-09 14:30:15 - ログイン成功<br>
+                        2025-08-09 14:32:20 - 求人投稿作成<br>
+                        2025-08-08 10:15:30 - 求人編集<br>
+                        2025-08-07 16:45:10 - ログアウト
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('companyDetailContent').innerHTML = content;
+            document.getElementById('companyDetailModal').style.display = 'block';
+        }
+
+        // 企業編集
+        function editCompany(companyId) {
+            showNotification('企業編集機能は開発中です', 'info');
+        }
+
+        // 企業停止
+        function suspendCompany(companyId) {
+            if (!confirm('この企業アカウントを停止しますか？')) return;
+            
+            showNotification('企業アカウントを停止しました', 'warning');
+            logSystemEvent(`企業停止: ID=${companyId}`, 'SECURITY');
+        }
+
+        // 企業承認
+        function approveCompany(companyId) {
+            if (!confirm('この企業アカウントを承認しますか？')) return;
+            
+            showNotification('企業アカウントを承認しました', 'success');
+            logSystemEvent(`企業承認: ID=${companyId}`, 'SECURITY');
+        }
+
+        // 企業拒否
+        function rejectCompany(companyId) {
+            if (!confirm('この企業アカウントを拒否しますか？')) return;
+            
+            showNotification('企業アカウントを拒否しました', 'error');
+            logSystemEvent(`企業拒否: ID=${companyId}`, 'SECURITY');
+        }
+
+        // 企業再開
+        function activateCompany(companyId) {
+            if (!confirm('この企業アカウントを再開しますか？')) return;
+            
+            showNotification('企業アカウントを再開しました', 'success');
+            logSystemEvent(`企業再開: ID=${companyId}`, 'SECURITY');
+        }
+
+        // モーダル閉じる
+        function closeModal() {
+            document.getElementById('companyDetailModal').style.display = 'none';
+        }
+
+        // システムイベントログ
+        function logSystemEvent(action, level) {
+            console.log(`🛡️ [${level}] ${new Date().toLocaleString()}: ${action}`);
+        }
+
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+
+            const colors = {
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'warning': '#f39c12',
+                'info': '#3498db'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // モーダル外クリックで閉じる
+        window.onclick = function(event) {
+            const modal = document.getElementById('companyDetailModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        console.log('🏢 Patent Hub 企業アカウント管理 - 初期化完了');
+    </script>
+</body>
+</html>

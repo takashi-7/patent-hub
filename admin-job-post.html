@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求人投稿 | Patent Hub 企業管理画面</title>
+    <meta name="description" content="Patent Hub 企業管理画面 - 新しい求人の投稿・編集">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 管理画面専用スタイル */
+        .admin-body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（共通） */
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #1e3c72;
+        }
+        
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        /* メインコンテンツ */
+        .admin-main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .preview-btn {
+            background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .preview-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+        }
+        
+        /* フォームコンテナ */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-label.required::after {
+            content: ' *';
+            color: #dc3545;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-textarea.large {
+            min-height: 200px;
+        }
+        
+        .form-help {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        
+        /* チェックボックス・ラジオボタン */
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .checkbox-item input, .radio-item input {
+            width: auto;
+            margin: 0;
+        }
+        
+        /* 年収入力 */
+        .salary-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .salary-inputs .form-input {
+            width: 120px;
+        }
+        
+        /* タグ入力 */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag-item {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tag-remove {
+            background: none;
+            border: none;
+            color: #1565c0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .tag-remove:hover {
+            background: #1565c0;
+            color: white;
+        }
+        
+        .tag-input {
+            border: 1px dashed #ccc;
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 8px;
+            width: 150px;
+        }
+        
+        /* フォームアクション */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+            margin-top: 2rem;
+        }
+        
+        .form-btn {
+            padding: 0.875rem 2rem;
+            border: 2px solid;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .form-btn.secondary {
+            background: white;
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+        
+        .form-btn.secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .form-btn.primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-color: #1e3c72;
+        }
+        
+        .form-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.3);
+        }
+        
+        .form-btn.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .form-btn.success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* プレビューモーダル */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .preview-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .preview-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+        
+        .preview-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .preview-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .preview-close:hover {
+            background: #f8f9fa;
+        }
+        
+        .preview-body {
+            padding: 2rem;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .admin-header .container,
+            .admin-main {
+                padding: 0 1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .salary-inputs {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .admin-nav {
+                display: none;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .preview-modal {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <a href="index.html" class="admin-logo" style="text-decoration: none; color: inherit;">
+                    <div class="admin-logo-icon">🏢</div>
+                    <span>Patent Hub 管理画面</span>
+                </a>
+                <a href="index.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    🏠 ホームに戻る
+                </a>
+            </div>
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">ダッシュボード</a>
+                <a href="admin-jobs.html" class="nav-link">求人管理</a>
+                <a href="admin-applications.html" class="nav-link">応募者管理</a>
+                <a href="admin-company.html" class="nav-link">企業情報</a>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">
+                📝 求人投稿
+            </h1>
+            <button class="preview-btn" onclick="showPreview()">
+                👁️ プレビュー
+            </button>
+        </div>
+
+        <!-- フォーム -->
+        <form class="form-container" id="jobPostForm">
+            <!-- 基本情報 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    📋 基本情報
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required">求人タイトル</label>
+                        <input type="text" class="form-input" id="jobTitle" required
+                               placeholder="例: 特許技術者（機械・電気）">
+                        <div class="form-help">応募者に分かりやすい職種名を入力してください</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">職種カテゴリ</label>
+                        <select class="form-select" id="jobCategory" required>
+                            <option value="">カテゴリを選択</option>
+                            <option value="特許技術者">特許技術者</option>
+                            <option value="弁理士">弁理士</option>
+                            <option value="知財翻訳者">知財翻訳者</option>
+                            <option value="企業知財担当">企業知財担当</option>
+                            <option value="知財事務">知財事務</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required">雇用形態</label>
+                        <select class="form-select" id="employmentType" required>
+                            <option value="">雇用形態を選択</option>
+                            <option value="正社員">正社員</option>
+                            <option value="契約社員">契約社員</option>
+                            <option value="派遣社員">派遣社員</option>
+                            <option value="パート・アルバイト">パート・アルバイト</option>
+                            <option value="業務委託">業務委託</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">経験レベル</label>
+                        <select class="form-select" id="experienceLevel" required>
+                            <option value="">経験レベルを選択</option>
+                            <option value="未経験歓迎">未経験歓迎</option>
+                            <option value="経験者優遇">経験者優遇</option>
+                            <option value="管理職候補">管理職候補</option>
+                            <option value="エキスパート">エキスパート</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 勤務条件 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    🏢 勤務条件
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required">勤務地</label>
+                        <input type="text" class="form-input" id="workLocation" required
+                               placeholder="例: 東京都港区赤坂3-21-16">
+                        <div class="form-help">最寄駅からのアクセスも記載してください</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">リモートワーク</label>
+                        <select class="form-select" id="remoteWork">
+                            <option value="不可">リモートワーク不可</option>
+                            <option value="一部可能">一部リモート可能</option>
+                            <option value="完全リモート可">完全リモート可能</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required">年収（万円）</label>
+                        <div class="salary-inputs">
+                            <input type="number" class="form-input" id="salaryMin" required
+                                   placeholder="400" min="300" max="2000">
+                            <span>万円 〜</span>
+                            <input type="number" class="form-input" id="salaryMax" required
+                                   placeholder="800" min="300" max="2000">
+                            <span>万円</span>
+                        </div>
+                        <div class="form-help">年収レンジを入力してください</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">勤務時間</label>
+                        <input type="text" class="form-input" id="workingHours"
+                               placeholder="例: 9:00-18:00（休憩1時間）">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 仕事内容 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    ⚙️ 仕事内容
+                </h2>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label required">職務概要</label>
+                        <textarea class="form-textarea" id="jobSummary" required
+                                  placeholder="この求人の職務内容を簡潔に説明してください..."></textarea>
+                        <div class="form-help">応募者が理解しやすいよう、具体的に記載してください</div>
+                    </div>
+                </div>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label required">具体的な業務内容</label>
+                        <textarea class="form-textarea large" id="jobDetails" required
+                                  placeholder="- 特許明細書の作成&#10;- 先行技術調査&#10;- 中間処理対応&#10;- クライアント打ち合わせ&#10;など、具体的な業務を箇条書きで記載してください..."></textarea>
+                        <div class="form-help">日常的な業務内容を詳しく記載してください</div>
+                    </div>
+                </div>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label">扱う技術分野</label>
+                        <input type="text" class="form-input" id="techFieldsInput"
+                               placeholder="技術分野を入力してEnterキーで追加">
+                        <div class="tags-container" id="techFieldsTags">
+                            <!-- タグはJavaScriptで動的に生成 -->
+                        </div>
+                        <div class="form-help">機械工学、電気電子、化学、バイオテクノロジーなど</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 応募要件 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    ✅ 応募要件
+                </h2>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label required">必須要件</label>
+                        <textarea class="form-textarea" id="requiredSkills" required
+                                  placeholder="- 機械工学または電気工学系の学位&#10;- 基本的なPCスキル&#10;- 日本語ネイティブレベル&#10;など、必須条件を箇条書きで記載してください..."></textarea>
+                        <div class="form-help">応募の最低条件を明記してください</div>
+                    </div>
+                </div>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label">歓迎要件</label>
+                        <textarea class="form-textarea" id="preferredSkills"
+                                  placeholder="- 特許事務所での勤務経験&#10;- TOEIC 600点以上&#10;- 弁理士試験短答式合格&#10;など、あれば歓迎する条件を記載してください..."></textarea>
+                        <div class="form-help">あれば歓迎する条件を記載してください</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 企業・職場情報 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    🌟 企業・職場情報
+                </h2>
+                
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label class="form-label">職場の魅力・特徴</label>
+                        <textarea class="form-textarea" id="workplaceFeatures"
+                                  placeholder="職場の雰囲気、成長機会、福利厚生など、応募者にアピールしたい点を記載してください..."></textarea>
+                        <div class="form-help">応募者が働きたいと思える魅力的な点を記載してください</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">福利厚生</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="社会保険完備">
+                                <span>社会保険完備</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="交通費支給">
+                                <span>交通費支給</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="残業手当">
+                                <span>残業手当</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="賞与あり">
+                                <span>賞与あり</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="退職金制度">
+                                <span>退職金制度</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="benefits" value="研修制度">
+                                <span>研修制度</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 公開設定 -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    🔧 公開設定
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">公開状態</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="publishStatus" value="draft" checked>
+                                <span>下書き（非公開）</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="publishStatus" value="published">
+                                <span>公開</span>
+                            </label>
+                        </div>
+                        <div class="form-help">下書きで保存後、内容確認してから公開できます</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">掲載期限</label>
+                        <input type="date" class="form-input" id="publishUntil">
+                        <div class="form-help">指定しない場合は無期限で掲載されます</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- フォームアクション -->
+            <div class="form-actions">
+                <button type="button" class="form-btn secondary" onclick="saveDraft()">
+                    📝 下書き保存
+                </button>
+                <button type="button" class="form-btn primary" onclick="showPreview()">
+                    👁️ プレビュー
+                </button>
+                <button type="submit" class="form-btn success">
+                    🚀 公開する
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- プレビューモーダル -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3 class="preview-title">求人プレビュー</h3>
+                <button class="preview-close" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="preview-body" id="previewBody">
+                <!-- プレビュー内容はJavaScriptで生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 求人投稿機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('求人投稿画面が読み込まれました');
+            
+            // 認証チェック
+            checkAuthentication();
+            
+            // ユーザー情報を読み込み
+            loadUserInfo();
+            
+            // タグ入力機能を初期化
+            initializeTagInput();
+            
+            // フォーム送信処理
+            initializeFormSubmission();
+            
+            // デフォルトの掲載期限を設定（30日後）
+            setDefaultPublishUntil();
+            
+            console.log('✅ 求人投稿画面の初期化が完了しました');
+        });
+        
+        // タグ入力機能の初期化
+        function initializeTagInput() {
+            const tagInput = document.getElementById('techFieldsInput');
+            const tagsContainer = document.getElementById('techFieldsTags');
+            let tags = [];
+            
+            tagInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = this.value.trim();
+                    if (value && !tags.includes(value)) {
+                        tags.push(value);
+                        updateTagsDisplay();
+                        this.value = '';
+                    }
+                }
+            });
+            
+            function updateTagsDisplay() {
+                tagsContainer.innerHTML = tags.map(tag => `
+                    <div class="tag-item">
+                        <span>${tag}</span>
+                        <button type="button" class="tag-remove" onclick="removeTag('${tag}')">×</button>
+                    </div>
+                `).join('');
+            }
+            
+            // タグ削除機能をグローバルに登録
+            window.removeTag = function(tagToRemove) {
+                tags = tags.filter(tag => tag !== tagToRemove);
+                updateTagsDisplay();
+            };
+            
+            // タグ配列を取得する機能
+            window.getTechFields = function() {
+                return tags;
+            };
+        }
+        
+        // デフォルトの掲載期限を設定
+        function setDefaultPublishUntil() {
+            const today = new Date();
+            today.setDate(today.getDate() + 30); // 30日後
+            const dateString = today.toISOString().split('T')[0];
+            document.getElementById('publishUntil').value = dateString;
+        }
+        
+        // プレビュー表示
+        function showPreview() {
+            const formData = collectFormData();
+            const previewBody = document.getElementById('previewBody');
+            
+            // 求人詳細ページのような形式でプレビューを生成
+            previewBody.innerHTML = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <!-- ヘッダー情報 -->
+                    <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${formData.jobTitle || '求人タイトルが未入力'}</h2>
+                        <p style="margin: 0; opacity: 0.9;">${formData.companyName || '企業名'}</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">
+                                💰 ${formData.salaryMin && formData.salaryMax ? `${formData.salaryMin}-${formData.salaryMax}万円` : '年収未設定'}
+                            </span>
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">
+                                📍 ${formData.workLocation || '勤務地未設定'}
+                            </span>
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">
+                                ⭐ ${formData.experienceLevel || '経験レベル未設定'}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- 仕事内容 -->
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">📋 仕事内容</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="color: #495057;">職務概要</h4>
+                            <p style="color: #6c757d; line-height: 1.6;">${formData.jobSummary || '職務概要が未入力です'}</p>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="color: #495057;">具体的な業務内容</h4>
+                            <div style="color: #6c757d; line-height: 1.6; white-space: pre-line;">${formData.jobDetails || '業務内容が未入力です'}</div>
+                        </div>
+                        ${formData.techFields.length > 0 ? `
+                        <div>
+                            <h4 style="color: #495057;">扱う技術分野</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                ${formData.techFields.map(field => `<span style="background: #e3f2fd; color: #1565c0; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">${field}</span>`).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- 応募要件 -->
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">✅ 応募要件</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="color: #495057;">必須要件</h4>
+                            <div style="color: #6c757d; line-height: 1.6; white-space: pre-line;">${formData.requiredSkills || '必須要件が未入力です'}</div>
+                        </div>
+                        ${formData.preferredSkills ? `
+                        <div>
+                            <h4 style="color: #495057;">歓迎要件</h4>
+                            <div style="color: #6c757d; line-height: 1.6; white-space: pre-line;">${formData.preferredSkills}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- 勤務条件 -->
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">🏢 勤務条件</h3>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div><strong>雇用形態:</strong> ${formData.employmentType || '未設定'}</div>
+                            <div><strong>勤務地:</strong> ${formData.workLocation || '未設定'}</div>
+                            <div><strong>勤務時間:</strong> ${formData.workingHours || '未設定'}</div>
+                            <div><strong>年収:</strong> ${formData.salaryMin && formData.salaryMax ? `${formData.salaryMin}-${formData.salaryMax}万円` : '未設定'}</div>
+                            <div><strong>リモートワーク:</strong> ${formData.remoteWork || '不可'}</div>
+                            ${formData.benefits.length > 0 ? `<div><strong>福利厚生:</strong> ${formData.benefits.join('、')}</div>` : ''}
+                        </div>
+                    </div>
+                    
+                    ${formData.workplaceFeatures ? `
+                    <!-- 職場の魅力 -->
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">🌟 職場の魅力</h3>
+                        <div style="color: #6c757d; line-height: 1.6; white-space: pre-line;">${formData.workplaceFeatures}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+        
+        // プレビューを閉じる
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+        
+        // フォームデータの収集
+        function collectFormData() {
+            const benefits = Array.from(document.querySelectorAll('input[name="benefits"]:checked'))
+                .map(cb => cb.value);
+            
+            const publishStatus = document.querySelector('input[name="publishStatus"]:checked')?.value || 'draft';
+            
+            return {
+                jobTitle: document.getElementById('jobTitle').value,
+                jobCategory: document.getElementById('jobCategory').value,
+                employmentType: document.getElementById('employmentType').value,
+                experienceLevel: document.getElementById('experienceLevel').value,
+                workLocation: document.getElementById('workLocation').value,
+                remoteWork: document.getElementById('remoteWork').value,
+                salaryMin: document.getElementById('salaryMin').value,
+                salaryMax: document.getElementById('salaryMax').value,
+                workingHours: document.getElementById('workingHours').value,
+                jobSummary: document.getElementById('jobSummary').value,
+                jobDetails: document.getElementById('jobDetails').value,
+                techFields: window.getTechFields ? window.getTechFields() : [],
+                requiredSkills: document.getElementById('requiredSkills').value,
+                preferredSkills: document.getElementById('preferredSkills').value,
+                workplaceFeatures: document.getElementById('workplaceFeatures').value,
+                benefits: benefits,
+                publishStatus: publishStatus,
+                publishUntil: document.getElementById('publishUntil').value,
+                companyName: getCompanyName(),
+                createdAt: new Date().toISOString()
+            };
+        }
+        
+        // 企業名を取得
+        function getCompanyName() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                return session.companyName;
+            }
+            return '企業名';
+        }
+        
+        // 下書き保存
+        function saveDraft() {
+            const formData = collectFormData();
+            formData.publishStatus = 'draft';
+            
+            // LocalStorageに保存（実際のサイトではAPIに送信）
+            const jobId = 'DRAFT_' + Date.now();
+            localStorage.setItem(`job_draft_${jobId}`, JSON.stringify(formData));
+            
+            showNotification('下書きを保存しました', 'success');
+            console.log('下書き保存:', formData);
+        }
+        
+        // フォーム送信の初期化
+        function initializeFormSubmission() {
+            document.getElementById('jobPostForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    publishJob();
+                }
+            });
+        }
+        
+        // フォームバリデーション
+        function validateForm() {
+            const requiredFields = [
+                'jobTitle', 'jobCategory', 'employmentType', 'experienceLevel',
+                'workLocation', 'salaryMin', 'salaryMax', 'jobSummary', 
+                'jobDetails', 'requiredSkills'
+            ];
+            
+            let isValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e9ecef';
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('必須項目を入力してください', 'error');
+            }
+            
+            return isValid;
+        }
+        
+        // 求人を公開
+        function publishJob() {
+            const formData = collectFormData();
+            formData.publishStatus = 'published';
+            formData.publishedAt = new Date().toISOString();
+            
+            // LocalStorageに保存（実際のサイトではAPIに送信）
+            const jobId = 'JOB_' + Date.now();
+            localStorage.setItem(`job_${jobId}`, JSON.stringify(formData));
+            
+            // 成功メッセージ
+            showNotification('求人を公開しました！', 'success');
+            
+            // 2秒後にダッシュボードにリダイレクト
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 2000);
+            
+            console.log('求人公開:', formData);
+        }
+        
+        // 通知表示機能
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            
+            const colors = {
+                'success': '#28a745',
+                'error': '#dc3545',
+                'info': '#17a2b8'
+            };
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 認証チェック
+        function checkAuthentication() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        }
+        
+        // ユーザー情報を読み込み
+        function loadUserInfo() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            const firstChar = session.companyName.charAt(0);
+            document.getElementById('userAvatar').textContent = firstChar;
+        }
+        
+        // ログアウト
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                localStorage.removeItem('admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreview();
+            }
+        });
+        
+        console.log('📝 Patent Hub 求人投稿画面 - 初期化完了');
+    </script>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

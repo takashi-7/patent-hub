@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">ニュース詳細 | Patent Hub</title>
+    <meta name="description" content="知的財産業界の最新ニュース詳細情報">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ニュース詳細ページ専用スタイル */
+        .news-detail-body {
+            background: #f8f9fa;
+        }
+        
+        /* パンくずナビ */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .breadcrumb nav {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .news-article {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        /* 記事ヘッダー */
+        .article-header {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .news-date {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .news-category {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid #e9ecef;
+        }
+        
+        .news-source {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .priority-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .priority-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .priority-5 { background: #dc3545; }
+        .priority-4 { background: #fd7e14; }
+        .priority-3 { background: #ffc107; }
+        .priority-2 { background: #28a745; }
+        .priority-1 { background: #6c757d; }
+        
+        .article-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+        
+        .article-summary {
+            font-size: 1.2rem;
+            color: #495057;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        /* 記事本文 */
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .article-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .article-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-content ul {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .article-content li {
+            margin-bottom: 0.8rem;
+        }
+        
+        /* 記事アクション */
+        .article-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .share-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .share-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+        
+        .share-btn.facebook {
+            background: #1877f2;
+            color: white;
+        }
+        
+        .share-btn.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .favorite-btn {
+            background: none;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .favorite-btn:hover,
+        .favorite-btn.active {
+            border-color: #e74c3c;
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* 関連記事 */
+        .related-news {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .related-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .related-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .related-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .related-date {
+            flex: 0 0 60px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .related-content {
+            flex: 1;
+        }
+        
+        .related-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .related-item-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .related-item-title a:hover {
+            color: #1e3c72;
+        }
+        
+        .related-summary {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* ナビゲーション */
+        .news-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1rem;
+            }
+            
+            .news-article {
+                padding: 2rem;
+            }
+            
+            .article-title {
+                font-size: 1.8rem;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .article-actions {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .share-buttons {
+                order: 2;
+            }
+            
+            .related-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .related-date {
+                flex: none;
+                width: 80px;
+            }
+        }
+    </style>
+</head>
+<body class="news-detail-body">
+    <!-- ヘッダー（共通） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link active">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビ -->
+    <div class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">ホーム</a> > 
+                <a href="news.html">ニュース</a> > 
+                <span id="breadcrumbTitle">記事詳細</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <article class="news-article">
+            <!-- 記事ヘッダー -->
+            <header class="article-header">
+                <div class="article-meta">
+                    <div class="news-date" id="articleDate">2025年8月9日</div>
+                    <div class="news-category" id="articleCategory">制度改正</div>
+                    <div class="news-source">出典: <span id="articleSource">特許庁</span></div>
+                    <div class="priority-indicator">
+                        <div class="priority-badge priority-5" id="priorityBadge"></div>
+                        <span>重要度: <span id="priorityLevel">5</span>/5</span>
+                    </div>
+                </div>
+                
+                <h1 class="article-title" id="articleTitle">特許庁、AI関連特許の審査基準を改定</h1>
+                
+                <p class="article-summary" id="articleSummary">
+                    人工知能技術の発展に対応し、特許審査基準を見直し。機械学習アルゴリズムや深層学習技術に関する特許要件を明確化。これにより、AI関連の特許出願における審査プロセスがより効率的になることが期待される。
+                </p>
+            </header>
+            
+            <!-- 記事本文 -->
+            <div class="article-content" id="articleContent">
+                <h3>改定の背景</h3>
+                <p>近年のAI技術の急速な発展により、従来の特許審査基準では対応が困難な案件が増加していました。特に機械学習アルゴリズムや深層学習技術に関する特許出願において、その技術的特徴や進歩性の判断基準が明確でないという課題がありました。</p>
+                
+                <h3>主な改定内容</h3>
+                <ul>
+                    <li>AI関連発明の定義の明確化</li>
+                    <li>機械学習アルゴリズムの技術的特徴の評価基準</li>
+                    <li>深層学習技術の進歩性判断基準</li>
+                    <li>AI発明の実施可能要件の具体的指針</li>
+                    <li>AI関連特許の記載要件の詳細化</li>
+                </ul>
+                
+                <h3>業界への影響</h3>
+                <p>この改定により、AI関連の特許出願がより効率的に審査されることが期待されます。特に、スタートアップ企業や研究機関にとって、AI技術の知的財産保護がより確実になることで、イノベーションの促進が期待されています。</p>
+                
+                <p>また、国際的な競争力の観点からも、日本のAI特許制度が他国と比較して遜色ない水準に達することで、海外からの技術投資や共同研究の促進も見込まれます。</p>
+                
+                <h3>今後の展望</h3>
+                <p>特許庁では、今回の改定を受けて、AI関連特許の審査官の専門性向上や、審査プロセスのデジタル化をさらに推進する予定です。また、産業界との連携を強化し、実務に即した運用指針の策定も検討されています。</p>
+            </div>
+            
+            <!-- 記事アクション -->
+            <div class="article-actions">
+                <div class="share-buttons">
+                    <a href="#" class="share-btn twitter" onclick="shareOnTwitter()">
+                        🐦 Twitter
+                    </a>
+                    <a href="#" class="share-btn facebook" onclick="shareOnFacebook()">
+                        📘 Facebook
+                    </a>
+                    <a href="#" class="share-btn linkedin" onclick="shareOnLinkedIn()">
+                        💼 LinkedIn
+                    </a>
+                </div>
+                
+                <button class="favorite-btn" onclick="toggleFavorite()" title="お気に入りに追加">
+                    ♡
+                </button>
+            </div>
+        </article>
+        
+        <!-- ナビゲーション -->
+        <div class="news-navigation">
+            <a href="#" class="nav-btn" id="prevBtn">← 前の記事</a>
+            <a href="news.html" class="nav-btn">📰 ニュース一覧に戻る</a>
+            <a href="#" class="nav-btn" id="nextBtn">次の記事 →</a>
+        </div>
+        
+        <!-- 関連記事 -->
+        <section class="related-news">
+            <h2 class="related-title">🔗 関連記事</h2>
+            
+            <div class="related-item">
+                <div class="related-date">8/8</div>
+                <div class="related-content">
+                    <h3 class="related-item-title">
+                        <a href="news-detail.html?id=news_008">知財高裁、AI生成発明の特許性について判断</a>
+                    </h3>
+                    <p class="related-summary">AIが生成した発明の特許性を巡る初の高裁判断が示される。人間の創作的関与の程度が焦点となる。</p>
+                </div>
+            </div>
+            
+            <div class="related-item">
+                <div class="related-date">8/3</div>
+                <div class="related-content">
+                    <h3 class="related-item-title">
+                        <a href="news-detail.html?id=news_007">国際特許出願、日本企業の件数増加</a>
+                    </h3>
+                    <p class="related-summary">WIPOの統計によると、日本企業による国際特許出願（PCT出願）が前年比8%増加。特にAI分野での出願が顕著。</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ニュース詳細機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('ニュース詳細ページが読み込まれました');
+            
+            // URLパラメータからニュースIDを取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id');
+            
+            if (newsId) {
+                loadNewsDetail(newsId);
+            } else {
+                // デフォルトニュースを表示
+                loadNewsDetail('news_001');
+            }
+        });
+        
+        // ニュースデータ
+        const newsData = {
+            'news_001': {
+                title: '特許庁、AI関連特許の審査基準を改定',
+                category: '制度改正',
+                source: '特許庁',
+                date: '2025-08-09',
+                priority: 5,
+                summary: '人工知能技術の発展に対応し、特許審査基準を見直し。機械学習アルゴリズムや深層学習技術に関する特許要件を明確化。これにより、AI関連の特許出願における審査プロセスがより効率的になることが期待される。',
+                content: `
+                    <h3>改定の背景</h3>
+                    <p>近年のAI技術の急速な発展により、従来の特許審査基準では対応が困難な案件が増加していました。特に機械学習アルゴリズムや深層学習技術に関する特許出願において、その技術的特徴や進歩性の判断基準が明確でないという課題がありました。</p>
+                    
+                    <h3>主な改定内容</h3>
+                    <ul>
+                        <li>AI関連発明の定義の明確化</li>
+                        <li>機械学習アルゴリズムの技術的特徴の評価基準</li>
+                        <li>深層学習技術の進歩性判断基準</li>
+                        <li>AI発明の実施可能要件の具体的指針</li>
+                        <li>AI関連特許の記載要件の詳細化</li>
+                    </ul>
+                    
+                    <h3>業界への影響</h3>
+                    <p>この改定により、AI関連の特許出願がより効率的に審査されることが期待されます。特に、スタートアップ企業や研究機関にとって、AI技術の知的財産保護がより確実になることで、イノベーションの促進が期待されています。</p>
+                    
+                    <p>また、国際的な競争力の観点からも、日本のAI特許制度が他国と比較して遜色ない水準に達することで、海外からの技術投資や共同研究の促進も見込まれます。</p>
+                    
+                    <h3>今後の展望</h3>
+                    <p>特許庁では、今回の改定を受けて、AI関連特許の審査官の専門性向上や、審査プロセスのデジタル化をさらに推進する予定です。また、産業界との連携を強化し、実務に即した運用指針の策定も検討されています。</p>
+                `
+            },
+            'news_002': {
+                title: '大手製薬会社、新薬特許で訴訟勝利',
+                category: '裁判',
+                source: '東京地裁',
+                date: '2025-08-08',
+                priority: 4,
+                summary: '糖尿病治療薬の特許侵害を巡る訴訟で、東京地裁が原告の主張を認定。ジェネリック医薬品の販売差し止めを命令。この判決は医薬品業界における特許権保護の重要性を再確認するものとなった。',
+                content: `
+                    <h3>訴訟の概要</h3>
+                    <p>今回の訴訟は、大手製薬会社A社が開発した糖尿病治療薬の特許権を巡るものでした。B社が製造・販売するジェネリック医薬品が、A社の特許技術を侵害しているとして、A社がB社に対して販売差し止めと損害賠償を求めていました。</p>
+                    
+                    <h3>争点</h3>
+                    <ul>
+                        <li>特許技術の技術的範囲の解釈</li>
+                        <li>ジェネリック医薬品の製法が特許権を侵害するか</li>
+                        <li>特許の有効性に関する争点</li>
+                    </ul>
+                    
+                    <h3>判決内容</h3>
+                    <p>東京地裁は、A社の特許権がB社のジェネリック医薬品によって侵害されていると認定し、B社に対して該当製品の製造・販売差し止めを命じました。また、損害賠償についても一部認容する判決を下しました。</p>
+                    
+                    <h3>業界への影響</h3>
+                    <p>この判決は、医薬品業界における特許権保護の重要性を改めて示すものとなりました。特に、ジェネリック医薬品メーカーにとっては、特許権侵害リスクの慎重な検討がより重要になることが予想されます。</p>
+                `
+            }
+        };
+        
+        // ニュース詳細を読み込み
+        function loadNewsDetail(newsId) {
+            const news = newsData[newsId];
+            
+            if (!news) {
+                // ニュースが見つからない場合
+                document.getElementById('articleTitle').textContent = 'ニュースが見つかりません';
+                document.getElementById('articleContent').innerHTML = '<p>指定された記事は存在しないか、削除されています。</p>';
+                return;
+            }
+            
+            // ページタイトル更新
+            document.getElementById('pageTitle').textContent = `${news.title} | Patent Hub`;
+            document.getElementById('breadcrumbTitle').textContent = news.title;
+            
+            // 記事データを設定
+            document.getElementById('articleDate').textContent = formatDate(news.date);
+            document.getElementById('articleCategory').textContent = news.category;
+            document.getElementById('articleSource').textContent = news.source;
+            document.getElementById('articleTitle').textContent = news.title;
+            document.getElementById('articleSummary').textContent = news.summary;
+            document.getElementById('articleContent').innerHTML = news.content;
+            
+            // 重要度設定
+            document.getElementById('priorityLevel').textContent = news.priority;
+            const priorityBadge = document.getElementById('priorityBadge');
+            priorityBadge.className = `priority-badge priority-${news.priority}`;
+        }
+        
+        // 日付フォーマット
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}年${month}月${day}日`;
+        }
+        
+        // お気に入り機能
+        function toggleFavorite() {
+            const btn = event.target;
+            btn.classList.toggle('active');
+            
+            // URLパラメータからニュースIDを取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id') || 'news_001';
+            
+            // ローカルストレージに保存
+            let favorites = JSON.parse(localStorage.getItem('favorite_news') || '[]');
+            
+            if (btn.classList.contains('active')) {
+                btn.textContent = '♥';
+                if (!favorites.includes(newsId)) {
+                    favorites.push(newsId);
+                }
+            } else {
+                btn.textContent = '♡';
+                favorites = favorites.filter(id => id !== newsId);
+            }
+            
+            localStorage.setItem('favorite_news', JSON.stringify(favorites));
+        }
+        
+        // お気に入り状態の復元
+        function restoreFavoriteState() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id') || 'news_001';
+            const favorites = JSON.parse(localStorage.getItem('favorite_news') || '[]');
+            
+            if (favorites.includes(newsId)) {
+                const btn = document.querySelector('.favorite-btn');
+                btn.classList.add('active');
+                btn.textContent = '♥';
+            }
+        }
+        
+        // ページ読み込み後にお気に入り状態を復元
+        setTimeout(restoreFavoriteState, 100);
+        
+        // SNSシェア機能
+        function shareOnTwitter() {
+            const title = document.getElementById('articleTitle').textContent;
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(`${title} - Patent Hub`);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+        
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+        
+        function shareOnLinkedIn() {
+            const title = document.getElementById('articleTitle').textContent;
+            const url = encodeURIComponent(window.location.href);
+            const summary = encodeURIComponent(document.getElementById('articleSummary').textContent);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${encodeURIComponent(title)}&summary=${summary}`, '_blank');
+        }
+        
+        console.log('📰 Patent Hub ニュース詳細 - 初期化完了');
+    </script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メンテナンスモード管理 | Patent Hub システム管理</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - メンテナンスモードの設定と管理">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ヘッダー（システム管理者専用テーマ） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .breadcrumb-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #e74c3c;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* 危険警告バナー */
+        .danger-banner {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 3px solid #922b21;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .danger-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ステータスカード */
+        .status-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .status-active {
+            border-left: 4px solid #27ae60;
+        }
+
+        .status-maintenance {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .status-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-description {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        /* セクション */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        /* フォーム */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* ボタン */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 警告チェックボックス */
+        .warning-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+        }
+
+        .warning-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .warning-checkbox label {
+            color: #856404;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* スケジュール */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 履歴テーブル */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main,
+            .breadcrumb-list {
+                padding: 0 1rem;
+            }
+
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .history-table {
+                font-size: 0.9rem;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: white; font-weight: 600;">システム管理者</span>
+                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+        <ul class="breadcrumb-list">
+            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
+            <li>›</li>
+            <li class="breadcrumb-current">メンテナンスモード管理</li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">🔧 メンテナンスモード管理</h1>
+            <p class="page-subtitle">サイト全体のメンテナンス設定と予約管理</p>
+        </div>
+
+        <!-- 危険警告バナー -->
+        <div class="danger-banner">
+            <div class="danger-icon">⚠️</div>
+            <strong>重要な警告</strong><br>
+            メンテナンスモードは Patent Hub サイト全体を停止します。<br>
+            ユーザーアクセス、企業管理機能、すべてのサービスが一時的に利用不可となります。<br>
+            <strong>慎重に操作してください。</strong>
+        </div>
+
+        <!-- 現在のステータス -->
+        <div class="status-card status-active" id="maintenanceStatus">
+            <div class="status-icon">✅</div>
+            <div class="status-text">サイト稼働中</div>
+            <div class="status-description">すべてのサービスが正常に動作しています</div>
+        </div>
+
+        <!-- メンテナンス制御 -->
+        <div class="section">
+            <h2 class="section-title">
+                🔧 メンテナンス制御
+            </h2>
+            
+            <div class="form-group">
+                <label class="form-label">メンテナンス理由</label>
+                <select class="form-select" id="maintenanceReason">
+                    <option value="">理由を選択してください</option>
+                    <option value="database">データベースメンテナンス</option>
+                    <option value="server">サーバーアップデート</option>
+                    <option value="security">セキュリティパッチ適用</option>
+                    <option value="feature">新機能追加・修正</option>
+                    <option value="emergency">緊急メンテナンス</option>
+                    <option value="other">その他</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">メンテナンス内容</label>
+                <textarea class="form-textarea" id="maintenanceDescription" placeholder="メンテナンスの詳細内容を入力してください..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">予想復旧時間</label>
+                <select class="form-select" id="estimatedDuration">
+                    <option value="30min">30分</option>
+                    <option value="1hour">1時間</option>
+                    <option value="2hours">2時間</option>
+                    <option value="4hours">4時間</option>
+                    <option value="8hours">8時間</option>
+                    <option value="unknown">不明</option>
+                </select>
+            </div>
+
+            <div class="warning-checkbox">
+                <input type="checkbox" id="confirmMaintenance">
+                <label for="confirmMaintenance">
+                    ⚠️ メンテナンスモードの影響を理解し、実行する意図を確認しました
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-danger" onclick="activateMaintenance()">
+                    🔧 メンテナンス開始
+                </button>
+                <button class="btn btn-success" onclick="deactivateMaintenance()" style="display: none;" id="deactivateBtn">
+                    ✅ メンテナンス終了
+                </button>
+            </div>
+        </div>
+
+        <!-- 予約メンテナンス -->
+        <div class="section">
+            <h2 class="section-title">
+                📅 予約メンテナンス
+            </h2>
+            
+            <div class="schedule-grid">
+                <div class="form-group">
+                    <label class="form-label">開始日時</label>
+                    <input type="datetime-local" class="form-input" id="scheduleStart">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">終了日時</label>
+                    <input type="datetime-local" class="form-input" id="scheduleEnd">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">予約メンテナンス内容</label>
+                <textarea class="form-textarea" id="scheduleDescription" placeholder="予約メンテナンスの内容を入力してください..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-secondary" onclick="scheduleMaintenanceReminder()">
+                    📅 メンテナンス予約
+                </button>
+            </div>
+        </div>
+
+        <!-- メンテナンス履歴 -->
+        <div class="section">
+            <h2 class="section-title">
+                📋 メンテナンス履歴
+            </h2>
+            
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>実施日時</th>
+                        <th>理由</th>
+                        <th>継続時間</th>
+                        <th>実施者</th>
+                        <th>ステータス</th>
+                    </tr>
+                </thead>
+                <tbody id="maintenanceHistory">
+                    <tr>
+                        <td>2025-08-10 02:00 - 04:30</td>
+                        <td>データベースメンテナンス</td>
+                        <td>2時間30分</td>
+                        <td>システム管理者</td>
+                        <td><span style="color: #27ae60; font-weight: 600;">完了</span></td>
+                    </tr>
+                    <tr>
+                        <td>2025-08-05 01:00 - 03:00</td>
+                        <td>セキュリティパッチ適用</td>
+                        <td>2時間</td>
+                        <td>システム管理者</td>
+                        <td><span style="color: #27ae60; font-weight: 600;">完了</span></td>
+                    </tr>
+                    <tr>
+                        <td>2025-07-28 03:00 - 05:00</td>
+                        <td>新機能追加・修正</td>
+                        <td>2時間</td>
+                        <td>システム管理者</td>
+                        <td><span style="color: #27ae60; font-weight: 600;">完了</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // メンテナンスモード管理機能
+        let isMaintenanceMode = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('メンテナンスモード管理画面が読み込まれました');
+            checkSystemAuthentication();
+            initializeDateInputs();
+        });
+
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+
+        // 日時入力初期化
+        function initializeDateInputs() {
+            const now = new Date();
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            
+            // 予約開始時間：明日の深夜2時に設定
+            tomorrow.setHours(2, 0, 0, 0);
+            document.getElementById('scheduleStart').value = tomorrow.toISOString().slice(0, 16);
+            
+            // 予約終了時間：明日の朝5時に設定
+            tomorrow.setHours(5, 0, 0, 0);
+            document.getElementById('scheduleEnd').value = tomorrow.toISOString().slice(0, 16);
+        }
+
+        // メンテナンス開始
+        function activateMaintenance() {
+            const reason = document.getElementById('maintenanceReason').value;
+            const description = document.getElementById('maintenanceDescription').value.trim();
+            const duration = document.getElementById('estimatedDuration').value;
+            const confirmed = document.getElementById('confirmMaintenance').checked;
+
+            if (!reason) {
+                showNotification('メンテナンス理由を選択してください', 'error');
+                return;
+            }
+
+            if (!description) {
+                showNotification('メンテナンス内容を入力してください', 'error');
+                return;
+            }
+
+            if (!confirmed) {
+                showNotification('確認チェックボックスをチェックしてください', 'error');
+                return;
+            }
+
+            const confirmMessage = `⚠️ PATENT HUB をメンテナンスモードにします
+
+理由: ${reason}
+内容: ${description}
+予想復旧時間: ${duration}
+
+この操作により：
+- 全ユーザーのアクセスが制限されます
+- 企業管理機能が停止します
+- すべてのサービスが一時的に利用不可となります
+
+本当に実行しますか？`;
+
+            if (!confirm(confirmMessage)) return;
+
+            // さらに確認
+            const finalConfirm = prompt('メンテナンスモードを開始するには「MAINTENANCE」と入力してください:');
+            if (finalConfirm !== 'MAINTENANCE') {
+                showNotification('確認テキストが正しくありません', 'error');
+                return;
+            }
+
+            // メンテナンスモード開始
+            isMaintenanceMode = true;
+            updateMaintenanceStatus();
+            
+            showNotification('メンテナンスモードを開始しました', 'warning');
+            logCriticalEvent(`メンテナンスモード開始: ${reason} - ${description}`, 'CRITICAL');
+            
+            // フォームリセット
+            document.getElementById('maintenanceReason').value = '';
+            document.getElementById('maintenanceDescription').value = '';
+            document.getElementById('confirmMaintenance').checked = false;
+            
+            // 履歴に追加
+            addMaintenanceHistory(reason, '開始');
+        }
+
+        // メンテナンス終了
+        function deactivateMaintenance() {
+            if (!confirm('メンテナンスモードを終了し、サイトを通常運用に戻しますか？')) return;
+
+            isMaintenanceMode = false;
+            updateMaintenanceStatus();
+            
+            showNotification('メンテナンスモードを終了しました', 'success');
+            logCriticalEvent('メンテナンスモード終了', 'CRITICAL');
+            
+            // 履歴に追加
+            addMaintenanceHistory('通常運用復旧', '終了');
+        }
+
+        // メンテナンス状況更新
+        function updateMaintenanceStatus() {
+            const statusCard = document.getElementById('maintenanceStatus');
+            const deactivateBtn = document.getElementById('deactivateBtn');
+            
+            if (isMaintenanceMode) {
+                statusCard.className = 'status-card status-maintenance';
+                statusCard.innerHTML = `
+                    <div class="status-icon">🔧</div>
+                    <div class="status-text">メンテナンス中</div>
+                    <div class="status-description">サイトはメンテナンスモードです - ユーザーアクセス制限中</div>
+                `;
+                deactivateBtn.style.display = 'inline-flex';
+            } else {
+                statusCard.className = 'status-card status-active';
+                statusCard.innerHTML = `
+                    <div class="status-icon">✅</div>
+                    <div class="status-text">サイト稼働中</div>
+                    <div class="status-description">すべてのサービスが正常に動作しています</div>
+                `;
+                deactivateBtn.style.display = 'none';
+            }
+        }
+
+        // 予約メンテナンス
+        function scheduleMaintenanceReminder() {
+            const startTime = document.getElementById('scheduleStart').value;
+            const endTime = document.getElementById('scheduleEnd').value;
+            const description = document.getElementById('scheduleDescription').value.trim();
+
+            if (!startTime || !endTime) {
+                showNotification('開始日時と終了日時を入力してください', 'error');
+                return;
+            }
+
+            if (!description) {
+                showNotification('予約メンテナンス内容を入力してください', 'error');
+                return;
+            }
+
+            const startDate = new Date(startTime);
+            const endDate = new Date(endTime);
+
+            if (startDate >= endDate) {
+                showNotification('終了日時は開始日時より後に設定してください', 'error');
+                return;
+            }
+
+            if (startDate <= new Date()) {
+                showNotification('開始日時は現在時刻より後に設定してください', 'error');
+                return;
+            }
+
+            showNotification(`メンテナンス予約を設定しました\n${startDate.toLocaleString()} - ${endDate.toLocaleString()}`, 'success');
+            logCriticalEvent(`メンテナンス予約設定: ${startDate.toLocaleString()} - ${description}`, 'SYSTEM');
+            
+            // フォームリセット
+            document.getElementById('scheduleDescription').value = '';
+        }
+
+        // メンテナンス履歴追加
+        function addMaintenanceHistory(reason, status) {
+            const historyBody = document.getElementById('maintenanceHistory');
+            const now = new Date();
+            const timeString = now.toLocaleString();
+            
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${timeString}</td>
+                <td>${reason}</td>
+                <td>${status === '開始' ? '実行中...' : '完了'}</td>
+                <td>システム管理者</td>
+                <td><span style="color: ${status === '開始' ? '#f39c12' : '#27ae60'}; font-weight: 600;">${status}</span></td>
+            `;
+            
+            historyBody.insertBefore(newRow, historyBody.firstChild);
+        }
+
+        // 重要イベントログ
+        function logCriticalEvent(action, level) {
+            console.log(`🚨 [${level}] ${new Date().toLocaleString()}: ${action}`);
+        }
+
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (isMaintenanceMode) {
+                alert('メンテナンスモード中はログアウトできません。先にメンテナンスを終了してください。');
+                return;
+            }
+            
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+                white-space: pre-line;
+            `;
+
+            const colors = {
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'warning': '#f39c12',
+                'info': '#3498db'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // ページ離脱時の警告（メンテナンスモード中）
+        window.addEventListener('beforeunload', function(e) {
+            if (isMaintenanceMode) {
+                const message = 'メンテナンスモード中です。ページを離れる前にメンテナンスを終了してください。';
+                e.returnValue = message;
+                return message;
+            }
+        });
+
+        console.log('🔧 Patent Hub メンテナンスモード管理 - 初期化完了');
+    </script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>応募者管理 | Patent Hub 企業管理画面</title>
+    <meta name="description" content="Patent Hub 企業管理画面 - 応募者管理。適切な個人情報保護対策を実施しています。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 管理画面専用スタイル */
+        .admin-body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（ダッシュボードと共通） */
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #1e3c72;
+        }
+        
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        /* メインコンテンツ */
+        .admin-main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .applications-count {
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        /* プライバシー通知 */
+        .privacy-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #fdcb6e;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-notice h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .privacy-notice p {
+            color: #856404;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        /* 検索・フィルター */
+        .search-filters {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .filters-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 120px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        /* 応募者一覧 */
+        .applications-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .application-item {
+            border-bottom: 1px solid #f8f9fa;
+            padding: 1.5rem;
+            transition: background 0.3s;
+        }
+        
+        .application-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .application-item:last-child {
+            border-bottom: none;
+        }
+        
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .applicant-info {
+            flex: 1;
+        }
+        
+        .applicant-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .job-title {
+            color: #1e3c72;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .application-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .status-applied {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .status-reviewing {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-interview {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status-hired {
+            background: #e1f5fe;
+            color: #0277bd;
+        }
+        
+        .status-rejected {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .application-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #f8f9fa;
+            border-color: #1e3c72;
+        }
+        
+        .action-btn.primary {
+            background: #1e3c72;
+            color: white;
+            border-color: #1e3c72;
+        }
+        
+        .action-btn.primary:hover {
+            background: #2a5298;
+        }
+        
+        /* 応募者詳細モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background: #f8f9fa;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+        
+        .detail-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .detail-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .status-update {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .status-select {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .internal-notes {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .admin-header .container,
+            .admin-main {
+                padding: 0 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .application-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .application-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .admin-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="container">
+            <a href="index.html" class="admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="admin-logo-icon">🏢</div>
+                <span>Patent Hub 管理画面</span>
+            </a>
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">ダッシュボード</a>
+                <a href="admin-jobs.html" class="nav-link">求人管理</a>
+                <a href="admin-applications.html" class="nav-link active">応募者管理</a>
+                <a href="admin-company.html" class="nav-link">企業情報</a>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">
+                📧 応募者管理
+                <span class="applications-count" id="applicationsCount">0件</span>
+            </h1>
+        </div>
+
+        <!-- プライバシー保護通知 -->
+        <div class="privacy-notice">
+            <h4>🛡️ 個人情報保護について</h4>
+            <p>応募者の個人情報は採用選考の目的でのみ使用し、適切に保護されます。不要になった情報は自動的に削除されます。</p>
+        </div>
+
+        <!-- 検索・フィルター -->
+        <div class="search-filters">
+            <div class="filters-row">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="応募者名で検索..." 
+                    id="searchInput"
+                >
+                <select class="filter-select" id="jobFilter">
+                    <option value="">すべての求人</option>
+                    <option value="特許技術者（機械・電気）">特許技術者（機械・電気）</option>
+                    <option value="弁理士（パートナー候補）">弁理士（パートナー候補）</option>
+                    <option value="知財事務スタッフ">知財事務スタッフ</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">すべてのステータス</option>
+                    <option value="applied">応募受付</option>
+                    <option value="reviewing">書類選考中</option>
+                    <option value="interview">面接予定</option>
+                    <option value="hired">内定</option>
+                    <option value="rejected">不採用</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 応募者一覧 -->
+        <div class="applications-list" id="applicationsList">
+            <!-- 応募者データはJavaScriptで動的に生成 -->
+        </div>
+    </main>
+
+    <!-- 応募者詳細モーダル -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">応募者詳細</h3>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 詳細内容はJavaScriptで生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" onclick="closeDetailModal()">閉じる</button>
+                <button class="action-btn primary" onclick="saveChanges()">変更を保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 応募者管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('応募者管理画面が読み込まれました');
+            
+            // 認証チェック
+            checkAuthentication();
+            
+            // ユーザー情報を読み込み
+            loadUserInfo();
+            
+            // 応募者データを初期化
+            initializeApplicationsData();
+            
+            // 応募者一覧を表示
+            displayApplications();
+            
+            // 検索・フィルター機能を初期化
+            initializeFilters();
+            
+            console.log('✅ 応募者管理画面の初期化が完了しました');
+        });
+        
+        // サンプル応募者データ（実際のサイトではAPIから取得）
+        let applicationsData = [];
+        
+        // 応募者データの初期化
+        function initializeApplicationsData() {
+            // プライバシー配慮：最小限の情報のみ
+            applicationsData = [
+                {
+                    id: 'APP001',
+                    name: '田中太郎',
+                    jobTitle: '特許技術者（機械・電気）',
+                    applicationDate: '2025-08-09',
+                    status: 'reviewing',
+                    email: 'ta***@*****.com', // マスク処理
+                    motivation: '機械工学の専門知識を活かして...',
+                    companyNotes: '',
+                    applicationTime: '14:30'
+                },
+                {
+                    id: 'APP002',
+                    name: '佐藤花子',
+                    jobTitle: '弁理士（パートナー候補）',
+                    applicationDate: '2025-08-08',
+                    status: 'interview',
+                    email: 'sa***@*****.com',
+                    motivation: '長年の特許実務経験を生かして...',
+                    companyNotes: '経験豊富、面接でより詳しく確認',
+                    applicationTime: '11:15'
+                },
+                {
+                    id: 'APP003',
+                    name: '山田次郎',
+                    jobTitle: '知財事務スタッフ',
+                    applicationDate: '2025-08-07',
+                    status: 'applied',
+                    email: 'ya***@*****.com',
+                    motivation: '知財業界でのキャリアスタートを...',
+                    companyNotes: '',
+                    applicationTime: '16:45'
+                },
+                {
+                    id: 'APP004',
+                    name: '鈴木美咲',
+                    jobTitle: '特許技術者（機械・電気）',
+                    applicationDate: '2025-08-06',
+                    status: 'hired',
+                    email: 'su***@*****.com',
+                    motivation: '電気工学の知識を特許分野で...',
+                    companyNotes: '優秀な候補者、内定通知済み',
+                    applicationTime: '09:20'
+                },
+                {
+                    id: 'APP005',
+                    name: '高橋健一',
+                    jobTitle: '弁理士（パートナー候補）',
+                    applicationDate: '2025-08-05',
+                    status: 'rejected',
+                    email: 'ta***@*****.com',
+                    motivation: 'パートナーとして貢献したい...',
+                    companyNotes: '経験不足のため不採用',
+                    applicationTime: '13:10'
+                }
+            ];
+            
+            updateApplicationsCount();
+        }
+        
+        // 応募者一覧の表示
+        function displayApplications(filteredData = null) {
+            const dataToShow = filteredData || applicationsData;
+            const listContainer = document.getElementById('applicationsList');
+            
+            if (dataToShow.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #6c757d;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                        <h3>応募者がいません</h3>
+                        <p>条件に一致する応募者が見つかりませんでした</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = dataToShow.map(applicant => `
+                <div class="application-item">
+                    <div class="application-header">
+                        <div class="applicant-info">
+                            <h3 class="applicant-name">${applicant.name}</h3>
+                            <div class="job-title">${applicant.jobTitle}</div>
+                            <div class="application-meta">
+                                <span>📅 ${applicant.applicationDate} ${applicant.applicationTime}応募</span>
+                                <span>📧 ${applicant.email}</span>
+                            </div>
+                        </div>
+                        <div class="status-badge status-${applicant.status}">
+                            ${getStatusText(applicant.status)}
+                        </div>
+                    </div>
+                    
+                    <div class="application-actions">
+                        <button class="action-btn primary" onclick="showDetail('${applicant.id}')">
+                            詳細を確認・編集
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ステータステキストの取得
+        function getStatusText(status) {
+            const statusMap = {
+                'applied': '応募受付',
+                'reviewing': '書類選考中',
+                'interview': '面接予定',
+                'hired': '内定',
+                'rejected': '不採用'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // 検索・フィルター機能の初期化
+        function initializeFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const jobFilter = document.getElementById('jobFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            
+            // 検索機能
+            searchInput.addEventListener('input', function() {
+                applyFilters();
+            });
+            
+            // フィルター機能
+            jobFilter.addEventListener('change', function() {
+                applyFilters();
+            });
+            
+            statusFilter.addEventListener('change', function() {
+                applyFilters();
+            });
+        }
+        
+        // フィルターの適用
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const jobFilter = document.getElementById('jobFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            let filtered = applicationsData.filter(applicant => {
+                const matchesSearch = applicant.name.toLowerCase().includes(searchTerm);
+                const matchesJob = !jobFilter || applicant.jobTitle === jobFilter;
+                const matchesStatus = !statusFilter || applicant.status === statusFilter;
+                
+                return matchesSearch && matchesJob && matchesStatus;
+            });
+            
+            displayApplications(filtered);
+            updateApplicationsCount(filtered.length);
+        }
+        
+        // 応募者数の更新
+        function updateApplicationsCount(count = null) {
+            const countElement = document.getElementById('applicationsCount');
+            const totalCount = count !== null ? count : applicationsData.length;
+            countElement.textContent = `${totalCount}件`;
+        }
+        
+        // 応募者詳細の表示
+        function showDetail(applicantId) {
+            const applicant = applicationsData.find(app => app.id === applicantId);
+            if (!applicant) return;
+            
+            const modal = document.getElementById('detailModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `${applicant.name}さんの応募詳細`;
+            
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-title">基本情報</div>
+                    <div class="detail-content">
+                        <strong>応募求人:</strong> ${applicant.jobTitle}<br>
+                        <strong>応募日時:</strong> ${applicant.applicationDate} ${applicant.applicationTime}<br>
+                        <strong>連絡先:</strong> ${applicant.email}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">志望動機・自己PR</div>
+                    <div class="detail-content">
+                        ${applicant.motivation}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">選考ステータス</div>
+                    <div class="status-update">
+                        <select class="status-select" id="statusSelect">
+                            <option value="applied" ${applicant.status === 'applied' ? 'selected' : ''}>応募受付</option>
+                            <option value="reviewing" ${applicant.status === 'reviewing' ? 'selected' : ''}>書類選考中</option>
+                            <option value="interview" ${applicant.status === 'interview' ? 'selected' : ''}>面接予定</option>
+                            <option value="hired" ${applicant.status === 'hired' ? 'selected' : ''}>内定</option>
+                            <option value="rejected" ${applicant.status === 'rejected' ? 'selected' : ''}>不採用</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">企業内部メモ（応募者には見えません）</div>
+                    <textarea class="internal-notes" id="internalNotes" placeholder="選考に関するメモを入力...">${applicant.companyNotes}</textarea>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            window.currentApplicantId = applicantId;
+        }
+        
+        // モーダルを閉じる
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+        
+        // 変更を保存
+        function saveChanges() {
+            const applicantId = window.currentApplicantId;
+            const newStatus = document.getElementById('statusSelect').value;
+            const notes = document.getElementById('internalNotes').value;
+            
+            // データを更新
+            const applicantIndex = applicationsData.findIndex(app => app.id === applicantId);
+            if (applicantIndex !== -1) {
+                applicationsData[applicantIndex].status = newStatus;
+                applicationsData[applicantIndex].companyNotes = notes;
+            }
+            
+            // 画面を更新
+            displayApplications();
+            closeDetailModal();
+            
+            // 保存完了の通知
+            showNotification('変更を保存しました', 'success');
+        }
+        
+        
+        // 通知表示機能
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            
+            const colors = {
+                'success': '#28a745',
+                'error': '#dc3545',
+                'info': '#17a2b8'
+            };
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 認証チェック（ダッシュボードと同じ）
+        function checkAuthentication() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        }
+        
+        // ユーザー情報を読み込み
+        function loadUserInfo() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            const firstChar = session.companyName.charAt(0);
+            document.getElementById('userAvatar').textContent = firstChar;
+        }
+        
+        // ログアウト
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                localStorage.removeItem('admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailModal();
+            }
+        });
+        
+        console.log('📧 Patent Hub 応募者管理画面 - 初期化完了');
+    </script>
+</body>
+</html>

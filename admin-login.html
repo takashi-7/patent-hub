@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業管理画面ログイン | Patent Hub</title>
+    <meta name="description" content="Patent Hub 企業管理画面へのログイン。求人投稿・応募者管理・企業情報編集が可能です。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 管理画面専用スタイル */
+        .admin-body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .login-header {
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+        
+        .login-form {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(30, 60, 114, 0.3);
+        }
+        
+        .login-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .forgot-password {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .demo-accounts {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        
+        .demo-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-account {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .demo-account:hover {
+            border-color: #1e3c72;
+            background: #f8f9fa;
+        }
+        
+        .demo-account:last-child {
+            margin-bottom: 0;
+        }
+        
+        .demo-company {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.9rem;
+        }
+        
+        .demo-credentials {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        
+        .back-to-site {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .back-link {
+            color: #6c757d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #1e3c72;
+        }
+        
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    🏢
+                </div>
+                <h1 class="login-title">企業管理画面</h1>
+                <p class="login-subtitle">Patent Hub 管理者ログイン</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="companyId">企業ID</label>
+                    <input 
+                        type="text" 
+                        id="companyId" 
+                        class="form-input" 
+                        placeholder="企業IDを入力"
+                        required
+                        autocomplete="username"
+                    >
+                    <div class="error-message" id="companyIdError">企業IDを入力してください</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">パスワード</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="パスワードを入力"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <div class="error-message" id="passwordError">パスワードを入力してください</div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>ログイン状態を保持</span>
+                    </label>
+                    <a href="#" class="forgot-password">パスワードを忘れた場合</a>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    ログイン
+                </button>
+            </form>
+            
+            <!-- デモアカウント -->
+            <div class="demo-accounts">
+                <div class="demo-title">
+                    🚀 デモアカウント（クリックで入力）
+                </div>
+                
+                <div class="demo-account" onclick="fillDemoAccount('abc-patent', 'demo123')">
+                    <div class="demo-company">特許事務所ABC</div>
+                    <div class="demo-credentials">ID: abc-patent / PW: demo123</div>
+                </div>
+                
+                <div class="demo-account" onclick="fillDemoAccount('xyz-corp', 'demo456')">
+                    <div class="demo-company">株式会社XYZ知財部</div>
+                    <div class="demo-credentials">ID: xyz-corp / PW: demo456</div>
+                </div>
+                
+                <div class="demo-account" onclick="fillDemoAccount('global-ip', 'demo789')">
+                    <div class="demo-company">グローバル特許事務所</div>
+                    <div class="demo-credentials">ID: global-ip / PW: demo789</div>
+                </div>
+            </div>
+            
+            <div class="back-to-site">
+                <a href="/" class="back-link">
+                    ← Patent Hub サイトに戻る
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 管理画面ログイン機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('企業管理画面ログイン画面が読み込まれました');
+            
+            const loginForm = document.getElementById('loginForm');
+            const companyIdInput = document.getElementById('companyId');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // デモアカウントデータ
+            const demoAccounts = {
+                'abc-patent': {
+                    password: 'demo123',
+                    companyName: '特許事務所ABC',
+                    companyId: 'COMPANY_ABC'
+                },
+                'xyz-corp': {
+                    password: 'demo456',
+                    companyName: '株式会社XYZ知財部',
+                    companyId: 'COMPANY_XYZ'
+                },
+                'global-ip': {
+                    password: 'demo789',
+                    companyName: 'グローバル特許事務所',
+                    companyId: 'COMPANY_GLOBAL'
+                }
+            };
+            
+            // ログインフォーム送信
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const companyId = companyIdInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                // バリデーション
+                if (!validateForm(companyId, password)) {
+                    return;
+                }
+                
+                // ログイン処理
+                if (authenticateUser(companyId, password)) {
+                    // ログイン成功
+                    showLoadingState();
+                    
+                    setTimeout(() => {
+                        // セッション情報を保存
+                        const account = demoAccounts[companyId];
+                        const sessionData = {
+                            companyId: account.companyId,
+                            companyName: account.companyName,
+                            loginId: companyId,
+                            loginTime: new Date().toISOString(),
+                            rememberMe: document.getElementById('rememberMe').checked
+                        };
+                        
+                        // ローカルストレージに保存
+                        localStorage.setItem('admin_session', JSON.stringify(sessionData));
+                        
+                        // ダッシュボードにリダイレクト
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1500);
+                } else {
+                    // ログイン失敗
+                    showLoginError();
+                }
+            });
+            
+            // バリデーション
+            function validateForm(companyId, password) {
+                let isValid = true;
+                
+                // 企業ID
+                if (!companyId) {
+                    showFieldError('companyId', 'companyIdError', '企業IDを入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('companyId', 'companyIdError');
+                }
+                
+                // パスワード
+                if (!password) {
+                    showFieldError('password', 'passwordError', 'パスワードを入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('password', 'passwordError');
+                }
+                
+                return isValid;
+            }
+            
+            // 認証処理
+            function authenticateUser(companyId, password) {
+                const account = demoAccounts[companyId];
+                return account && account.password === password;
+            }
+            
+            // フィールドエラー表示
+            function showFieldError(inputId, errorId, message) {
+                const input = document.getElementById(inputId);
+                const error = document.getElementById(errorId);
+                
+                input.classList.add('error');
+                error.textContent = message;
+                error.style.display = 'block';
+            }
+            
+            // フィールドエラークリア
+            function clearFieldError(inputId, errorId) {
+                const input = document.getElementById(inputId);
+                const error = document.getElementById(errorId);
+                
+                input.classList.remove('error');
+                error.style.display = 'none';
+            }
+            
+            // ローディング状態表示
+            function showLoadingState() {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '🔄 ログイン中...';
+                
+                // 成功アニメーション
+                setTimeout(() => {
+                    loginBtn.innerHTML = '✅ ログイン成功！';
+                    loginBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                }, 800);
+            }
+            
+            // ログインエラー表示
+            function showLoginError() {
+                showFieldError('companyId', 'companyIdError', 'IDまたはパスワードが正しくありません');
+                showFieldError('password', 'passwordError', 'IDまたはパスワードが正しくありません');
+                
+                // ボタンを振動させる
+                loginBtn.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginBtn.style.animation = '';
+                }, 500);
+            }
+            
+            // デモアカウント自動入力
+            window.fillDemoAccount = function(companyId, password) {
+                companyIdInput.value = companyId;
+                passwordInput.value = password;
+                
+                // エラー状態をクリア
+                clearFieldError('companyId', 'companyIdError');
+                clearFieldError('password', 'passwordError');
+                
+                // フォーカスをログインボタンに移動
+                loginBtn.focus();
+                
+                console.log(`デモアカウント選択: ${companyId}`);
+            };
+        });
+        
+        // CSS アニメーション（振動）
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        console.log('🔐 Patent Hub 企業管理画面ログイン - 初期化完了');
+    </script>
+</body>
+</html>

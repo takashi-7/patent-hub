@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求人一覧 | Patent Hub - 知的財産の求人情報</title>
+    <meta name="description" content="知的財産業界の求人一覧ページ。弁理士、特許技術者、知財翻訳者など多数の求人情報を掲載 - Patent Hub">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link">ニュース</a>
+                    <a href="jobs.html" class="nav-link active">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="jobs-main">
+        <!-- パンくずナビ -->
+        <div class="breadcrumb">
+            <div class="container">
+                <nav>
+                    <a href="index.html">ホーム</a> > 
+                    <span>求人一覧</span>
+                </nav>
+            </div>
+        </div>
+
+        <!-- 検索バー -->
+        <section class="search-hero">
+            <div class="container">
+                <h1 class="page-title">求人一覧</h1>
+                <div class="search-bar">
+                    <div class="search-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="職種、企業名、キーワードで検索" 
+                            class="search-input"
+                        >
+                        <button id="searchBtn" class="search-btn">
+                            🔍 検索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="jobs-layout">
+                <!-- 左サイドバー（フィルタ） -->
+                <aside class="jobs-sidebar">
+                    <div class="filter-section">
+                        <h3 class="filter-title">🔍 条件で絞り込み</h3>
+                        
+                        <!-- 職種カテゴリ -->
+                        <div class="filter-group">
+                            <h4 class="filter-group-title">職種</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="特許技術者">
+                                    <span class="checkmark"></span>
+                                    特許技術者 <span class="count">(4)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="弁理士">
+                                    <span class="checkmark"></span>
+                                    弁理士 <span class="count">(3)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="知財翻訳者">
+                                    <span class="checkmark"></span>
+                                    知財翻訳者 <span class="count">(1)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="企業知財担当">
+                                    <span class="checkmark"></span>
+                                    企業知財担当 <span class="count">(2)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 勤務地 -->
+                        <div class="filter-group">
+                            <h4 class="filter-group-title">勤務地</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="location" value="東京都">
+                                    <span class="checkmark"></span>
+                                    東京都 <span class="count">(7)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="location" value="大阪府">
+                                    <span class="checkmark"></span>
+                                    大阪府 <span class="count">(2)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="location" value="リモートOK">
+                                    <span class="checkmark"></span>
+                                    リモートOK <span class="count">(1)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 年収範囲 -->
+                        <div class="filter-group">
+                            <h4 class="filter-group-title">年収</h4>
+                            <div class="salary-filter">
+                                <div class="salary-inputs">
+                                    <input type="number" id="salaryMin" placeholder="300" min="300" max="1500" step="50">
+                                    <span>万円 〜</span>
+                                    <input type="number" id="salaryMax" placeholder="1500" min="300" max="1500" step="50">
+                                    <span>万円</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 経験レベル -->
+                        <div class="filter-group">
+                            <h4 class="filter-group-title">経験レベル</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="experience" value="未経験歓迎">
+                                    <span class="checkmark"></span>
+                                    未経験歓迎 <span class="count">(3)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="experience" value="経験者優遇">
+                                    <span class="checkmark"></span>
+                                    経験者優遇 <span class="count">(5)</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="experience" value="管理職候補">
+                                    <span class="checkmark"></span>
+                                    管理職候補 <span class="count">(2)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- フィルタリセット -->
+                        <div class="filter-actions">
+                            <button id="resetFilters" class="reset-btn">🔄 条件をリセット</button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- 右メインエリア -->
+                <main class="jobs-content">
+                    <!-- 結果ヘッダー -->
+                    <div class="results-header">
+                        <div class="results-info">
+                            <h2 class="results-count">
+                                <span id="jobCount">10</span>件の求人が見つかりました
+                            </h2>
+                        </div>
+                        <div class="sort-controls">
+                            <select id="sortSelect" class="sort-select">
+                                <option value="newest">新着順</option>
+                                <option value="salary">年収順</option>
+                                <option value="updated">更新順</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 求人カード一覧 -->
+                    <div class="jobs-grid" id="jobsGrid">
+                        <!-- 求人カード1 -->
+                        <article class="job-card" data-category="特許技術者" data-location="東京都" data-salary-min="500" data-salary-max="800" data-experience="未経験歓迎" data-date="2025-08-09">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge new">NEW</span>
+                                    <span class="job-badge urgent">急募</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH001">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">特許技術者（機械・電気）</h3>
+                            <p class="company-name">特許事務所ABC</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都港区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収500-800万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>未経験歓迎</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/09更新</span>
+                                    <span class="post-date">🕒 1日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード2 -->
+                        <article class="job-card" data-category="弁理士" data-location="大阪府" data-salary-min="700" data-salary-max="1200" data-experience="経験者優遇" data-date="2025-08-08">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge experienced">経験者</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH002">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">弁理士（化学・バイオ）</h3>
+                            <p class="company-name">株式会社XYZ知財部</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>大阪府大阪市</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収700-1200万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>経験者優遇</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/08更新</span>
+                                    <span class="post-date">🕒 2日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード3 -->
+                        <article class="job-card" data-category="知財翻訳者" data-location="リモートOK" data-salary-min="400" data-salary-max="600" data-experience="経験者優遇" data-date="2025-08-07">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge remote">リモートOK</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH003">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">知財翻訳者（英⇔日）</h3>
+                            <p class="company-name">グローバル特許事務所</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都新宿区（リモート可）</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収400-600万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>経験者優遇</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/07更新</span>
+                                    <span class="post-date">🕒 3日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード4 -->
+                        <article class="job-card" data-category="特許技術者" data-location="東京都" data-salary-min="550" data-salary-max="900" data-experience="経験者優遇" data-date="2025-08-06">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge urgent">急募</span>
+                                    <span class="job-badge tech">IT系</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH004">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">特許技術者（IT・ソフトウェア）</h3>
+                            <p class="company-name">テック特許事務所</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都渋谷区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収550-900万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>経験者優遇</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/06更新</span>
+                                    <span class="post-date">🕒 4日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード5 -->
+                        <article class="job-card" data-category="企業知財担当" data-location="東京都" data-salary-min="600" data-salary-max="1000" data-experience="管理職候補" data-date="2025-08-05">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge manager">管理職候補</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH005">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">企業知財担当者</h3>
+                            <p class="company-name">大手メーカーDEF</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都千代田区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収600-1000万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>管理職候補</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/05更新</span>
+                                    <span class="post-date">🕒 5日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード6 -->
+                        <article class="job-card" data-category="弁理士" data-location="東京都" data-salary-min="800" data-salary-max="1500" data-experience="管理職候補" data-date="2025-08-04">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge manager">管理職候補</span>
+                                    <span class="job-badge high-salary">高年収</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH006">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">パートナー弁理士候補</h3>
+                            <p class="company-name">大手国際特許事務所</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都丸の内</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収800-1500万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>管理職候補</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/04更新</span>
+                                    <span class="post-date">🕒 6日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード7 -->
+                        <article class="job-card" data-category="特許技術者" data-location="大阪府" data-salary-min="450" data-salary-max="650" data-experience="未経験歓迎" data-date="2025-08-03">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge new">NEW</span>
+                                    <span class="job-badge beginner">未経験OK</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH007">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">特許技術者（医療機器）</h3>
+                            <p class="company-name">関西医療特許事務所</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>大阪府梅田</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収450-650万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>未経験歓迎</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/03更新</span>
+                                    <span class="post-date">🕒 7日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード8 -->
+                        <article class="job-card" data-category="企業知財担当" data-location="東京都" data-salary-min="520" data-salary-max="780" data-experience="経験者優遇" data-date="2025-08-02">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge experienced">経験者</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH008">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">知財戦略マネージャー</h3>
+                            <p class="company-name">IT系ベンチャー企業</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都品川区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収520-780万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>経験者優遇</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/02更新</span>
+                                    <span class="post-date">🕒 8日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード9 -->
+                        <article class="job-card" data-category="特許技術者" data-location="東京都" data-salary-min="480" data-salary-max="720" data-experience="経験者優遇" data-date="2025-08-01">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge tech">バイオ系</span>
+                                    <span class="job-badge experienced">経験者</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH009">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">特許技術者（化学・バイオ）</h3>
+                            <p class="company-name">バイオ特許専門事務所</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都文京区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収480-720万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>経験者優遇</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/08/01更新</span>
+                                    <span class="post-date">🕒 9日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+
+                        <!-- 求人カード10 -->
+                        <article class="job-card" data-category="弁理士" data-location="東京都" data-salary-min="650" data-salary-max="950" data-experience="未経験歓迎" data-date="2025-07-31">
+                            <div class="job-card-header">
+                                <div class="job-badges">
+                                    <span class="job-badge beginner">未経験OK</span>
+                                    <span class="job-badge training">研修充実</span>
+                                </div>
+                                <button class="favorite-btn" data-job-id="PH010">
+                                    ❤️
+                                </button>
+                            </div>
+                            
+                            <h3 class="job-title">弁理士（機械・構造物）</h3>
+                            <p class="company-name">総合特許事務所GHI</p>
+                            
+                            <div class="job-details">
+                                <div class="job-detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span>東京都中央区</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">💰</span>
+                                    <span>年収650-950万円</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">👔</span>
+                                    <span>正社員</span>
+                                </div>
+                                <div class="job-detail">
+                                    <span class="detail-icon">⭐</span>
+                                    <span>未経験歓迎</span>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card-footer">
+                                <div class="job-meta">
+                                    <span class="update-date">📅 2025/07/31更新</span>
+                                    <span class="post-date">🕒 10日前投稿</span>
+                                </div>
+                                <a href="job-detail.html" class="view-details-btn">詳細を見る</a>
+                            </div>
+                        </article>
+                        
+                    </div>
+
+                    <!-- 検索結果なしメッセージ（初期は非表示） -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <div class="no-results-content">
+                            <h3>😔 検索条件に一致する求人が見つかりませんでした</h3>
+                            <p>条件を変更して再度検索してみてください</p>
+                            <button id="clearSearch" class="clear-search-btn">検索条件をクリア</button>
+                        </div>
+                    </div>
+
+                    <!-- ページネーション -->
+                    <div class="pagination" id="pagination">
+                        <button class="pagination-btn prev" disabled>← 前へ</button>
+                        <div class="pagination-numbers">
+                            <button class="pagination-number active">1</button>
+                            <button class="pagination-number">2</button>
+                            <button class="pagination-number">3</button>
+                            <span class="pagination-dots">...</span>
+                            <button class="pagination-number">12</button>
+                        </div>
+                        <button class="pagination-btn next">次へ →</button>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="/jobs.html">求人</a></li>
+                        <li><a href="/#seminars">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/jobs.js"></script>
+</body>
+</html>

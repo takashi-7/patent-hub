@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システムニュース管理 | Patent Hub</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - ニュース自動収集・管理システム">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（システム管理者専用デザイン） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .system-admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .system-nav-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .system-nav-link:hover,
+        .system-nav-link.active {
+            color: #e74c3c;
+        }
+        
+        .system-admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        
+        .system-user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .system-logout-btn {
+            background: transparent;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .system-logout-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* セキュリティ警告バー */
+        .security-warning-bar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .back-to-dashboard {
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-to-dashboard:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        /* ニュース収集統計 */
+        .news-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .news-stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+        
+        .news-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .news-stat-card.total {
+            border-left-color: #3498db;
+        }
+        
+        .news-stat-card.today {
+            border-left-color: #2ecc71;
+        }
+        
+        .news-stat-card.sources {
+            border-left-color: #f39c12;
+        }
+        
+        .news-stat-card.quality {
+            border-left-color: #e74c3c;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        /* ニュース収集制御パネル */
+        .news-control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .control-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .control-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            border-color: #e74c3c;
+            background: #fff5f5;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.success {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .control-btn.success:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .control-btn.warning {
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .control-btn.warning:hover {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* ニュースソース管理 */
+        .news-sources {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .source-item {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .source-item.enabled {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .source-item.disabled {
+            border-color: #dc3545;
+            background: #fff5f5;
+            opacity: 0.7;
+        }
+        
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .source-name {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .source-toggle {
+            background: none;
+            border: 2px solid;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .source-toggle.enabled {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .source-toggle.enabled:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .source-toggle.disabled {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .source-toggle.disabled:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .source-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .source-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .source-stat {
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* ニュース一覧・管理 */
+        .news-management {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .news-filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+        
+        .filter-input {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .news-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .news-item {
+            border-bottom: 1px solid #f8f9fa;
+            padding: 1.5rem 0;
+            transition: background 0.3s;
+        }
+        
+        .news-item:hover {
+            background: #f8f9fa;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 8px;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .news-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            flex: 1;
+            margin-right: 1rem;
+        }
+        
+        .news-priority {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .priority-1, .priority-2 {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .priority-3 {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .priority-4, .priority-5 {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .news-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .news-summary {
+            color: #495057;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .news-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .action-btn:hover {
+            background: #f8f9fa;
+            border-color: #e74c3c;
+        }
+        
+        .action-btn.primary {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .action-btn.primary:hover {
+            background: #c0392b;
+        }
+        
+        .action-btn.success {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .action-btn.success:hover {
+            background: #1e7e34;
+        }
+        
+        .action-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .action-btn.danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 1200px) {
+            .news-filters {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main {
+                padding: 0 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .news-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .news-actions {
+                flex-wrap: wrap;
+            }
+            
+            .system-admin-nav {
+                display: none;
+            }
+            
+            .control-actions,
+            .sources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- セキュリティ警告バー -->
+    <div class="security-warning-bar">
+        🛡️ システム管理者権限 - ニュース自動収集・管理システム
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <div class="system-admin-logo">
+                <div class="system-admin-logo-icon">📰</div>
+                <span>ニュース管理システム</span>
+            </div>
+            <nav class="system-admin-nav">
+                <a href="system-admin-dashboard.html" class="system-nav-link">ダッシュボード</a>
+                <a href="#" class="system-nav-link">企業管理</a>
+                <a href="#" class="system-nav-link">求人統制</a>
+                <a href="#" class="system-nav-link active">ニュース管理</a>
+                <a href="#" class="system-nav-link">システム設定</a>
+            </nav>
+            <div class="system-admin-user-info">
+                <div class="system-user-avatar" id="systemUserAvatar">S</div>
+                <span id="systemUserName">システム管理者</span>
+                <button class="system-logout-btn" onclick="systemLogout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">
+                📰 ニュース管理システム
+            </h1>
+            <a href="system-admin-dashboard.html" class="back-to-dashboard">
+                ← ダッシュボードに戻る
+            </a>
+        </div>
+
+        <!-- ニュース収集統計 -->
+        <div class="news-stats-grid">
+            <div class="news-stat-card total">
+                <div class="stat-icon">📊</div>
+                <span class="stat-number" id="totalNewsCount">0</span>
+                <div class="stat-label">総ニュース数</div>
+            </div>
+            
+            <div class="news-stat-card today">
+                <div class="stat-icon">📅</div>
+                <span class="stat-number" id="todayNewsCount">0</span>
+                <div class="stat-label">本日取得数</div>
+            </div>
+            
+            <div class="news-stat-card sources">
+                <div class="stat-icon">🌐</div>
+                <span class="stat-number" id="activeSourcesCount">0</span>
+                <div class="stat-label">アクティブソース</div>
+            </div>
+            
+            <div class="news-stat-card quality">
+                <div class="stat-icon">⭐</div>
+                <span class="stat-number" id="averageQuality">0</span>
+                <div class="stat-label">平均品質スコア</div>
+            </div>
+        </div>
+
+        <!-- ニュース収集制御パネル -->
+        <div class="news-control-panel">
+            <h2 class="control-title">
+                🔧 ニュース収集制御
+            </h2>
+            <div class="control-actions">
+                <button class="control-btn success" onclick="manualNewsRefresh()">
+                    🔄 手動更新実行
+                </button>
+                
+                <button class="control-btn" onclick="toggleAutoCollection()">
+                    <span id="autoCollectionStatus">⏸️ 自動収集停止</span>
+                </button>
+                
+                <button class="control-btn" onclick="runQualityCheck()">
+                    🔍 品質チェック実行
+                </button>
+                
+                <button class="control-btn warning" onclick="clearNewsCache()">
+                    🗑️ キャッシュクリア
+                </button>
+                
+                <button class="control-btn" onclick="exportNews()">
+                    📊 ニュースエクスポート
+                </button>
+                
+                <button class="control-btn" onclick="showNewsStatistics()">
+                    📈 詳細統計表示
+                </button>
+            </div>
+        </div>
+
+        <!-- ニュースソース管理 -->
+        <div class="news-sources">
+            <h2 class="control-title">
+                🌐 ニュースソース管理
+            </h2>
+            <div class="sources-grid" id="newsSourcesGrid">
+                <!-- ニュースソース情報はJavaScriptで動的に生成 -->
+            </div>
+        </div>
+
+        <!-- ニュース一覧・管理 -->
+        <div class="news-management">
+            <h2 class="control-title">
+                📋 ニュース一覧・管理
+            </h2>
+            
+            <!-- フィルター -->
+            <div class="news-filters">
+                <input 
+                    type="text" 
+                    class="filter-input" 
+                    placeholder="ニュースタイトルで検索..."
+                    id="newsSearchInput"
+                >
+                <select class="filter-select" id="sourceFilter">
+                    <option value="">すべてのソース</option>
+                    <option value="特許庁">特許庁</option>
+                    <option value="WIPO">WIPO</option>
+                    <option value="JETRO（知財）">JETRO（知財）</option>
+                </select>
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">すべてのカテゴリ</option>
+                    <option value="特許">特許</option>
+                    <option value="商標">商標</option>
+                    <option value="意匠">意匠</option>
+                    <option value="AI・IT">AI・IT</option>
+                </select>
+                <button class="control-btn" onclick="refreshNewsList()">
+                    🔄 リスト更新
+                </button>
+            </div>
+            
+            <!-- ニュース一覧 -->
+            <div class="news-list" id="newsManagementList">
+                <!-- ニュース項目はJavaScriptで動的に生成 -->
+            </div>
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/news-scraper.js"></script>
+    <script>
+        // システムニュース管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('システムニュース管理画面が読み込まれました');
+            
+            // システム管理者認証チェック
+            checkSystemAuthentication();
+            
+            // ユーザー情報を表示
+            loadSystemUserInfo();
+            
+            // ニュース統計を更新
+            updateNewsStatistics();
+            
+            // ニュースソース表示
+            displayNewsSources();
+            
+            // ニュース一覧表示
+            displayNewsManagement();
+            
+            // フィルター機能を初期化
+            initializeNewsFilters();
+            
+            console.log('✅ システムニュース管理画面の初期化が完了しました');
+        });
+        
+        let autoCollectionEnabled = true;
+        
+        // ニュース統計の更新
+        function updateNewsStatistics() {
+            if (!patentNewsScaper) return;
+            
+            const stats = patentNewsScaper.getStatistics();
+            const todayNews = patentNewsScaper.newsCache.filter(article => {
+                const today = new Date();
+                const articleDate = new Date(article.publishTime);
+                return articleDate.toDateString() === today.toDateString();
+            });
+            
+            document.getElementById('totalNewsCount').textContent = stats.totalArticles;
+            document.getElementById('todayNewsCount').textContent = todayNews.length;
+            document.getElementById('activeSourcesCount').textContent = Object.keys(stats.sourceBreakdown).length;
+            
+            // 平均品質スコア計算
+            const avgQuality = patentNewsScaper.newsCache.length > 0 ? 
+                Math.round(patentNewsScaper.newsCache.reduce((sum, article) => sum + article.priority * 20, 0) / patentNewsScaper.newsCache.length) : 0;
+            document.getElementById('averageQuality').textContent = `${avgQuality}%`;
+        }
+        
+        // ニュースソース表示
+        function displayNewsSources() {
+            if (!patentNewsScaper) return;
+            
+            const sourcesGrid = document.getElementById('newsSourcesGrid');
+            const sources = patentNewsScaper.newsSources;
+            
+            sourcesGrid.innerHTML = Object.entries(sources).map(([key, source]) => {
+                const sourceStats = patentNewsScaper.getStatistics().sourceBreakdown;
+                const articleCount = sourceStats[source.name] || 0;
+                
+                return `
+                    <div class="source-item ${source.enabled ? 'enabled' : 'disabled'}">
+                        <div class="source-header">
+                            <div class="source-name">${source.name}</div>
+                            <button class="source-toggle ${source.enabled ? 'enabled' : 'disabled'}" 
+                                    onclick="toggleNewsSource('${key}')">
+                                ${source.enabled ? '無効にする' : '有効にする'}
+                            </button>
+                        </div>
+                        <div class="source-info">
+                            <strong>URL:</strong> ${source.url}<br>
+                            <strong>ステータス:</strong> ${source.enabled ? '🟢 有効' : '🔴 無効'}
+                        </div>
+                        <div class="source-stats">
+                            <div class="source-stat">📰 ${articleCount}件取得</div>
+                            <div class="source-stat">⏰ ${source.enabled ? '30分間隔' : '停止中'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ニュース一覧管理表示
+        function displayNewsManagement() {
+            if (!patentNewsScaper) return;
+            
+            const newsList = document.getElementById('newsManagementList');
+            const articles = patentNewsScaper.newsCache.slice(0, 50); // 最新50件表示
+            
+            if (articles.length === 0) {
+                newsList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #6c757d;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                        <h3>ニュースがありません</h3>
+                        <p>ニュース収集を実行してください</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            newsList.innerHTML = articles.map(article => `
+                <div class="news-item">
+                    <div class="news-header">
+                        <div class="news-title">${article.title}</div>
+                        <div class="news-priority priority-${article.priority}">
+                            優先度 ${article.priority}
+                        </div>
+                    </div>
+                    
+                    <div class="news-meta">
+                        <span>📡 ${article.source}</span>
+                        <span>📅 ${formatTime(new Date(article.publishTime))}</span>
+                        <span>🏷️ ${article.category}</span>
+                        <span>🔗 <a href="${article.url}" target="_blank">元記事</a></span>
+                    </div>
+                    
+                    <div class="news-summary">${article.summary}</div>
+                    
+                    <div class="news-actions">
+                        <button class="action-btn primary" onclick="editArticle('${article.id}')">
+                            編集
+                        </button>
+                        <button class="action-btn success" onclick="promoteArticle('${article.id}')">
+                            優先度上げる
+                        </button>
+                        <button class="action-btn" onclick="hideArticle('${article.id}')">
+                            非表示
+                        </button>
+                        <button class="action-btn danger" onclick="deleteArticle('${article.id}')">
+                            削除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ニュースフィルター機能の初期化
+        function initializeNewsFilters() {
+            const searchInput = document.getElementById('newsSearchInput');
+            const sourceFilter = document.getElementById('sourceFilter');
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            [searchInput, sourceFilter, categoryFilter].forEach(element => {
+                element.addEventListener('change', applyNewsFilters);
+                element.addEventListener('input', applyNewsFilters);
+            });
+        }
+        
+        // ニュースフィルターの適用
+        function applyNewsFilters() {
+            // フィルター機能の実装
+            console.log('ニュースフィルターを適用中...');
+            // 実際の実装では、フィルター条件に基づいてニュース一覧を更新
+        }
+        
+        // ニュース管理操作
+        function manualNewsRefresh() {
+            if (!patentNewsScaper) return;
+            
+            showNotification('手動ニュース更新を実行中...', 'info');
+            patentNewsScaper.manualRefresh();
+            
+            setTimeout(() => {
+                updateNewsStatistics();
+                displayNewsSources();
+                displayNewsManagement();
+                showNotification('ニュース更新が完了しました', 'success');
+            }, 3000);
+        }
+        
+        function toggleAutoCollection() {
+            autoCollectionEnabled = !autoCollectionEnabled;
+            const statusElement = document.getElementById('autoCollectionStatus');
+            
+            if (autoCollectionEnabled) {
+                statusElement.textContent = '⏸️ 自動収集停止';
+                showNotification('自動ニュース収集を再開しました', 'success');
+            } else {
+                statusElement.textContent = '▶️ 自動収集開始';
+                showNotification('自動ニュース収集を停止しました', 'warning');
+            }
+            
+            logSecurityEvent(`自動ニュース収集${autoCollectionEnabled ? '再開' : '停止'}`, 'ADMIN');
+        }
+        
+        function runQualityCheck() {
+            showNotification('ニュース品質チェックを実行中...', 'info');
+            
+            setTimeout(() => {
+                const lowQualityCount = patentNewsScaper.newsCache.filter(article => article.priority <= 2).length;
+                showNotification(`品質チェック完了: ${lowQualityCount}件のニュースで品質向上が可能です`, 
+                    lowQualityCount > 0 ? 'warning' : 'success');
+                logSecurityEvent(`ニュース品質チェック実行: 要改善${lowQualityCount}件`, 'SYSTEM');
+            }, 2000);
+        }
+        
+        function clearNewsCache() {
+            if (!confirm('⚠️ ニュースキャッシュをクリアしますか？この操作は元に戻せません。')) return;
+            
+            patentNewsScaper.newsCache = [];
+            localStorage.removeItem('patent_hub_news_cache');
+            
+            updateNewsStatistics();
+            displayNewsManagement();
+            showNotification('ニュースキャッシュをクリアしました', 'success');
+            logSecurityEvent('ニュースキャッシュクリア実行', 'ADMIN');
+        }
+        
+        function exportNews() {
+            const newsData = patentNewsScaper.newsCache.map(article => ({
+                title: article.title,
+                source: article.source,
+                category: article.category,
+                publishTime: article.publishTime,
+                priority: article.priority
+            }));
+            
+            showNotification(`${newsData.length}件のニュースデータをエクスポートしました`, 'success');
+            logSecurityEvent(`ニュースエクスポート実行: ${newsData.length}件`, 'ADMIN');
+        }
+        
+        function showNewsStatistics() {
+            const stats = patentNewsScaper.getStatistics();
+            const statsMessage = `
+                総記事数: ${stats.totalArticles}件
+                ソース別: ${Object.entries(stats.sourceBreakdown).map(([source, count]) => `${source}:${count}件`).join(', ')}
+                カテゴリ別: ${Object.entries(stats.categoryBreakdown).map(([category, count]) => `${category}:${count}件`).join(', ')}
+            `;
+            
+            alert(statsMessage);
+            logSecurityEvent('ニュース詳細統計表示', 'INFO');
+        }
+        
+        function toggleNewsSource(sourceKey) {
+            patentNewsScaper.toggleNewsSource(sourceKey);
+            displayNewsSources();
+            
+            const source = patentNewsScaper.newsSources[sourceKey];
+            showNotification(`${source.name}を${source.enabled ? '有効' : '無効'}にしました`, 
+                source.enabled ? 'success' : 'warning');
+            logSecurityEvent(`ニュースソース設定変更: ${source.name} ${source.enabled ? '有効' : '無効'}`, 'ADMIN');
+        }
+        
+        function refreshNewsList() {
+            displayNewsManagement();
+            showNotification('ニュース一覧を更新しました', 'info');
+        }
+        
+        // 個別ニュース操作
+        function editArticle(articleId) {
+            showNotification('ニュース編集機能は開発中です', 'info');
+            logSecurityEvent(`ニュース編集試行: ${articleId}`, 'ADMIN');
+        }
+        
+        function promoteArticle(articleId) {
+            const article = patentNewsScaper.newsCache.find(a => a.id === articleId);
+            if (article && article.priority < 5) {
+                article.priority += 1;
+                displayNewsManagement();
+                showNotification('ニュースの優先度を上げました', 'success');
+                logSecurityEvent(`ニュース優先度変更: ${articleId} → ${article.priority}`, 'ADMIN');
+            }
+        }
+        
+        function hideArticle(articleId) {
+            showNotification('ニュース非表示機能は開発中です', 'info');
+            logSecurityEvent(`ニュース非表示試行: ${articleId}`, 'ADMIN');
+        }
+        
+        function deleteArticle(articleId) {
+            if (!confirm('このニュースを削除しますか？')) return;
+            
+            const index = patentNewsScaper.newsCache.findIndex(a => a.id === articleId);
+            if (index !== -1) {
+                patentNewsScaper.newsCache.splice(index, 1);
+                displayNewsManagement();
+                updateNewsStatistics();
+                showNotification('ニュースを削除しました', 'success');
+                logSecurityEvent(`ニュース削除: ${articleId}`, 'ADMIN');
+            }
+        }
+        
+        // 時刻フォーマット関数
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) {
+                return '1分前';
+            } else if (diff < 3600000) {
+                return `${Math.floor(diff / 60000)}分前`;
+            } else if (diff < 86400000) {
+                return `${Math.floor(diff / 3600000)}時間前`;
+            } else {
+                return date.toLocaleDateString('ja-JP', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        }
+        
+        // システム管理者認証・共通機能
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+        
+        function loadSystemUserInfo() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            document.getElementById('systemUserName').textContent = session.adminName;
+            document.getElementById('systemUserAvatar').textContent = session.adminName.charAt(0);
+        }
+        
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                logSecurityEvent('システム管理者ログアウト', 'SECURITY');
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+        
+        // セキュリティログ機能
+        function logSecurityEvent(action, level) {
+            const timestamp = new Date().toLocaleString('ja-JP');
+            console.log(`🛡️ [${level}] ${timestamp}: ${action}`);
+        }
+        
+        // 通知機能
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            `;
+            
+            const colors = {
+                'success': 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)',
+                'error': 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
+                'warning': 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                'info': 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+        
+        console.log('📰 Patent Hub システムニュース管理 - 初期化完了');
+    </script>
+</body>
+</html>

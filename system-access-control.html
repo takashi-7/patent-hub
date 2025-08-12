@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アクセス権限管理 | Patent Hub システム管理</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - アクセス権限とロール管理">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ヘッダー（システム管理者専用テーマ） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .breadcrumb-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #e74c3c;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* セキュリティ警告 */
+        .security-warning {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+            border: 2px solid #e74c3c;
+        }
+
+        /* 権限統計 */
+        .permission-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.admins { border-left-color: #e74c3c; }
+        .stat-card.companies { border-left-color: #3498db; }
+        .stat-card.users { border-left-color: #27ae60; }
+        .stat-card.guests { border-left-color: #95a5a6; }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* セクション */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        /* ロールカード */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .role-card:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
+        }
+
+        .role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .role-title {
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .role-count {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .role-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .role-permissions {
+            margin-bottom: 1rem;
+        }
+
+        .permission-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .permission-tag {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .permission-tag.critical {
+            background: #fff5f5;
+            color: #c53030;
+            border-color: #fed7d7;
+        }
+
+        .role-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .role-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .role-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* ユーザーテーブル */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .users-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .users-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .users-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .role-system-admin {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .role-company-admin {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .role-user {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .role-guest {
+            background: #f5f5f5;
+            color: #616161;
+        }
+
+        /* アクションボタン */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-edit-user {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-suspend {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* フィルターバー */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main,
+            .breadcrumb-list {
+                padding: 0 1rem;
+            }
+
+            .permission-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .users-table {
+                font-size: 0.9rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: white; font-weight: 600;">システム管理者</span>
+                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+        <ul class="breadcrumb-list">
+            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
+            <li>›</li>
+            <li class="breadcrumb-current">アクセス権限管理</li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">🔐 アクセス権限管理</h1>
+            <p class="page-subtitle">ユーザーロールと権限の管理・監督</p>
+        </div>
+
+        <!-- セキュリティ警告 -->
+        <div class="security-warning">
+            🚨 重要: 権限設定の変更はシステムセキュリティに重大な影響を与えます。慎重に操作してください。
+        </div>
+
+        <!-- 権限統計 -->
+        <div class="permission-stats">
+            <div class="stat-card admins">
+                <div class="stat-icon">👑</div>
+                <span class="stat-number" id="adminCount">3</span>
+                <div class="stat-label">システム管理者</div>
+            </div>
+            
+            <div class="stat-card companies">
+                <div class="stat-icon">🏢</div>
+                <span class="stat-number" id="companyAdminCount">12</span>
+                <div class="stat-label">企業管理者</div>
+            </div>
+            
+            <div class="stat-card users">
+                <div class="stat-icon">👤</div>
+                <span class="stat-number" id="userCount">89</span>
+                <div class="stat-label">登録ユーザー</div>
+            </div>
+            
+            <div class="stat-card guests">
+                <div class="stat-icon">👥</div>
+                <span class="stat-number" id="guestCount">234</span>
+                <div class="stat-label">ゲストユーザー</div>
+            </div>
+        </div>
+
+        <!-- ロール定義 -->
+        <div class="section">
+            <h2 class="section-title">
+                🎭 ロール定義
+            </h2>
+            
+            <div class="roles-grid">
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-title">
+                            👑 システム管理者
+                        </div>
+                        <div class="role-count">3名</div>
+                    </div>
+                    <div class="role-description">
+                        最高権限。すべてのシステム機能とデータにアクセス可能。
+                    </div>
+                    <div class="role-permissions">
+                        <div class="permission-list">
+                            <span class="permission-tag critical">システム設定</span>
+                            <span class="permission-tag critical">ユーザー管理</span>
+                            <span class="permission-tag critical">データベース操作</span>
+                            <span class="permission-tag critical">セキュリティ設定</span>
+                            <span class="permission-tag critical">ログ閲覧</span>
+                        </div>
+                    </div>
+                    <div class="role-actions">
+                        <button class="role-btn btn-edit" onclick="editRole('system-admin')">編集</button>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-title">
+                            🏢 企業管理者
+                        </div>
+                        <div class="role-count">12名</div>
+                    </div>
+                    <div class="role-description">
+                        自社の求人・企業情報の管理。応募者情報の閲覧。
+                    </div>
+                    <div class="role-permissions">
+                        <div class="permission-list">
+                            <span class="permission-tag">求人投稿</span>
+                            <span class="permission-tag">求人編集</span>
+                            <span class="permission-tag">企業情報編集</span>
+                            <span class="permission-tag">応募者閲覧</span>
+                            <span class="permission-tag">統計閲覧</span>
+                        </div>
+                    </div>
+                    <div class="role-actions">
+                        <button class="role-btn btn-edit" onclick="editRole('company-admin')">編集</button>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-title">
+                            👤 登録ユーザー
+                        </div>
+                        <div class="role-count">89名</div>
+                    </div>
+                    <div class="role-description">
+                        求人応募、お気に入り機能、プロフィール管理が可能。
+                    </div>
+                    <div class="role-permissions">
+                        <div class="permission-list">
+                            <span class="permission-tag">求人閲覧</span>
+                            <span class="permission-tag">求人応募</span>
+                            <span class="permission-tag">お気に入り</span>
+                            <span class="permission-tag">プロフィール編集</span>
+                            <span class="permission-tag">セミナー申込</span>
+                        </div>
+                    </div>
+                    <div class="role-actions">
+                        <button class="role-btn btn-edit" onclick="editRole('user')">編集</button>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-title">
+                            👥 ゲストユーザー
+                        </div>
+                        <div class="role-count">234名</div>
+                    </div>
+                    <div class="role-description">
+                        公開情報の閲覧のみ。応募には会員登録が必要。
+                    </div>
+                    <div class="role-permissions">
+                        <div class="permission-list">
+                            <span class="permission-tag">ニュース閲覧</span>
+                            <span class="permission-tag">求人閲覧</span>
+                            <span class="permission-tag">セミナー閲覧</span>
+                            <span class="permission-tag">企業情報閲覧</span>
+                        </div>
+                    </div>
+                    <div class="role-actions">
+                        <button class="role-btn btn-edit" onclick="editRole('guest')">編集</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ユーザー権限管理 -->
+        <div class="section">
+            <h2 class="section-title">
+                👥 ユーザー権限管理
+            </h2>
+            
+            <!-- フィルターバー -->
+            <div class="filter-bar">
+                <input type="text" class="search-input" placeholder="ユーザー名、メールアドレスで検索..." id="userSearchInput">
+                <select class="filter-select" id="roleFilter">
+                    <option value="">すべてのロール</option>
+                    <option value="system-admin">システム管理者</option>
+                    <option value="company-admin">企業管理者</option>
+                    <option value="user">登録ユーザー</option>
+                    <option value="guest">ゲストユーザー</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">すべてのステータス</option>
+                    <option value="active">アクティブ</option>
+                    <option value="suspended">停止中</option>
+                    <option value="pending">承認待ち</option>
+                </select>
+            </div>
+            
+            <table class="users-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>ユーザー情報</th>
+                        <th>現在のロール</th>
+                        <th>権限レベル</th>
+                        <th>最終ログイン</th>
+                        <th>ステータス</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">S</div>
+                                <div class="user-details">
+                                    <h4>システム管理者</h4>
+                                    <p>system-admin@patent-hub.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge role-system-admin">システム管理者</span></td>
+                        <td><strong>レベル 5</strong> (最高権限)</td>
+                        <td>2025-08-11 15:30</td>
+                        <td>🟢 アクティブ</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-edit-user" onclick="editUserPermissions(1)" title="権限編集">
+                                    ✏️ 編集
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">特</div>
+                                <div class="user-details">
+                                    <h4>特許事務所ABC</h4>
+                                    <p>admin@abc-patent.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge role-company-admin">企業管理者</span></td>
+                        <td><strong>レベル 3</strong> (企業管理)</td>
+                        <td>2025-08-11 14:20</td>
+                        <td>🟢 アクティブ</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-edit-user" onclick="editUserPermissions(2)">
+                                    ✏️ 編集
+                                </button>
+                                <button class="action-btn btn-suspend" onclick="suspendUser(2)">
+                                    ⏸️ 停止
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">田</div>
+                                <div class="user-details">
+                                    <h4>田中 太郎</h4>
+                                    <p>tanaka@example.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge role-user">登録ユーザー</span></td>
+                        <td><strong>レベル 2</strong> (基本権限)</td>
+                        <td>2025-08-11 10:15</td>
+                        <td>🟢 アクティブ</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-edit-user" onclick="editUserPermissions(3)">
+                                    ✏️ 編集
+                                </button>
+                                <button class="action-btn btn-suspend" onclick="suspendUser(3)">
+                                    ⏸️ 停止
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">G</div>
+                                <div class="user-details">
+                                    <h4>ゲストユーザー</h4>
+                                    <p>guest@temp.visitor</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge role-guest">ゲストユーザー</span></td>
+                        <td><strong>レベル 1</strong> (閲覧のみ)</td>
+                        <td>2025-08-11 16:45</td>
+                        <td>🟢 アクティブ</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-edit-user" onclick="editUserPermissions(4)">
+                                    ✏️ 編集
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 権限編集モーダル -->
+    <div id="permissionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">ユーザー権限編集</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="permissionContent">
+                <!-- 動的に生成される権限編集フォーム -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // アクセス権限管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('アクセス権限管理画面が読み込まれました');
+            checkSystemAuthentication();
+            updatePermissionStats();
+            setupFilters();
+        });
+
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+
+        // 権限統計更新
+        function updatePermissionStats() {
+            // 実際の実装では API から取得
+            document.getElementById('adminCount').textContent = '3';
+            document.getElementById('companyAdminCount').textContent = '12';
+            document.getElementById('userCount').textContent = '89';
+            document.getElementById('guestCount').textContent = '234';
+        }
+
+        // フィルター設定
+        function setupFilters() {
+            document.getElementById('userSearchInput').addEventListener('input', filterUsers);
+            document.getElementById('roleFilter').addEventListener('change', filterUsers);
+            document.getElementById('statusFilter').addEventListener('change', filterUsers);
+        }
+
+        // ユーザーフィルター
+        function filterUsers() {
+            const search = document.getElementById('userSearchInput').value.toLowerCase();
+            const role = document.getElementById('roleFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            const rows = document.querySelectorAll('#usersTableBody tr');
+            
+            rows.forEach(row => {
+                const userName = row.querySelector('.user-details h4').textContent.toLowerCase();
+                const userEmail = row.querySelector('.user-details p').textContent.toLowerCase();
+                const userRole = row.querySelector('.role-badge').className;
+                const userStatus = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+                
+                const searchMatch = !search || userName.includes(search) || userEmail.includes(search);
+                const roleMatch = !role || userRole.includes(role);
+                const statusMatch = !status || userStatus.includes(status);
+                
+                if (searchMatch && roleMatch && statusMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // ロール編集
+        function editRole(roleType) {
+            if (!confirm(`${roleType} ロールの権限設定を編集しますか？`)) return;
+            
+            showNotification(`${roleType} ロールの編集機能は実装中です`, 'info');
+            logSecurityEvent(`ロール編集試行: ${roleType}`, 'SECURITY');
+        }
+
+        // ユーザー権限編集
+        function editUserPermissions(userId) {
+            const content = `
+                <div style="margin-bottom: 2rem;">
+                    <h3>ロール変更</h3>
+                    <select style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; margin-bottom: 1rem;">
+                        <option value="guest">ゲストユーザー</option>
+                        <option value="user">登録ユーザー</option>
+                        <option value="company-admin">企業管理者</option>
+                        <option value="system-admin">システム管理者</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <h3>追加権限</h3>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="checkbox"> 統計データ閲覧
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="checkbox"> API アクセス
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="checkbox"> バックアップダウンロード
+                    </label>
+                </div>
+                <div style="text-align: right; margin-top: 2rem;">
+                    <button onclick="closeModal()" style="margin-right: 1rem; padding: 0.75rem 1.5rem; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">キャンセル</button>
+                    <button onclick="savePermissions(${userId})" style="padding: 0.75rem 1.5rem; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer;">保存</button>
+                </div>
+            `;
+
+            document.getElementById('permissionContent').innerHTML = content;
+            document.getElementById('permissionModal').style.display = 'block';
+            
+            logSecurityEvent(`ユーザー権限編集画面アクセス: UserID=${userId}`, 'SECURITY');
+        }
+
+        // 権限保存
+        function savePermissions(userId) {
+            if (!confirm('⚠️ ユーザー権限を変更しますか？この操作はセキュリティログに記録されます。')) return;
+            
+            showNotification('ユーザー権限を更新しました', 'success');
+            logSecurityEvent(`ユーザー権限変更実行: UserID=${userId}`, 'CRITICAL');
+            closeModal();
+        }
+
+        // ユーザー停止
+        function suspendUser(userId) {
+            if (!confirm('このユーザーアカウントを停止しますか？')) return;
+            
+            showNotification('ユーザーアカウントを停止しました', 'warning');
+            logSecurityEvent(`ユーザーアカウント停止: UserID=${userId}`, 'SECURITY');
+        }
+
+        // モーダル閉じる
+        function closeModal() {
+            document.getElementById('permissionModal').style.display = 'none';
+        }
+
+        // セキュリティイベントログ
+        function logSecurityEvent(action, level) {
+            console.log(`🛡️ [${level}] ${new Date().toLocaleString()}: ${action}`);
+            
+            // 実際の実装では監査ログDBに記録
+            const auditLog = {
+                timestamp: new Date().toISOString(),
+                action: action,
+                level: level,
+                adminId: 'system-admin',
+                ip: 'xxx.xxx.xxx.xxx'
+            };
+            
+            const existingLogs = JSON.parse(localStorage.getItem('system_audit_logs') || '[]');
+            existingLogs.unshift(auditLog);
+            
+            if (existingLogs.length > 100) {
+                existingLogs.splice(100);
+            }
+            
+            localStorage.setItem('system_audit_logs', JSON.stringify(existingLogs));
+        }
+
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                logSecurityEvent('システム管理者ログアウト', 'SECURITY');
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+            `;
+
+            const colors = {
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'warning': '#f39c12',
+                'info': '#3498db'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // モーダル外クリックで閉じる
+        window.onclick = function(event) {
+            const modal = document.getElementById('permissionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        console.log('🔐 Patent Hub アクセス権限管理 - 初期化完了');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>セミナー管理 | Patent Hub システム管理画面</title>
+    <meta name="description" content="Patent Hub システム管理画面 - セミナー全体管理機能">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .admin-body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（システム管理者用） */
+        .admin-header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+        
+        /* サイドバー */
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* メインエリア */
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .content-header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 2rem;
+        }
+        
+        .content-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .content-subtitle {
+            opacity: 0.9;
+            margin: 0;
+        }
+        
+        .content-body {
+            padding: 2rem;
+        }
+        
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.seminars {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .stat-icon.applications {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .stat-icon.participants {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: white;
+        }
+        
+        .stat-icon.revenue {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+        }
+        
+        .stat-content h3 {
+            margin: 0 0 0.25rem 0;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: #28a745;
+        }
+        
+        .stat-change.negative {
+            color: #dc3545;
+        }
+        
+        /* タブナビゲーション */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab-btn:hover,
+        .tab-btn.active {
+            color: #dc3545;
+            border-bottom-color: #dc3545;
+        }
+        
+        .tab-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* アクションツールバー */
+        .action-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+        
+        .action-btn.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        /* データテーブル */
+        .data-table-container {
+            overflow-x: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .data-table thead th {
+            background: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* ステータスバッジ */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+            display: inline-block;
+        }
+        
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-badge.draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-badge.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-badge.full {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-badge.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        /* アクションボタン */
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .table-btn {
+            background: none;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .table-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .table-btn.primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .table-btn.primary:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .table-btn.success {
+            color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .table-btn.success:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .table-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .table-btn.danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        /* モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-toolbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-box {
+                max-width: none;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-logo">
+                <div class="admin-logo-icon">⚙️</div>
+                <span>Patent Hub システム管理</span>
+            </div>
+            <div class="admin-user">
+                <div class="user-info">
+                    <div class="user-name">管理者</div>
+                    <div class="user-role">システム管理者</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- サイドバー -->
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="admin-system-dashboard.html"><span>📊</span> ダッシュボード</a></li>
+                <li><a href="admin-system-companies.html"><span>🏢</span> 企業管理</a></li>
+                <li><a href="admin-system-jobs.html"><span>💼</span> 求人管理</a></li>
+                <li><a href="admin-system-seminars.html" class="active"><span>🎓</span> セミナー管理</a></li>
+                <li><a href="admin-system-news.html"><span>📰</span> ニュース管理</a></li>
+                <li><a href="admin-system-analytics.html"><span>📈</span> アナリティクス</a></li>
+                <li><a href="admin-system-settings.html"><span>⚙️</span> システム設定</a></li>
+            </ul>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="content-area">
+            <div class="content-header">
+                <h1 class="content-title">🎓 セミナー管理</h1>
+                <p class="content-subtitle">セミナー・申込・参加者の統合管理</p>
+            </div>
+            
+            <div class="content-body">
+                <!-- 統計カード -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon seminars">🎓</div>
+                            <div class="stat-content">
+                                <h3>開催セミナー</h3>
+                                <div class="stat-value">12</div>
+                                <div class="stat-change positive">📈 +3 (今月)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon applications">📝</div>
+                            <div class="stat-content">
+                                <h3>総申込件数</h3>
+                                <div class="stat-value">156</div>
+                                <div class="stat-change positive">📈 +28 (今月)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon participants">👥</div>
+                            <div class="stat-content">
+                                <h3>参加者数</h3>
+                                <div class="stat-value">1,245</div>
+                                <div class="stat-change positive">📈 +185 (今月)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon revenue">💰</div>
+                            <div class="stat-content">
+                                <h3>受講料収入</h3>
+                                <div class="stat-value">¥2.4M</div>
+                                <div class="stat-change positive">📈 +¥320K (今月)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- タブナビゲーション -->
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="showTab('seminars')">
+                        セミナー一覧
+                    </button>
+                    <button class="tab-btn" onclick="showTab('applications')">
+                        申込管理
+                        <span class="tab-badge">5</span>
+                    </button>
+                    <button class="tab-btn" onclick="showTab('participants')">
+                        参加者管理
+                    </button>
+                    <button class="tab-btn" onclick="showTab('analytics')">
+                        分析・レポート
+                    </button>
+                </div>
+
+                <!-- セミナー一覧タブ -->
+                <div class="tab-content active" id="seminarsTab">
+                    <div class="action-toolbar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="セミナー検索..." id="seminarSearchInput">
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="openAddSeminarModal()">+ 新規セミナー</button>
+                            <button class="action-btn success" onclick="exportSeminarsData()">📊 データ出力</button>
+                        </div>
+                    </div>
+
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>セミナー名</th>
+                                    <th>主催者</th>
+                                    <th>開催日</th>
+                                    <th>形式</th>
+                                    <th>参加者</th>
+                                    <th>料金</th>
+                                    <th>ステータス</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="seminarsTableBody">
+                                <!-- セミナーデータは動的生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 申込管理タブ -->
+                <div class="tab-content" id="applicationsTab">
+                    <div class="action-toolbar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="企業・申込者名で検索..." id="applicationSearchInput">
+                            <select class="search-input" id="applicationStatusFilter">
+                                <option value="">すべてのステータス</option>
+                                <option value="pending">承認待ち</option>
+                                <option value="confirmed">承認済み</option>
+                                <option value="cancelled">キャンセル済み</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn success" onclick="bulkApproveApplications()">一括承認</button>
+                            <button class="action-btn" onclick="exportApplicationsData()">📊 データ出力</button>
+                        </div>
+                    </div>
+
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllApplications"></th>
+                                    <th>セミナー名</th>
+                                    <th>企業名</th>
+                                    <th>申込者</th>
+                                    <th>参加人数</th>
+                                    <th>申込日</th>
+                                    <th>ステータス</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsTableBody">
+                                <!-- 申込データは動的生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 参加者管理タブ -->
+                <div class="tab-content" id="participantsTab">
+                    <div class="action-toolbar">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="参加者名で検索..." id="participantSearchInput">
+                            <select class="search-input" id="seminarFilter">
+                                <option value="">すべてのセミナー</option>
+                                <!-- セミナーオプションは動的生成 -->
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="sendBulkNotification()">📧 一括通知</button>
+                            <button class="action-btn" onclick="exportParticipantsData()">📊 データ出力</button>
+                        </div>
+                    </div>
+
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllParticipants"></th>
+                                    <th>参加者名</th>
+                                    <th>企業名</th>
+                                    <th>セミナー名</th>
+                                    <th>参加日</th>
+                                    <th>参加ステータス</th>
+                                    <th>評価</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="participantsTableBody">
+                                <!-- 参加者データは動的生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 分析・レポートタブ -->
+                <div class="tab-content" id="analyticsTab">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>📊 月別参加者推移</h3>
+                            <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                                チャートプレースホルダー<br>
+                                <small>実装時にChart.jsなどを使用</small>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>🏢 企業別参加状況</h3>
+                            <div style="padding: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>ABC特許事務所</span>
+                                    <span>15回</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>XYZ法律事務所</span>
+                                    <span>12回</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>グローバル特許事務所</span>
+                                    <span>8回</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>📈 カテゴリ別人気度</h3>
+                            <div style="padding: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>AI・IT</span>
+                                    <div style="background: #007bff; height: 8px; width: 80%; border-radius: 4px;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>特許</span>
+                                    <div style="background: #28a745; height: 8px; width: 65%; border-radius: 4px;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>商標</span>
+                                    <div style="background: #ffc107; height: 8px; width: 45%; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>⭐ 満足度評価</h3>
+                            <div style="text-align: center; padding: 2rem;">
+                                <div style="font-size: 3rem; color: #ffc107;">⭐⭐⭐⭐⭐</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50; margin: 0.5rem 0;">4.7</div>
+                                <div style="color: #6c757d;">平均満足度 (125件の評価)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- セミナー追加/編集モーダル -->
+    <div class="modal-overlay" id="seminarModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="seminarModalTitle">新規セミナー追加</h3>
+            </div>
+            
+            <form id="seminarForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">セミナー名 *</label>
+                        <input type="text" class="form-input" id="seminarTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">主催者 *</label>
+                        <input type="text" class="form-input" id="seminarOrganizer" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">開催日 *</label>
+                        <input type="date" class="form-input" id="seminarDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">開始時刻 *</label>
+                        <input type="time" class="form-input" id="seminarStartTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">終了時刻 *</label>
+                        <input type="time" class="form-input" id="seminarEndTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">開催形式 *</label>
+                        <select class="form-select" id="seminarFormat" required>
+                            <option value="">選択してください</option>
+                            <option value="online">オンライン</option>
+                            <option value="offline">会場開催</option>
+                            <option value="hybrid">ハイブリッド</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">カテゴリ *</label>
+                        <select class="form-select" id="seminarCategory" required>
+                            <option value="">選択してください</option>
+                            <option value="特許">特許</option>
+                            <option value="商標">商標</option>
+                            <option value="意匠">意匠</option>
+                            <option value="AI・IT">AI・IT</option>
+                            <option value="訴訟">知財訴訟</option>
+                            <option value="戦略">知財戦略</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">参加費用 (円)</label>
+                        <input type="number" class="form-input" id="seminarPrice" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">定員</label>
+                        <input type="number" class="form-input" id="seminarCapacity" min="1" value="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">開催場所</label>
+                        <input type="text" class="form-input" id="seminarLocation" placeholder="オンラインの場合は「オンライン開催」">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">セミナー概要 *</label>
+                        <textarea class="form-textarea" id="seminarDescription" rows="4" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn secondary" onclick="closeSeminarModal()">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="modal-btn primary">
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // システム管理者セミナー管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('システム管理者セミナー管理画面が読み込まれました');
+            
+            // データを初期化
+            initializeSystemSeminarData();
+            
+            // 各タブのデータを読み込み
+            loadSeminarsTable();
+            loadApplicationsTable();
+            loadParticipantsTable();
+            
+            console.log('✅ システム管理者セミナー管理画面の初期化が完了しました');
+        });
+        
+        let systemSeminars = [];
+        let seminarApplications = [];
+        let seminarParticipants = [];
+        
+        // システムセミナーデータの初期化
+        function initializeSystemSeminarData() {
+            systemSeminars = [
+                {
+                    id: 'SEM001',
+                    title: 'AI時代の特許戦略セミナー',
+                    organizer: '日本知財学会',
+                    date: '2025-08-15',
+                    startTime: '14:00',
+                    endTime: '17:00',
+                    format: 'online',
+                    category: 'AI・IT',
+                    price: 0,
+                    capacity: 100,
+                    currentParticipants: 45,
+                    location: 'オンライン開催',
+                    description: 'AI技術の急速な発展に対応した特許戦略について、最新の動向と実践的なアプローチを学びます。',
+                    status: 'active',
+                    createdDate: '2025-08-01'
+                },
+                {
+                    id: 'SEM002',
+                    title: '商標権侵害の最新判例研究',
+                    organizer: '弁理士会東京会',
+                    date: '2025-08-20',
+                    startTime: '13:30',
+                    endTime: '16:30',
+                    format: 'hybrid',
+                    category: '商標',
+                    price: 5000,
+                    capacity: 80,
+                    currentParticipants: 65,
+                    location: '弁理士会館+オンライン',
+                    description: '近年の商標権侵害事件の重要判例を詳細に分析し、実務における留意点を解説します。',
+                    status: 'active',
+                    createdDate: '2025-07-28'
+                },
+                {
+                    id: 'SEM003',
+                    title: 'スタートアップのための知財入門',
+                    organizer: 'JETRO',
+                    date: '2025-08-25',
+                    startTime: '10:00',
+                    endTime: '12:00',
+                    format: 'online',
+                    category: '戦略',
+                    price: 0,
+                    capacity: 200,
+                    currentParticipants: 150,
+                    location: 'オンライン開催',
+                    description: 'スタートアップ企業が知っておくべき知的財産の基礎知識と活用方法を解説します。',
+                    status: 'active',
+                    createdDate: '2025-07-25'
+                }
+            ];
+            
+            seminarApplications = [
+                {
+                    id: 'APP001',
+                    seminarId: 'SEM002',
+                    seminarTitle: '商標権侵害の最新判例研究',
+                    companyName: 'ABC特許事務所',
+                    applicantName: '田中 太郎',
+                    participantCount: 3,
+                    participants: ['田中 太郎', '山田 花子', '佐藤 次郎'],
+                    applicationDate: '2025-08-10',
+                    status: 'pending',
+                    totalCost: 15000
+                },
+                {
+                    id: 'APP002',
+                    seminarId: 'SEM001',
+                    seminarTitle: 'AI時代の特許戦略セミナー',
+                    companyName: 'XYZ法律事務所',
+                    applicantName: '鈴木 花子',
+                    participantCount: 2,
+                    participants: ['鈴木 花子', '高橋 次郎'],
+                    applicationDate: '2025-08-09',
+                    status: 'confirmed',
+                    totalCost: 0
+                },
+                {
+                    id: 'APP003',
+                    seminarId: 'SEM003',
+                    seminarTitle: 'スタートアップのための知財入門',
+                    companyName: 'グローバル特許事務所',
+                    applicantName: '佐藤 三郎',
+                    participantCount: 1,
+                    participants: ['佐藤 三郎'],
+                    applicationDate: '2025-08-11',
+                    status: 'pending',
+                    totalCost: 0
+                }
+            ];
+            
+            seminarParticipants = [
+                {
+                    id: 'PART001',
+                    name: '田中 太郎',
+                    company: 'ABC特許事務所',
+                    seminarTitle: '知的財産の国際化対応セミナー',
+                    seminarDate: '2025-07-15',
+                    participationStatus: 'attended',
+                    rating: 4,
+                    feedback: '実践的な内容で参考になりました'
+                },
+                {
+                    id: 'PART002',
+                    name: '山田 花子',
+                    company: 'ABC特許事務所',
+                    seminarTitle: 'デジタル時代の著作権実務',
+                    seminarDate: '2025-06-20',
+                    participationStatus: 'attended',
+                    rating: 5,
+                    feedback: '最新情報が充実していました'
+                },
+                {
+                    id: 'PART003',
+                    name: '鈴木 花子',
+                    company: 'XYZ法律事務所',
+                    seminarTitle: 'AI時代の特許戦略セミナー',
+                    seminarDate: '2025-08-15',
+                    participationStatus: 'registered',
+                    rating: null,
+                    feedback: null
+                }
+            ];
+        }
+        
+        // セミナー一覧テーブルを読み込み
+        function loadSeminarsTable() {
+            const tbody = document.getElementById('seminarsTableBody');
+            
+            tbody.innerHTML = systemSeminars.map(seminar => {
+                const formatText = seminar.format === 'online' ? 'オンライン' : 
+                                 seminar.format === 'offline' ? '会場開催' : 'ハイブリッド';
+                
+                const statusText = seminar.status === 'active' ? '開催中' :
+                                  seminar.status === 'draft' ? '下書き' :
+                                  seminar.status === 'cancelled' ? 'キャンセル' :
+                                  seminar.status === 'full' ? '満席' : '不明';
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${seminar.title}</strong><br>
+                            <small style="color: #6c757d;">${seminar.description.substring(0, 50)}...</small>
+                        </td>
+                        <td>${seminar.organizer}</td>
+                        <td>${seminar.date}<br><small>${seminar.startTime}-${seminar.endTime}</small></td>
+                        <td>${formatText}</td>
+                        <td>${seminar.currentParticipants}/${seminar.capacity}名</td>
+                        <td>${seminar.price === 0 ? '無料' : '¥' + seminar.price.toLocaleString()}</td>
+                        <td><span class="status-badge ${seminar.status}">${statusText}</span></td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="table-btn primary" onclick="editSeminar('${seminar.id}')">編集</button>
+                                <button class="table-btn" onclick="viewSeminarDetail('${seminar.id}')">詳細</button>
+                                <button class="table-btn danger" onclick="deleteSeminar('${seminar.id}')">削除</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 申込管理テーブルを読み込み
+        function loadApplicationsTable() {
+            const tbody = document.getElementById('applicationsTableBody');
+            
+            tbody.innerHTML = seminarApplications.map(app => {
+                const statusText = app.status === 'confirmed' ? '承認済み' :
+                                  app.status === 'pending' ? '承認待ち' :
+                                  app.status === 'cancelled' ? 'キャンセル済み' : '不明';
+                
+                return `
+                    <tr>
+                        <td><input type="checkbox" value="${app.id}"></td>
+                        <td>
+                            <strong>${app.seminarTitle}</strong><br>
+                            <small style="color: #6c757d;">ID: ${app.seminarId}</small>
+                        </td>
+                        <td>${app.companyName}</td>
+                        <td>${app.applicantName}</td>
+                        <td>${app.participantCount}名</td>
+                        <td>${app.applicationDate}</td>
+                        <td><span class="status-badge ${app.status}">${statusText}</span></td>
+                        <td>
+                            <div class="table-actions">
+                                ${app.status === 'pending' ? 
+                                    `<button class="table-btn success" onclick="approveApplication('${app.id}')">承認</button>` : ''
+                                }
+                                <button class="table-btn" onclick="viewApplicationDetail('${app.id}')">詳細</button>
+                                <button class="table-btn danger" onclick="cancelApplication('${app.id}')">キャンセル</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 参加者管理テーブルを読み込み
+        function loadParticipantsTable() {
+            const tbody = document.getElementById('participantsTableBody');
+            
+            tbody.innerHTML = seminarParticipants.map(participant => {
+                const statusText = participant.participationStatus === 'attended' ? '参加済み' :
+                                  participant.participationStatus === 'registered' ? '申込済み' :
+                                  participant.participationStatus === 'cancelled' ? 'キャンセル' : '不明';
+                
+                const ratingDisplay = participant.rating ? '⭐'.repeat(participant.rating) : '-';
+                
+                return `
+                    <tr>
+                        <td><input type="checkbox" value="${participant.id}"></td>
+                        <td>${participant.name}</td>
+                        <td>${participant.company}</td>
+                        <td>${participant.seminarTitle}</td>
+                        <td>${participant.seminarDate}</td>
+                        <td><span class="status-badge ${participant.participationStatus}">${statusText}</span></td>
+                        <td>${ratingDisplay}</td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="table-btn" onclick="viewParticipantDetail('${participant.id}')">詳細</button>
+                                <button class="table-btn primary" onclick="sendNotification('${participant.id}')">通知</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // タブ切り替え
+        function showTab(tabName) {
+            // タブボタンの状態更新
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // タブコンテンツの表示切り替え
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'seminars') {
+                document.getElementById('seminarsTab').classList.add('active');
+            } else if (tabName === 'applications') {
+                document.getElementById('applicationsTab').classList.add('active');
+            } else if (tabName === 'participants') {
+                document.getElementById('participantsTab').classList.add('active');
+            } else if (tabName === 'analytics') {
+                document.getElementById('analyticsTab').classList.add('active');
+            }
+        }
+        
+        // セミナー追加モーダルを開く
+        function openAddSeminarModal() {
+            document.getElementById('seminarModalTitle').textContent = '新規セミナー追加';
+            document.getElementById('seminarModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // フォームをリセット
+            document.getElementById('seminarForm').reset();
+        }
+        
+        // セミナー編集
+        function editSeminar(seminarId) {
+            const seminar = systemSeminars.find(s => s.id === seminarId);
+            if (!seminar) return;
+            
+            document.getElementById('seminarModalTitle').textContent = 'セミナー編集';
+            
+            // フォームに既存データを入力
+            document.getElementById('seminarTitle').value = seminar.title;
+            document.getElementById('seminarOrganizer').value = seminar.organizer;
+            document.getElementById('seminarDate').value = seminar.date;
+            document.getElementById('seminarStartTime').value = seminar.startTime;
+            document.getElementById('seminarEndTime').value = seminar.endTime;
+            document.getElementById('seminarFormat').value = seminar.format;
+            document.getElementById('seminarCategory').value = seminar.category;
+            document.getElementById('seminarPrice').value = seminar.price;
+            document.getElementById('seminarCapacity').value = seminar.capacity;
+            document.getElementById('seminarLocation').value = seminar.location;
+            document.getElementById('seminarDescription').value = seminar.description;
+            
+            document.getElementById('seminarModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // セミナーモーダルを閉じる
+        function closeSeminarModal() {
+            document.getElementById('seminarModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // セミナーフォーム送信
+        document.getElementById('seminarForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('seminarTitle').value,
+                organizer: document.getElementById('seminarOrganizer').value,
+                date: document.getElementById('seminarDate').value,
+                startTime: document.getElementById('seminarStartTime').value,
+                endTime: document.getElementById('seminarEndTime').value,
+                format: document.getElementById('seminarFormat').value,
+                category: document.getElementById('seminarCategory').value,
+                price: parseInt(document.getElementById('seminarPrice').value) || 0,
+                capacity: parseInt(document.getElementById('seminarCapacity').value) || 50,
+                location: document.getElementById('seminarLocation').value,
+                description: document.getElementById('seminarDescription').value
+            };
+            
+            console.log('セミナーデータ:', formData);
+            alert('セミナー情報を保存しました。');
+            
+            closeSeminarModal();
+            loadSeminarsTable();
+        });
+        
+        // 申込承認
+        function approveApplication(applicationId) {
+            if (confirm('この申込を承認しますか？')) {
+                const app = seminarApplications.find(a => a.id === applicationId);
+                if (app) {
+                    app.status = 'confirmed';
+                    alert('申込を承認しました。');
+                    loadApplicationsTable();
+                }
+            }
+        }
+        
+        // 一括承認
+        function bulkApproveApplications() {
+            const checkboxes = document.querySelectorAll('#applicationsTableBody input[type="checkbox"]:checked');
+            if (checkboxes.length === 0) {
+                alert('承認する申込を選択してください。');
+                return;
+            }
+            
+            if (confirm(`${checkboxes.length}件の申込を一括承認しますか？`)) {
+                checkboxes.forEach(checkbox => {
+                    const app = seminarApplications.find(a => a.id === checkbox.value);
+                    if (app && app.status === 'pending') {
+                        app.status = 'confirmed';
+                    }
+                });
+                
+                alert(`${checkboxes.length}件の申込を承認しました。`);
+                loadApplicationsTable();
+            }
+        }
+        
+        // セミナー削除
+        function deleteSeminar(seminarId) {
+            if (confirm('本当にこのセミナーを削除しますか？\n関連する申込データも削除されます。')) {
+                systemSeminars = systemSeminars.filter(s => s.id !== seminarId);
+                alert('セミナーを削除しました。');
+                loadSeminarsTable();
+            }
+        }
+        
+        // 申込キャンセル
+        function cancelApplication(applicationId) {
+            if (confirm('この申込をキャンセルしますか？')) {
+                const app = seminarApplications.find(a => a.id === applicationId);
+                if (app) {
+                    app.status = 'cancelled';
+                    alert('申込をキャンセルしました。');
+                    loadApplicationsTable();
+                }
+            }
+        }
+        
+        // データ出力機能
+        function exportSeminarsData() {
+            alert('セミナーデータをCSV形式で出力します。\n（実装時はCSV生成とダウンロード機能を追加）');
+        }
+        
+        function exportApplicationsData() {
+            alert('申込データをCSV形式で出力します。\n（実装時はCSV生成とダウンロード機能を追加）');
+        }
+        
+        function exportParticipantsData() {
+            alert('参加者データをCSV形式で出力します。\n（実装時はCSV生成とダウンロード機能を追加）');
+        }
+        
+        // 通知機能
+        function sendNotification(participantId) {
+            alert('参加者に通知を送信しました。\n（実装時はメール送信機能を追加）');
+        }
+        
+        function sendBulkNotification() {
+            const checkboxes = document.querySelectorAll('#participantsTableBody input[type="checkbox"]:checked');
+            if (checkboxes.length === 0) {
+                alert('通知を送信する参加者を選択してください。');
+                return;
+            }
+            
+            alert(`${checkboxes.length}名の参加者に一括通知を送信しました。`);
+        }
+        
+        // 詳細表示機能
+        function viewSeminarDetail(seminarId) {
+            window.open(`seminar-detail.html?id=${seminarId}`, '_blank');
+        }
+        
+        function viewApplicationDetail(applicationId) {
+            alert('申込詳細を表示します。\n（実装時は詳細モーダルを表示）');
+        }
+        
+        function viewParticipantDetail(participantId) {
+            alert('参加者詳細を表示します。\n（実装時は詳細モーダルを表示）');
+        }
+        
+        // ログアウト
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'admin-system-login.html';
+            }
+        }
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('seminarModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSeminarModal();
+            }
+        });
+        
+        console.log('⚙️ Patent Hub システム管理者セミナー管理 - 初期化完了');
+    </script>
+</body>
+</html>

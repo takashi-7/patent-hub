@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム管理ダッシュボード | Patent Hub</title>
+    <meta name="description" content="Patent Hub システム管理者専用ダッシュボード - 最高管理者権限での全体統制">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（赤テーマでシステム管理者専用を強調） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .system-admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .system-nav-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .system-nav-link:hover,
+        .system-nav-link.active {
+            color: #e74c3c;
+        }
+        
+        .system-admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        
+        .system-user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .system-logout-btn {
+            background: transparent;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .system-logout-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .system-welcome-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .system-welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .system-welcome-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        /* 全体統計 */
+        .system-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .system-stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+        
+        .system-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .system-stat-card.companies {
+            border-left-color: #3498db;
+        }
+        
+        .system-stat-card.total-jobs {
+            border-left-color: #2ecc71;
+        }
+        
+        .system-stat-card.total-news {
+            border-left-color: #f39c12;
+        }
+        
+        .system-stat-card.revenue {
+            border-left-color: #e74c3c;
+        }
+        
+        .system-stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .system-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .system-stat-label {
+            color: #7f8c8d;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .system-stat-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-up {
+            color: #27ae60;
+        }
+        
+        .stat-down {
+            color: #e74c3c;
+        }
+        
+        /* 管理機能セクション */
+        .system-admin-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .system-admin-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .system-section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .system-action-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .system-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .system-action-btn:hover {
+            background: #e9ecef;
+            border-color: #e74c3c;
+            transform: translateX(5px);
+        }
+        
+        .system-action-btn.danger:hover {
+            background: #fff5f5;
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .system-action-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        /* システム活動ログ */
+        .system-activity-log {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .activity-log-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-log-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .activity-log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-log-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .activity-log-icon.security {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .activity-log-icon.user {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+        
+        .activity-log-icon.system {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        .activity-log-content {
+            flex: 1;
+        }
+        
+        .activity-log-text {
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-log-time {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+        
+        .activity-log-level {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .level-critical {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .level-warning {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .level-info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 1200px) {
+            .system-admin-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main {
+                padding: 0 1rem;
+            }
+            
+            .system-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .system-welcome-title {
+                font-size: 1.6rem;
+            }
+            
+            .system-admin-nav {
+                display: none;
+            }
+            
+            .system-admin-user-info {
+                gap: 0.5rem;
+            }
+        }
+        
+        /* セキュリティ警告バー */
+        .security-warning-bar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- セキュリティ警告バー -->
+    <div class="security-warning-bar">
+        🔒 システム管理者権限でログイン中 - すべての操作がログに記録されます
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <div class="system-admin-logo">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </div>
+            <nav class="system-admin-nav">
+                <a href="system-admin-dashboard.html" class="system-nav-link active">ダッシュボード</a>
+                <a href="system-company-management.html" class="system-nav-link">企業管理</a>
+                <a href="system-job-management.html" class="system-nav-link">求人統制</a>
+                <a href="system-business-analytics.html" class="system-nav-link">分析レポート</a>
+                <a href="system-site-settings.html" class="system-nav-link">システム設定</a>
+            </nav>
+            <div class="system-admin-user-info">
+                <div class="system-user-avatar" id="systemUserAvatar">S</div>
+                <span id="systemUserName">システム管理者</span>
+                <button class="system-logout-btn" onclick="systemLogout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ウェルカムカード -->
+        <div class="system-welcome-card">
+            <h1 class="system-welcome-title">システム管理者ダッシュボード</h1>
+            <p class="system-welcome-subtitle">Patent Hub 全体の運営状況と管理機能へのアクセス</p>
+        </div>
+
+        <!-- 全体統計 -->
+        <div class="system-stats-grid">
+            <div class="system-stat-card companies">
+                <div class="system-stat-icon">🏢</div>
+                <span class="system-stat-number" id="totalCompanies">12</span>
+                <div class="system-stat-label">登録企業数</div>
+                <div class="system-stat-change stat-up">↗ +2 今月</div>
+            </div>
+            
+            <div class="system-stat-card total-jobs">
+                <div class="system-stat-icon">💼</div>
+                <span class="system-stat-number" id="totalAllJobs">47</span>
+                <div class="system-stat-label">総求人数</div>
+                <div class="system-stat-change stat-up">↗ +8 今週</div>
+            </div>
+            
+            <div class="system-stat-card total-news">
+                <div class="system-stat-icon">📰</div>
+                <span class="system-stat-number" id="totalNews">1,234</span>
+                <div class="system-stat-label">総ニュース数</div>
+                <div class="system-stat-change stat-up">↗ +25 今日</div>
+            </div>
+            
+            <div class="system-stat-card revenue">
+                <div class="system-stat-icon">💰</div>
+                <span class="system-stat-number" id="totalRevenue">¥1.2M</span>
+                <div class="system-stat-label">月間収益</div>
+                <div class="system-stat-change stat-up">↗ +18% 先月比</div>
+            </div>
+        </div>
+
+        <!-- 管理機能セクション -->
+        <div class="system-admin-sections">
+            <!-- 企業・ユーザー管理 -->
+            <div class="system-admin-section">
+                <h2 class="system-section-title">
+                    🏢 企業・ユーザー管理
+                </h2>
+                <div class="system-action-grid">
+                    <a href="system-company-management.html" class="system-action-btn">
+                        <div class="system-action-icon">🏢</div>
+                        <div>企業アカウント管理</div>
+                    </a>
+                    
+                    <a href="system-news-management.html" class="system-action-btn">
+                        <div class="system-action-icon">📰</div>
+                        <div>ニュース管理</div>
+                    </a>
+                    
+                    <a href="#" class="system-action-btn" onclick="showAccessControl()">
+                        <div class="system-action-icon">🔐</div>
+                        <div>アクセス権限管理</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- コンテンツ・求人管理 -->
+            <div class="system-admin-section">
+                <h2 class="system-section-title">
+                    💼 コンテンツ・求人管理
+                </h2>
+                <div class="system-action-grid">
+                    <a href="system-job-management.html" class="system-action-btn">
+                        <div class="system-action-icon">💼</div>
+                        <div>全求人統制・品質管理</div>
+                    </a>
+                    
+                    <a href="system-news-management.html" class="system-action-btn">
+                        <div class="system-action-icon">📰</div>
+                        <div>ニュース自動収集・管理</div>
+                    </a>
+                    
+                    <a href="#" class="system-action-btn danger" onclick="showSuspendedContent()">
+                        <div class="system-action-icon">⚠️</div>
+                        <div>違反コンテンツ管理</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- システム分析・設定 -->
+        <div class="system-admin-sections">
+            <!-- 分析・レポート -->
+            <div class="system-admin-section">
+                <h2 class="system-section-title">
+                    📊 分析・レポート
+                </h2>
+                <div class="system-action-grid">
+                    <a href="system-business-analytics.html" class="system-action-btn">
+                        <div class="system-action-icon">📈</div>
+                        <div>ビジネス分析・収益レポート</div>
+                    </a>
+                    
+                    <a href="#" class="system-action-btn" onclick="showPerformanceMetrics()">
+                        <div class="system-action-icon">⚡</div>
+                        <div>パフォーマンス指標</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- システム設定・セキュリティ -->
+            <div class="system-admin-section">
+                <h2 class="system-section-title">
+                    ⚙️ システム設定・セキュリティ
+                </h2>
+                <div class="system-action-grid">
+                    <a href="system-site-settings.html" class="system-action-btn">
+                        <div class="system-action-icon">⚙️</div>
+                        <div>サイト基本設定・SEO管理</div>
+                    </a>
+                    
+                    <a href="system-security-settings.html" class="system-action-btn">
+                        <div class="system-action-icon">🔒</div>
+                        <div>セキュリティ設定・監査ログ</div>
+                    </a>
+                    
+                    <a href="#" class="system-action-btn danger" onclick="showMaintenanceMode()">
+                        <div class="system-action-icon">🚨</div>
+                        <div>メンテナンスモード</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- システム活動ログ -->
+        <div class="system-activity-log">
+            <h2 class="system-section-title">
+                📋 システム活動ログ
+            </h2>
+            <ul class="activity-log-list" id="systemActivityLog">
+                <li class="activity-log-item">
+                    <div class="activity-log-icon security">🚨</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">システム管理者ログイン: system-admin</div>
+                        <div class="activity-log-time">2025-08-09 15:32:45</div>
+                    </div>
+                    <div class="activity-log-level level-critical">SECURITY</div>
+                </li>
+                
+                <li class="activity-log-item">
+                    <div class="activity-log-icon user">👥</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">新規企業登録: グローバル特許事務所</div>
+                        <div class="activity-log-time">2025-08-09 14:15:22</div>
+                    </div>
+                    <div class="activity-log-level level-info">USER</div>
+                </li>
+                
+                <li class="activity-log-item">
+                    <div class="activity-log-icon system">⚙️</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">データベースバックアップ実行完了</div>
+                        <div class="activity-log-time">2025-08-09 12:00:00</div>
+                    </div>
+                    <div class="activity-log-level level-info">SYSTEM</div>
+                </li>
+                
+                <li class="activity-log-item">
+                    <div class="activity-log-icon security">🛡️</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">不正アクセス試行を検出・ブロック</div>
+                        <div class="activity-log-time">2025-08-09 10:45:12</div>
+                    </div>
+                    <div class="activity-log-level level-warning">SECURITY</div>
+                </li>
+                
+                <li class="activity-log-item">
+                    <div class="activity-log-icon user">📧</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">スパムコンテンツ自動削除: 3件</div>
+                        <div class="activity-log-time">2025-08-09 09:20:30</div>
+                    </div>
+                    <div class="activity-log-level level-warning">MODERATION</div>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // システム管理ダッシュボード機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('システム管理ダッシュボードが読み込まれました');
+            
+            // 認証チェック
+            checkSystemAuthentication();
+            
+            // ユーザー情報を表示
+            loadSystemUserInfo();
+            
+            // 統計データを更新
+            updateSystemStats();
+            
+            // 活動ログの自動更新開始
+            startActivityLogUpdates();
+            
+            console.log('✅ システム管理ダッシュボードの初期化が完了しました');
+        });
+        
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            
+            if (!sessionData) {
+                alert('システム管理者権限が必要です。ログイン画面に移動します。');
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+            
+            try {
+                const session = JSON.parse(sessionData);
+                
+                // セッション期限チェック（12時間）
+                const loginTime = new Date(session.loginTime);
+                const currentTime = new Date();
+                const timeDiff = currentTime - loginTime;
+                const hoursDiff = timeDiff / (1000 * 60 * 60);
+                
+                if (hoursDiff > 12) {
+                    localStorage.removeItem('system_admin_session');
+                    alert('セキュリティのため、システム管理者セッションが期限切れになりました。再度ログインしてください。');
+                    window.location.href = 'system-admin-login.html';
+                    return;
+                }
+                
+                console.log(`システム管理者認証済み: ${session.adminName}`);
+                
+                // セキュリティログ記録
+                logSecurityEvent('システム管理ダッシュボードアクセス', 'INFO');
+                
+            } catch (error) {
+                console.error('システム管理者セッション情報の解析に失敗:', error);
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+        
+        // システム管理者情報を表示
+        function loadSystemUserInfo() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            
+            document.getElementById('systemUserName').textContent = session.adminName;
+            
+            // アバターに管理者名の頭文字を表示
+            const firstChar = session.adminName.charAt(0);
+            document.getElementById('systemUserAvatar').textContent = firstChar;
+        }
+        
+        // システム統計データを更新
+        function updateSystemStats() {
+            // 実際のシステムではAPIから取得
+            const currentHour = new Date().getHours();
+            
+            document.getElementById('totalCompanies').textContent = 12 + (currentHour % 3);
+            document.getElementById('totalAllJobs').textContent = 45 + (currentHour % 10);
+            document.getElementById('totalNews').textContent = 1200 + (currentHour * 3);
+            
+            const revenue = (1.1 + (currentHour * 0.02)).toFixed(1);
+            document.getElementById('totalRevenue').textContent = `¥${revenue}M`;
+            
+            // カウンターアニメーション
+            animateSystemCounters();
+        }
+        
+        // カウンターアニメーション（システム版）
+        function animateSystemCounters() {
+            const counters = document.querySelectorAll('.system-stat-number');
+            
+            counters.forEach(counter => {
+                const text = counter.textContent;
+                const numericMatch = text.match(/[\d,]+/);
+                if (!numericMatch) return;
+                
+                const target = parseInt(numericMatch[0].replace(/,/g, ''));
+                const increment = Math.max(1, Math.floor(target / 25));
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = text;
+                        clearInterval(timer);
+                    } else {
+                        const newText = text.replace(numericMatch[0], current.toLocaleString());
+                        counter.textContent = newText;
+                    }
+                }, 80);
+            });
+        }
+        
+        // システム管理機能（各機能のプレースホルダー）
+        function showCompanyManagement() {
+            logSecurityEvent('企業アカウント管理画面アクセス', 'INFO');
+            window.location.href = 'system-company-management.html';
+        }
+        
+        
+        function showAccessControl() {
+            logSecurityEvent('アクセス権限管理画面アクセス', 'SECURITY');
+            window.location.href = 'system-access-control.html';
+        }
+        
+        function showJobManagement() {
+            logSecurityEvent('求人統制管理画面アクセス', 'INFO');
+            window.location.href = 'system-job-management.html';
+        }
+        
+        function showContentModeration() {
+            logSecurityEvent('コンテンツ審査画面アクセス', 'MODERATION');
+            window.location.href = 'system-news-management.html';
+        }
+        
+        function showSuspendedContent() {
+            if (!confirm('違反コンテンツ管理は機密性の高い操作です。続行しますか？')) return;
+            logSecurityEvent('違反コンテンツ管理画面アクセス', 'SECURITY');
+            window.location.href = 'system-content-moderation.html';
+        }
+        
+        function showBusinessAnalytics() {
+            logSecurityEvent('ビジネス分析画面アクセス', 'INFO');
+            window.location.href = 'system-business-analytics.html';
+        }
+        
+        
+        function showPerformanceMetrics() {
+            logSecurityEvent('パフォーマンス指標画面アクセス', 'INFO');
+            window.location.href = 'system-business-analytics.html';
+        }
+        
+        function showSiteSettings() {
+            logSecurityEvent('サイト設定画面アクセス', 'SYSTEM');
+            window.location.href = 'system-site-settings.html';
+        }
+        
+        function showSecuritySettings() {
+            if (!confirm('セキュリティ設定は重要な操作です。続行しますか？')) return;
+            logSecurityEvent('セキュリティ設定画面アクセス', 'SECURITY');
+            window.location.href = 'system-security-settings.html';
+        }
+        
+        function showMaintenanceMode() {
+            if (!confirm('⚠️ メンテナンスモードはサイト全体に影響します。本当に続行しますか？')) return;
+            logSecurityEvent('メンテナンスモード画面アクセス', 'CRITICAL');
+            window.location.href = 'system-maintenance.html';
+        }
+        
+        // セキュリティイベントのログ記録
+        function logSecurityEvent(action, level) {
+            const timestamp = new Date().toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            console.log(`🛡️ [${level}] ${timestamp}: ${action}`);
+            
+            // 実際の実装では監査ログDBに記録
+            const auditLog = {
+                timestamp: new Date().toISOString(),
+                action: action,
+                level: level,
+                adminId: 'system-admin',
+                ip: 'xxx.xxx.xxx.xxx' // 実際の実装ではクライアントIPを取得
+            };
+            
+            // ローカルストレージに一時保存（実際はサーバーに送信）
+            const existingLogs = JSON.parse(localStorage.getItem('system_audit_logs') || '[]');
+            existingLogs.unshift(auditLog);
+            
+            // 最新100件のログのみ保持
+            if (existingLogs.length > 100) {
+                existingLogs.splice(100);
+            }
+            
+            localStorage.setItem('system_audit_logs', JSON.stringify(existingLogs));
+        }
+        
+        // 活動ログの自動更新
+        function startActivityLogUpdates() {
+            // 30秒ごとに活動ログを更新
+            setInterval(() => {
+                updateActivityLog();
+            }, 30000);
+        }
+        
+        function updateActivityLog() {
+            // 実際の実装では新しいログをAPIから取得
+            console.log('活動ログを更新中...');
+            
+            // シミュレーション：新しいログエントリを追加
+            const logContainer = document.getElementById('systemActivityLog');
+            if (Math.random() > 0.7) { // 30%の確率で新しいログを追加
+                addNewLogEntry(logContainer);
+            }
+        }
+        
+        function addNewLogEntry(container) {
+            const logTypes = [
+                { icon: '👥', text: '新規ユーザー登録', level: 'info', levelClass: 'level-info' },
+                { icon: '💼', text: '求人投稿承認', level: 'info', levelClass: 'level-info' },
+                { icon: '🛡️', text: 'セキュリティスキャン実行', level: 'warning', levelClass: 'level-warning' },
+                { icon: '📧', text: 'メール配信完了', level: 'info', levelClass: 'level-info' }
+            ];
+            
+            const randomLog = logTypes[Math.floor(Math.random() * logTypes.length)];
+            const timestamp = new Date().toLocaleString('ja-JP');
+            
+            const newLogHTML = `
+                <li class="activity-log-item">
+                    <div class="activity-log-icon system">${randomLog.icon}</div>
+                    <div class="activity-log-content">
+                        <div class="activity-log-text">${randomLog.text}</div>
+                        <div class="activity-log-time">${timestamp}</div>
+                    </div>
+                    <div class="activity-log-level ${randomLog.levelClass}">${randomLog.level.toUpperCase()}</div>
+                </li>
+            `;
+            
+            container.insertAdjacentHTML('afterbegin', newLogHTML);
+            
+            // 最新10件のログのみ表示
+            const logItems = container.querySelectorAll('.activity-log-item');
+            if (logItems.length > 10) {
+                logItems[logItems.length - 1].remove();
+            }
+        }
+        
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (confirm('🔒 システム管理者セッションを終了しますか？')) {
+                logSecurityEvent('システム管理者ログアウト', 'SECURITY');
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+        
+        // 通知表示機能（システム管理者版）
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            `;
+            
+            const colors = {
+                'success': 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)',
+                'error': 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
+                'warning': 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                'info': 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+        
+        // 統計データの定期更新
+        setInterval(updateSystemStats, 15 * 60 * 1000); // 15分ごと
+        
+        console.log('🛡️ Patent Hub システム管理ダッシュボード - 初期化完了');
+    </script>
+</body>
+</html>

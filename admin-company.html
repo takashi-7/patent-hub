@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業情報編集 | Patent Hub 企業管理画面</title>
+    <meta name="description" content="Patent Hub 企業管理画面 - 企業情報の編集・更新機能">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 管理画面専用スタイル */
+        .admin-body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ヘッダー（ダッシュボードと共通） */
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #1e3c72;
+        }
+        
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        /* メインコンテンツ */
+        .admin-main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-link {
+            color: #6c757d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #1e3c72;
+        }
+        
+        /* 情報編集フォーム */
+        .company-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-section {
+            margin-bottom: 3rem;
+        }
+        
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.75rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .required {
+            color: #dc3545;
+            margin-left: 0.25rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        /* チェックボックス・ラジオボタン */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-input,
+        .radio-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label,
+        .radio-label {
+            font-size: 0.95rem;
+            color: #495057;
+            cursor: pointer;
+        }
+        
+        /* ファイルアップロード */
+        .file-upload {
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: #1e3c72;
+            background: #f8f9fa;
+        }
+        
+        .file-upload.dragover {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload-text {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-upload-input {
+            display: none;
+        }
+        
+        .uploaded-file {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        /* タグ入力 */
+        .tag-input-container {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.5rem;
+            min-height: 80px;
+            cursor: text;
+        }
+        
+        .tag-input-container:focus-within {
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tag-item {
+            background: #1e3c72;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tag-remove {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .tag-remove:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .tag-input {
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        /* 保存ボタン */
+        .form-actions {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+        
+        .save-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .cancel-btn {
+            background: white;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cancel-btn:hover {
+            border-color: #6c757d;
+            color: #495057;
+        }
+        
+        /* プレビューセクション */
+        .preview-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .company-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .admin-header .container,
+            .admin-main {
+                padding: 0 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+            
+            .admin-nav {
+                display: none;
+            }
+            
+            .checkbox-group,
+            .radio-group {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- ヘッダー -->
+    <header class="admin-header">
+        <div class="container">
+            <a href="index.html" class="admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="admin-logo-icon">🏢</div>
+                <span>Patent Hub 管理画面</span>
+            </a>
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">ダッシュボード</a>
+                <a href="admin-jobs.html" class="nav-link">求人管理</a>
+                <a href="admin-applications.html" class="nav-link">応募者管理</a>
+                <a href="admin-company.html" class="nav-link active">企業情報</a>
+            </nav>
+            <div class="admin-user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <button class="logout-btn" onclick="logout()">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">
+                🏢 企業情報編集
+            </h1>
+            <a href="admin-dashboard.html" class="back-link">
+                ← ダッシュボードに戻る
+            </a>
+        </div>
+
+        <!-- 企業情報編集フォーム -->
+        <div class="company-form-container">
+            <form id="companyForm">
+                <!-- 基本情報 -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        📋 基本情報
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="companyName">
+                                企業名<span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="companyName" 
+                                class="form-input" 
+                                placeholder="株式会社○○特許事務所"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="companyNameEn">
+                                企業名（英語）
+                            </label>
+                            <input 
+                                type="text" 
+                                id="companyNameEn" 
+                                class="form-input" 
+                                placeholder="ABC Patent Office Co., Ltd."
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="companyType">
+                                企業形態<span class="required">*</span>
+                            </label>
+                            <select id="companyType" class="form-select" required>
+                                <option value="">選択してください</option>
+                                <option value="特許事務所">特許事務所</option>
+                                <option value="法律事務所">法律事務所</option>
+                                <option value="一般企業知財部">一般企業知財部</option>
+                                <option value="コンサルティング">コンサルティング</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="establishedYear">
+                                設立年
+                            </label>
+                            <input 
+                                type="number" 
+                                id="establishedYear" 
+                                class="form-input" 
+                                placeholder="2000"
+                                min="1900"
+                                max="2025"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="employeeCount">
+                                従業員数
+                            </label>
+                            <select id="employeeCount" class="form-select">
+                                <option value="">選択してください</option>
+                                <option value="1-5名">1-5名</option>
+                                <option value="6-20名">6-20名</option>
+                                <option value="21-50名">21-50名</option>
+                                <option value="51-100名">51-100名</option>
+                                <option value="101名以上">101名以上</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="website">
+                                ウェブサイト
+                            </label>
+                            <input 
+                                type="url" 
+                                id="website" 
+                                class="form-input" 
+                                placeholder="https://www.example.com"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label" for="companyDescription">
+                            企業紹介<span class="required">*</span>
+                        </label>
+                        <textarea 
+                            id="companyDescription" 
+                            class="form-input form-textarea" 
+                            placeholder="企業の概要、特徴、強みなどをご記入ください..."
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- 所在地情報 -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        📍 所在地情報
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="prefecture">
+                                都道府県<span class="required">*</span>
+                            </label>
+                            <select id="prefecture" class="form-select" required>
+                                <option value="">選択してください</option>
+                                <option value="北海道">北海道</option>
+                                <option value="青森県">青森県</option>
+                                <option value="岩手県">岩手県</option>
+                                <option value="宮城県">宮城県</option>
+                                <option value="秋田県">秋田県</option>
+                                <option value="山形県">山形県</option>
+                                <option value="福島県">福島県</option>
+                                <option value="茨城県">茨城県</option>
+                                <option value="栃木県">栃木県</option>
+                                <option value="群馬県">群馬県</option>
+                                <option value="埼玉県">埼玉県</option>
+                                <option value="千葉県">千葉県</option>
+                                <option value="東京都">東京都</option>
+                                <option value="神奈川県">神奈川県</option>
+                                <option value="新潟県">新潟県</option>
+                                <option value="富山県">富山県</option>
+                                <option value="石川県">石川県</option>
+                                <option value="福井県">福井県</option>
+                                <option value="山梨県">山梨県</option>
+                                <option value="長野県">長野県</option>
+                                <option value="岐阜県">岐阜県</option>
+                                <option value="静岡県">静岡県</option>
+                                <option value="愛知県">愛知県</option>
+                                <option value="三重県">三重県</option>
+                                <option value="滋賀県">滋賀県</option>
+                                <option value="京都府">京都府</option>
+                                <option value="大阪府">大阪府</option>
+                                <option value="兵庫県">兵庫県</option>
+                                <option value="奈良県">奈良県</option>
+                                <option value="和歌山県">和歌山県</option>
+                                <option value="鳥取県">鳥取県</option>
+                                <option value="島根県">島根県</option>
+                                <option value="岡山県">岡山県</option>
+                                <option value="広島県">広島県</option>
+                                <option value="山口県">山口県</option>
+                                <option value="徳島県">徳島県</option>
+                                <option value="香川県">香川県</option>
+                                <option value="愛媛県">愛媛県</option>
+                                <option value="高知県">高知県</option>
+                                <option value="福岡県">福岡県</option>
+                                <option value="佐賀県">佐賀県</option>
+                                <option value="長崎県">長崎県</option>
+                                <option value="熊本県">熊本県</option>
+                                <option value="大分県">大分県</option>
+                                <option value="宮崎県">宮崎県</option>
+                                <option value="鹿児島県">鹿児島県</option>
+                                <option value="沖縄県">沖縄県</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="city">
+                                市区町村<span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="city" 
+                                class="form-input" 
+                                placeholder="港区"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label" for="fullAddress">
+                                住所<span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="fullAddress" 
+                                class="form-input" 
+                                placeholder="東京都港区赤坂1-2-3 ○○ビル5階"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="nearestStation">
+                                最寄り駅
+                            </label>
+                            <input 
+                                type="text" 
+                                id="nearestStation" 
+                                class="form-input" 
+                                placeholder="赤坂駅 徒歩3分"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 連絡先情報 -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        📞 連絡先情報
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="phoneNumber">
+                                電話番号<span class="required">*</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                id="phoneNumber" 
+                                class="form-input" 
+                                placeholder="03-1234-5678"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="faxNumber">
+                                FAX番号
+                            </label>
+                            <input 
+                                type="tel" 
+                                id="faxNumber" 
+                                class="form-input" 
+                                placeholder="03-1234-5679"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="contactEmail">
+                                連絡先メールアドレス<span class="required">*</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                id="contactEmail" 
+                                class="form-input" 
+                                placeholder="contact@example.com"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="hrEmail">
+                                採用担当メールアドレス
+                            </label>
+                            <input 
+                                type="email" 
+                                id="hrEmail" 
+                                class="form-input" 
+                                placeholder="hr@example.com"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 専門分野・強み -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        💼 専門分野・強み
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            専門分野<span class="required">*</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-patent" class="checkbox-input" value="特許">
+                                <label for="field-patent" class="checkbox-label">特許</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-trademark" class="checkbox-input" value="商標">
+                                <label for="field-trademark" class="checkbox-label">商標</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-design" class="checkbox-input" value="意匠">
+                                <label for="field-design" class="checkbox-label">意匠</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-copyright" class="checkbox-input" value="著作権">
+                                <label for="field-copyright" class="checkbox-label">著作権</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-trade-secret" class="checkbox-input" value="営業秘密">
+                                <label for="field-trade-secret" class="checkbox-label">営業秘密</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="field-litigation" class="checkbox-input" value="知財訴訟">
+                                <label for="field-litigation" class="checkbox-label">知財訴訟</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            技術分野
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-mechanical" class="checkbox-input" value="機械">
+                                <label for="tech-mechanical" class="checkbox-label">機械</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-electrical" class="checkbox-input" value="電気・電子">
+                                <label for="tech-electrical" class="checkbox-label">電気・電子</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-chemical" class="checkbox-input" value="化学">
+                                <label for="tech-chemical" class="checkbox-label">化学</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-bio" class="checkbox-input" value="バイオ・医薬">
+                                <label for="tech-bio" class="checkbox-label">バイオ・医薬</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-it" class="checkbox-input" value="IT・ソフトウェア">
+                                <label for="tech-it" class="checkbox-label">IT・ソフトウェア</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tech-ai" class="checkbox-input" value="AI・IoT">
+                                <label for="tech-ai" class="checkbox-label">AI・IoT</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="companyStrengths">
+                            企業の強み・特徴
+                        </label>
+                        <textarea 
+                            id="companyStrengths" 
+                            class="form-input form-textarea" 
+                            placeholder="他社との差別化要因、独自の強み、サービスの特徴などをご記入ください..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- 企業ロゴ・画像 -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        🖼️ 企業ロゴ・画像
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            企業ロゴ
+                        </label>
+                        <div class="file-upload" onclick="document.getElementById('logoUpload').click()">
+                            <div class="file-upload-icon">🏢</div>
+                            <div class="file-upload-text">企業ロゴをアップロード</div>
+                            <div style="font-size: 0.9rem; color: #6c757d;">PNG, JPG形式 (最大2MB)</div>
+                        </div>
+                        <input type="file" id="logoUpload" class="file-upload-input" accept="image/*">
+                        <div id="logoPreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            オフィス写真
+                        </label>
+                        <div class="file-upload" onclick="document.getElementById('officeUpload').click()">
+                            <div class="file-upload-icon">📸</div>
+                            <div class="file-upload-text">オフィス写真をアップロード</div>
+                            <div style="font-size: 0.9rem; color: #6c757d;">PNG, JPG形式 (最大5MB)</div>
+                        </div>
+                        <input type="file" id="officeUpload" class="file-upload-input" accept="image/*">
+                        <div id="officePreview"></div>
+                    </div>
+                </div>
+
+                <!-- アクション -->
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="resetForm()">
+                        リセット
+                    </button>
+                    <button type="submit" class="save-btn" id="saveBtn">
+                        💾 保存する
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- プレビューセクション -->
+        <div class="preview-section">
+            <h2 class="preview-title">
+                👁️ プレビュー
+            </h2>
+            <div class="company-preview" id="companyPreview">
+                <!-- プレビュー内容はJavaScriptで動的に生成 -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 企業情報編集機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('企業情報編集画面が読み込まれました');
+            
+            // 認証チェック
+            checkAuthentication();
+            
+            // ユーザー情報を読み込み
+            loadUserInfo();
+            
+            // 既存の企業データを読み込み
+            loadCompanyData();
+            
+            // フォームイベントを初期化
+            initializeFormEvents();
+            
+            // プレビューを初期化
+            updatePreview();
+            
+            console.log('✅ 企業情報編集画面の初期化が完了しました');
+        });
+        
+        // 企業データを読み込み
+        function loadCompanyData() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            const companyId = session.companyId;
+            
+            // 既存の企業データを取得（実際はAPIから取得）
+            const companyData = getCompanyData(companyId);
+            
+            if (companyData) {
+                populateForm(companyData);
+                console.log('既存の企業データを読み込みました');
+            }
+        }
+        
+        // サンプル企業データ取得
+        function getCompanyData(companyId) {
+            const sampleData = {
+                'COMPANY_ABC': {
+                    companyName: '特許事務所ABC',
+                    companyNameEn: 'ABC Patent Office',
+                    companyType: '特許事務所',
+                    establishedYear: 2010,
+                    employeeCount: '21-50名',
+                    website: 'https://www.abc-patent.com',
+                    companyDescription: '特許・商標・意匠を中心とした知的財産の総合サービスを提供する特許事務所です。豊富な経験と専門知識で、お客様の知的財産戦略をサポートします。',
+                    prefecture: '東京都',
+                    city: '港区',
+                    fullAddress: '東京都港区赤坂1-2-3 ABCビル5階',
+                    nearestStation: '赤坂駅 徒歩3分',
+                    phoneNumber: '03-1234-5678',
+                    faxNumber: '03-1234-5679',
+                    contactEmail: 'contact@abc-patent.com',
+                    hrEmail: 'hr@abc-patent.com',
+                    specialFields: ['特許', '商標', '意匠'],
+                    techFields: ['機械', '電気・電子', 'IT・ソフトウェア'],
+                    companyStrengths: 'スタートアップから大企業まで幅広いクライアントをサポート。英語対応可能で国際出願にも強みがあります。'
+                },
+                'COMPANY_XYZ': {
+                    companyName: '株式会社XYZ知財部',
+                    companyNameEn: 'XYZ Corporation IP Department',
+                    companyType: '一般企業知財部',
+                    establishedYear: 1995,
+                    employeeCount: '101名以上',
+                    website: 'https://www.xyz-corp.co.jp',
+                    companyDescription: '製造業大手企業の知的財産部門として、自社技術の権利化から他社特許の調査・分析まで幅広く手がけています。',
+                    prefecture: '大阪府',
+                    city: '大阪市',
+                    fullAddress: '大阪府大阪市中央区本町2-3-4 XYZタワー10階',
+                    nearestStation: '本町駅 直結',
+                    phoneNumber: '06-1234-5678',
+                    contactEmail: 'ip@xyz-corp.co.jp',
+                    hrEmail: 'recruit@xyz-corp.co.jp',
+                    specialFields: ['特許', '営業秘密'],
+                    techFields: ['機械', '化学', 'バイオ・医薬'],
+                    companyStrengths: '長年にわたる製造業での経験を活かした実践的な知財戦略を展開。グローバル展開にも対応しています。'
+                }
+            };
+            
+            return sampleData[companyId] || null;
+        }
+        
+        // フォームにデータを入力
+        function populateForm(data) {
+            // 基本情報
+            document.getElementById('companyName').value = data.companyName || '';
+            document.getElementById('companyNameEn').value = data.companyNameEn || '';
+            document.getElementById('companyType').value = data.companyType || '';
+            document.getElementById('establishedYear').value = data.establishedYear || '';
+            document.getElementById('employeeCount').value = data.employeeCount || '';
+            document.getElementById('website').value = data.website || '';
+            document.getElementById('companyDescription').value = data.companyDescription || '';
+            
+            // 所在地
+            document.getElementById('prefecture').value = data.prefecture || '';
+            document.getElementById('city').value = data.city || '';
+            document.getElementById('fullAddress').value = data.fullAddress || '';
+            document.getElementById('nearestStation').value = data.nearestStation || '';
+            
+            // 連絡先
+            document.getElementById('phoneNumber').value = data.phoneNumber || '';
+            document.getElementById('faxNumber').value = data.faxNumber || '';
+            document.getElementById('contactEmail').value = data.contactEmail || '';
+            document.getElementById('hrEmail').value = data.hrEmail || '';
+            
+            // 専門分野
+            if (data.specialFields) {
+                data.specialFields.forEach(field => {
+                    const checkbox = document.querySelector(`input[value="${field}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            // 技術分野
+            if (data.techFields) {
+                data.techFields.forEach(field => {
+                    const checkbox = document.querySelector(`input[value="${field}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+            
+            // 強み
+            document.getElementById('companyStrengths').value = data.companyStrengths || '';
+            
+            updatePreview();
+        }
+        
+        // フォームイベント初期化
+        function initializeFormEvents() {
+            // リアルタイムプレビュー更新
+            const formInputs = document.querySelectorAll('.form-input, .form-select, .checkbox-input');
+            formInputs.forEach(input => {
+                input.addEventListener('input', updatePreview);
+                input.addEventListener('change', updatePreview);
+            });
+            
+            // ファイルアップロード
+            setupFileUploads();
+            
+            // フォーム送信
+            document.getElementById('companyForm').addEventListener('submit', handleFormSubmit);
+        }
+        
+        // ファイルアップロード設定
+        function setupFileUploads() {
+            // ロゴアップロード
+            document.getElementById('logoUpload').addEventListener('change', function(e) {
+                handleFileUpload(e, 'logoPreview', '企業ロゴ');
+            });
+            
+            // オフィス写真アップロード
+            document.getElementById('officeUpload').addEventListener('change', function(e) {
+                handleFileUpload(e, 'officePreview', 'オフィス写真');
+            });
+        }
+        
+        // ファイルアップロード処理
+        function handleFileUpload(event, previewId, label) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // ファイルサイズチェック
+            const maxSize = label === '企業ロゴ' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`ファイルサイズが大きすぎます。${maxSize / (1024 * 1024)}MB以下にしてください。`);
+                return;
+            }
+            
+            // プレビュー表示
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewContainer = document.getElementById(previewId);
+                previewContainer.innerHTML = `
+                    <div class="uploaded-file">
+                        <div class="file-info">
+                            <span>📎 ${file.name}</span>
+                            <span style="font-size: 0.8rem; color: #6c757d;">(${(file.size / 1024).toFixed(1)}KB)</span>
+                        </div>
+                        <button type="button" class="remove-file" onclick="removeFile('${previewId}', '${event.target.id}')">
+                            削除
+                        </button>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // ファイル削除
+        function removeFile(previewId, inputId) {
+            document.getElementById(previewId).innerHTML = '';
+            document.getElementById(inputId).value = '';
+        }
+        
+        // プレビュー更新
+        function updatePreview() {
+            const preview = document.getElementById('companyPreview');
+            
+            // フォームデータを取得
+            const formData = getFormData();
+            
+            // プレビューHTML生成
+            preview.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: #f8f9fa; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        🏢
+                    </div>
+                    <div>
+                        <h2 style="margin: 0 0 0.5rem 0; color: #1e3c72; font-size: 1.5rem;">
+                            ${formData.companyName || '企業名を入力してください'}
+                        </h2>
+                        <div style="color: #6c757d; margin-bottom: 0.25rem;">
+                            ${formData.companyType || '企業形態'} ${formData.establishedYear ? `| ${formData.establishedYear}年設立` : ''} ${formData.employeeCount ? `| ${formData.employeeCount}` : ''}
+                        </div>
+                        <div style="color: #6c757d;">
+                            📍 ${formData.fullAddress || '住所を入力してください'}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">企業紹介</h3>
+                    <p style="line-height: 1.6; color: #495057;">
+                        ${formData.companyDescription || '企業紹介を入力してください'}
+                    </p>
+                </div>
+                
+                ${formData.specialFields.length > 0 ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">専門分野</h3>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${formData.specialFields.map(field => 
+                                `<span style="background: #e3f2fd; color: #1565c0; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">${field}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${formData.techFields.length > 0 ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">技術分野</h3>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${formData.techFields.map(field => 
+                                `<span style="background: #f3e5f5; color: #7b1fa2; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.9rem;">${field}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${formData.companyStrengths ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">企業の強み</h3>
+                        <p style="line-height: 1.6; color: #495057;">
+                            ${formData.companyStrengths}
+                        </p>
+                    </div>
+                ` : ''}
+                
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">アクセス情報</h3>
+                    <div style="color: #495057;">
+                        <div style="margin-bottom: 0.5rem;">📞 ${formData.phoneNumber || '電話番号を入力してください'}</div>
+                        <div style="margin-bottom: 0.5rem;">📧 ${formData.contactEmail || 'メールアドレスを入力してください'}</div>
+                        ${formData.website ? `<div style="margin-bottom: 0.5rem;">🌐 <a href="${formData.website}" target="_blank">${formData.website}</a></div>` : ''}
+                        ${formData.nearestStation ? `<div>🚇 ${formData.nearestStation}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // フォームデータを取得
+        function getFormData() {
+            // 専門分野取得
+            const specialFields = Array.from(document.querySelectorAll('input[id^="field-"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            // 技術分野取得
+            const techFields = Array.from(document.querySelectorAll('input[id^="tech-"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            return {
+                companyName: document.getElementById('companyName').value,
+                companyNameEn: document.getElementById('companyNameEn').value,
+                companyType: document.getElementById('companyType').value,
+                establishedYear: document.getElementById('establishedYear').value,
+                employeeCount: document.getElementById('employeeCount').value,
+                website: document.getElementById('website').value,
+                companyDescription: document.getElementById('companyDescription').value,
+                prefecture: document.getElementById('prefecture').value,
+                city: document.getElementById('city').value,
+                fullAddress: document.getElementById('fullAddress').value,
+                nearestStation: document.getElementById('nearestStation').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                faxNumber: document.getElementById('faxNumber').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                hrEmail: document.getElementById('hrEmail').value,
+                specialFields: specialFields,
+                techFields: techFields,
+                companyStrengths: document.getElementById('companyStrengths').value
+            };
+        }
+        
+        // フォーム送信処理
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '💾 保存中...';
+            
+            // フォームデータを取得
+            const formData = getFormData();
+            
+            // バリデーション
+            if (!validateForm(formData)) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '💾 保存する';
+                return;
+            }
+            
+            // 保存処理をシミュレート
+            setTimeout(() => {
+                saveCompanyData(formData);
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '💾 保存する';
+                showNotification('企業情報を保存しました', 'success');
+            }, 2000);
+        }
+        
+        // バリデーション
+        function validateForm(data) {
+            const required = [
+                { field: 'companyName', message: '企業名は必須です' },
+                { field: 'companyType', message: '企業形態を選択してください' },
+                { field: 'companyDescription', message: '企業紹介は必須です' },
+                { field: 'prefecture', message: '都道府県を選択してください' },
+                { field: 'city', message: '市区町村は必須です' },
+                { field: 'fullAddress', message: '住所は必須です' },
+                { field: 'phoneNumber', message: '電話番号は必須です' },
+                { field: 'contactEmail', message: '連絡先メールアドレスは必須です' }
+            ];
+            
+            for (const req of required) {
+                if (!data[req.field] || data[req.field].trim() === '') {
+                    alert(req.message);
+                    document.getElementById(req.field).focus();
+                    return false;
+                }
+            }
+            
+            // 専門分野チェック
+            if (data.specialFields.length === 0) {
+                alert('専門分野を最低1つ選択してください');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 企業データを保存
+        function saveCompanyData(data) {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            const companyId = session.companyId;
+            
+            // ローカルストレージに保存（実際はAPIに送信）
+            const storageKey = `company_data_${companyId}`;
+            localStorage.setItem(storageKey, JSON.stringify({
+                ...data,
+                lastUpdated: new Date().toISOString()
+            }));
+            
+            console.log('企業データを保存しました:', data);
+        }
+        
+        // フォームリセット
+        function resetForm() {
+            if (confirm('入力内容をリセットしますか？保存されていない変更は失われます。')) {
+                document.getElementById('companyForm').reset();
+                document.getElementById('logoPreview').innerHTML = '';
+                document.getElementById('officePreview').innerHTML = '';
+                loadCompanyData(); // 元のデータを再読み込み
+            }
+        }
+        
+        // 認証チェック（共通機能）
+        function checkAuthentication() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        }
+        
+        // ユーザー情報を読み込み
+        function loadUserInfo() {
+            const sessionData = localStorage.getItem('admin_session');
+            if (!sessionData) return;
+            
+            const session = JSON.parse(sessionData);
+            const firstChar = session.companyName.charAt(0);
+            document.getElementById('userAvatar').textContent = firstChar;
+        }
+        
+        // ログアウト
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                localStorage.removeItem('admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // 通知表示機能
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            
+            const colors = {
+                'success': '#28a745',
+                'error': '#dc3545',
+                'info': '#17a2b8'
+            };
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        console.log('🏢 Patent Hub 企業情報編集 - 初期化完了');
+    </script>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

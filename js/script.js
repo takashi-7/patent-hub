@@ -60,8 +60,8 @@ function setupInteractiveElements() {
         });
     });
     
-    // 申込ボタンのクリックイベント
-    const applyBtns = document.querySelectorAll('.apply-btn, .register-btn');
+    // 申込ボタンのクリックイベント（.apply-btnのみに制限し、.register-btnは除外）
+    const applyBtns = document.querySelectorAll('.apply-btn');
     applyBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -69,14 +69,14 @@ function setupInteractiveElements() {
         });
     });
     
-    // 「もっと見る」ボタンのクリックイベント
-    const viewMoreBtns = document.querySelectorAll('.view-more');
-    viewMoreBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('実際のサイトでは一覧ページが開きます！');
-        });
-    });
+    // 「もっと見る」ボタンのクリックイベント（プロトタイプ版では無効化）
+    // const viewMoreBtns = document.querySelectorAll('.view-more');
+    // viewMoreBtns.forEach(btn => {
+    //     btn.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         alert('実際のサイトでは一覧ページが開きます！');
+    //     });
+    // });
 }
 
 // 将来的に追加予定の機能用の関数

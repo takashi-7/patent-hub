@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知財ニュース一覧 | Patent Hub</title>
+    <meta name="description" content="知的財産業界の最新ニュース一覧。特許庁、WIPO、業界動向など幅広いニュースを掲載。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ニュース一覧専用スタイル */
+        .news-body {
+            background: #f8f9fa;
+        }
+        
+        /* ページヘッダー */
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        /* ニュースコンテンツ */
+        .news-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .results-count {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        /* ニュース一覧 */
+        .news-list {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .news-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .news-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .news-date-section {
+            flex: 0 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .news-date-month {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .news-date-day {
+            font-size: 1.8rem;
+            line-height: 1;
+            margin-top: 0.25rem;
+        }
+        
+        .news-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        .news-category {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #e9ecef;
+        }
+        
+        .news-source {
+            font-weight: 500;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+        
+        .news-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .news-title a:hover {
+            color: #1e3c72;
+        }
+        
+        .news-summary {
+            color: #495057;
+            line-height: 1.5;
+            margin-bottom: auto;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        
+        .news-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .read-more-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .favorite-btn {
+            background: none;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .favorite-btn:hover,
+        .favorite-btn.active {
+            border-color: #e74c3c;
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .priority-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .priority-5 { background: #dc3545; }
+        .priority-4 { background: #fd7e14; }
+        .priority-3 { background: #ffc107; }
+        .priority-2 { background: #28a745; }
+        .priority-1 { background: #6c757d; }
+        
+        /* ページネーション */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0 0 0;
+            gap: 0.5rem;
+        }
+        
+        .pagination-btn {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            color: #6c757d;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .pagination-btn:hover,
+        .pagination-btn.active {
+            background: #1e3c72;
+            color: white;
+            border-color: #1e3c72;
+            text-decoration: none;
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 空の状態 */
+        .empty-news {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6c757d;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+        
+        .empty-description {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1rem;
+            }
+            
+            .news-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .news-date-section {
+                flex: none;
+                width: 100px;
+            }
+            
+            .news-content {
+                text-align: left;
+            }
+            
+            .news-actions {
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="news-body">
+    <!-- ヘッダー（共通） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link active">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">📰 知財ニュース</h1>
+            <p class="page-subtitle">知的財産業界の最新ニュース・動向を幅広くカバー</p>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+
+        <!-- ニュースコンテンツ -->
+        <main class="news-content">
+
+            <div class="news-list" id="newsList">
+                <!-- ニュース一覧はJavaScriptで動的生成 -->
+            </div>
+
+            <!-- ページネーション -->
+            <div class="pagination" id="pagination">
+                <!-- ページネーションはJavaScriptで動的生成 -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ニュース一覧機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('ニュース一覧画面が読み込まれました');
+            
+            // ニュースデータを初期化
+            initializeNewsData();
+            
+            // ニュース一覧を表示
+            displayNews();
+            
+            
+            console.log('✅ ニュース一覧画面の初期化が完了しました');
+        });
+        
+        let allNews = [];
+        let filteredNews = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        
+        // ニュースデータの初期化
+        function initializeNewsData() {
+            allNews = [
+                {
+                    id: 'news_001',
+                    title: '特許庁、AI関連特許の審査基準を改定',
+                    category: '制度改正',
+                    source: '特許庁',
+                    date: '2025-08-09',
+                    summary: '人工知能技術の発展に対応し、特許審査基準を見直し。機械学習アルゴリズムや深層学習技術に関する特許要件を明確化。これにより、AI関連の特許出願における審査プロセスがより効率的になることが期待される。',
+                    url: 'https://www.jpo.go.jp/news/ai-patent-guidelines.html',
+                    priority: 5
+                },
+                {
+                    id: 'news_002',
+                    title: '大手製薬会社、新薬特許で訴訟勝利',
+                    category: '裁判',
+                    source: '東京地裁',
+                    date: '2025-08-08',
+                    summary: '糖尿病治療薬の特許侵害を巡る訴訟で、東京地裁が原告の主張を認定。ジェネリック医薬品の販売差し止めを命令。この判決は医薬品業界における特許権保護の重要性を再確認するものとなった。',
+                    url: 'https://example.com/news/pharma-patent-victory',
+                    priority: 4
+                },
+                {
+                    id: 'news_003',
+                    title: '中国の知的財産権保護強化策発表',
+                    category: '国際',
+                    source: '中国国家知識産権局',
+                    date: '2025-08-07',
+                    summary: '中国国家知識産権局が2025年度の知財保護計画を発表。外国企業の権利保護強化と模倣品対策に重点を置く。国際的な知財保護レベルの向上を目指す取り組みが注目される。',
+                    url: 'https://example.com/news/china-ip-protection',
+                    priority: 4
+                },
+                {
+                    id: 'news_004',
+                    title: 'スタートアップ知財支援制度が本格稼働',
+                    category: '補助金',
+                    source: '経済産業省',
+                    date: '2025-08-06',
+                    summary: '経済産業省とJETROが連携し、スタートアップ企業の海外特許出願費用を最大300万円まで補助する制度を開始。革新的な技術を持つ日本のスタートアップの海外展開を支援する。',
+                    url: 'https://example.com/news/startup-ip-support',
+                    priority: 3
+                },
+                {
+                    id: 'news_005',
+                    title: '商標登録出願件数が過去最高を記録',
+                    category: '商標',
+                    source: '特許庁',
+                    date: '2025-08-05',
+                    summary: '2024年度の商標登録出願件数が前年度比12%増となり、過去最高の18万件を記録。デジタル化の進展やブランド価値への意識向上が背景にある。',
+                    url: 'https://example.com/news/trademark-record',
+                    priority: 3
+                },
+                {
+                    id: 'news_006',
+                    title: '意匠制度改正、創作性要件を緩和',
+                    category: '意匠',
+                    source: '特許庁',
+                    date: '2025-08-04',
+                    summary: '令和7年度意匠制度改正で創作性要件が緩和される。より多様なデザインが保護対象となり、デザイン重視の企業活動を後押しする制度改正となる。',
+                    url: 'https://example.com/news/design-reform',
+                    priority: 4
+                },
+                {
+                    id: 'news_007',
+                    title: '国際特許出願、日本企業の件数増加',
+                    category: '特許',
+                    source: 'WIPO',
+                    date: '2025-08-03',
+                    summary: 'WIPOの統計によると、日本企業による国際特許出願（PCT出願）が前年比8%増加。特にAI、バイオテクノロジー分野での出願が顕著に増加している。',
+                    url: 'https://example.com/news/international-patent',
+                    priority: 3
+                },
+                {
+                    id: 'news_008',
+                    title: '知財高裁、AI生成発明の特許性について判断',
+                    category: '裁判',
+                    source: '知的財産高等裁判所',
+                    date: '2025-08-02',
+                    summary: 'AIが生成した発明の特許性を巡る初の高裁判断が示される。人間の創作的関与の程度が焦点となり、今後のAI発明の取り扱いに大きな影響を与えそうだ。',
+                    url: 'https://example.com/news/ai-invention-patent',
+                    priority: 5
+                },
+                {
+                    id: 'news_009',
+                    title: '地域団体商標の活用促進、農産物ブランド化支援',
+                    category: '商標',
+                    source: '農林水産省',
+                    date: '2025-08-01',
+                    summary: '農林水産省が地域団体商標制度を活用した農産物のブランド化支援を強化。地域の特色ある農産物の付加価値向上と海外展開を目指す。',
+                    url: 'https://example.com/news/regional-trademark',
+                    priority: 2
+                },
+                {
+                    id: 'news_010',
+                    title: '営業秘密の保護強化、新ガイドライン策定',
+                    category: '制度改正',
+                    source: '経済産業省',
+                    date: '2025-07-31',
+                    summary: '経済産業省が営業秘密保護に関する新ガイドラインを策定。デジタル時代に対応した秘密情報の管理手法や従業員教育の重要性を明示。',
+                    url: 'https://example.com/news/trade-secret-guideline',
+                    priority: 3
+                }
+            ];
+            
+            filteredNews = [...allNews];
+        }
+        
+        // ニュース一覧を表示
+        function displayNews() {
+            const container = document.getElementById('newsList');
+            
+            // ページネーション計算
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedNews = filteredNews.slice(startIndex, endIndex);
+            
+            if (paginatedNews.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-news">
+                        <div class="empty-icon">📰</div>
+                        <h3 class="empty-title">該当するニュースがありません</h3>
+                        <p class="empty-description">
+                            検索条件やフィルターを変更してお試しください。
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = paginatedNews.map(news => {
+                const newsDate = new Date(news.date);
+                const month = `${newsDate.getMonth() + 1}月`;
+                const day = newsDate.getDate();
+                
+                return `
+                    <article class="news-item">
+                        <div class="priority-indicator priority-${news.priority}" 
+                             title="重要度: ${news.priority}/5"></div>
+                        
+                        <div class="news-date-section">
+                            <div class="news-date-month">${month}</div>
+                            <div class="news-date-day">${day}</div>
+                        </div>
+                        
+                        <div class="news-content">
+                            <div class="news-meta">
+                                <span class="news-category">${news.category}</span>
+                                <span class="news-source">出典: ${news.source}</span>
+                            </div>
+                            
+                            <h3 class="news-title">
+                                <a href="${news.url}" target="_blank">${news.title}</a>
+                            </h3>
+                            
+                            <p class="news-summary">${news.summary}</p>
+                            
+                            <div class="news-actions">
+                                <button class="favorite-btn" onclick="toggleFavorite('${news.id}')" 
+                                        title="お気に入りに追加">
+                                    ♡
+                                </button>
+                                <a href="${news.url}" target="_blank" class="read-more-btn">
+                                    詳細を見る
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+            
+            // ページネーションを更新
+            updatePagination();
+            
+            // お気に入り状態を復元
+            restoreFavorites();
+        }
+        
+        
+        // ページネーション更新
+        function updatePagination() {
+            const paginationContainer = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+            
+            let paginationHTML = '';
+            
+            // 前へボタン
+            paginationHTML += `
+                <button class="pagination-btn" onclick="changePage(${currentPage - 1})" 
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    ← 前へ
+                </button>
+            `;
+            
+            // ページ番号
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="pagination-btn active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="pagination-btn" onclick="changePage(${i})">${i}</button>`;
+                }
+            }
+            
+            // 次へボタン
+            paginationHTML += `
+                <button class="pagination-btn" onclick="changePage(${currentPage + 1})" 
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    次へ →
+                </button>
+            `;
+            
+            paginationContainer.innerHTML = paginationHTML;
+        }
+        
+        // ページ変更
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            displayNews();
+            
+            // ページトップにスクロール
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        
+        // お気に入り機能
+        function toggleFavorite(newsId) {
+            const btn = event.target;
+            btn.classList.toggle('active');
+            
+            // ローカルストレージに保存
+            let favorites = JSON.parse(localStorage.getItem('favorite_news') || '[]');
+            
+            if (btn.classList.contains('active')) {
+                btn.textContent = '♥';
+                if (!favorites.includes(newsId)) {
+                    favorites.push(newsId);
+                }
+            } else {
+                btn.textContent = '♡';
+                favorites = favorites.filter(id => id !== newsId);
+            }
+            
+            localStorage.setItem('favorite_news', JSON.stringify(favorites));
+        }
+        
+        // お気に入り状態の復元
+        function restoreFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorite_news') || '[]');
+            favorites.forEach(newsId => {
+                const btn = document.querySelector(`button[onclick="toggleFavorite('${newsId}')"]`);
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.textContent = '♥';
+                }
+            });
+        }
+        
+        console.log('📰 Patent Hub ニュース一覧 - 初期化完了');
+    </script>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

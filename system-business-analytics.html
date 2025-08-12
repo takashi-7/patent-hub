@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ビジネス分析・収益レポート | Patent Hub システム管理</title>
+    <meta name="description" content="Patent Hub システム管理者専用 - ビジネス分析と収益レポートの管理">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ヘッダー（システム管理者専用テーマ） */
+        .system-admin-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid #e74c3c;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .system-admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .system-admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .system-admin-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        /* パンくずナビゲーション */
+        .breadcrumb {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .breadcrumb-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #e74c3c;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* メインコンテンツ */
+        .system-admin-main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* 期間選択 */
+        .period-selector {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .period-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .period-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .period-btn.active {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .period-btn:hover {
+            border-color: #27ae60;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-range input {
+            padding: 0.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        /* KPI カード */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .kpi-card.revenue { border-left-color: #27ae60; }
+        .kpi-card.jobs { border-left-color: #3498db; }
+        .kpi-card.companies { border-left-color: #9b59b6; }
+        .kpi-card.growth { border-left-color: #f39c12; }
+
+        .kpi-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .change-up {
+            color: #27ae60;
+        }
+
+        .change-down {
+            color: #e74c3c;
+        }
+
+        /* チャートセクション */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 2px dashed #dee2e6;
+        }
+
+        /* データテーブル */
+        .data-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* 収益詳細 */
+        .revenue-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .revenue-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .revenue-item:hover {
+            border-color: #27ae60;
+            transform: translateY(-3px);
+        }
+
+        .revenue-category {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .revenue-amount {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 0.25rem;
+        }
+
+        .revenue-percentage {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .system-admin-header .container,
+            .system-admin-main,
+            .breadcrumb-list {
+                padding: 0 1rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .period-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .revenue-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <!-- ヘッダー -->
+    <header class="system-admin-header">
+        <div class="container">
+            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
+                <div class="system-admin-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: white; font-weight: 600;">システム管理者</span>
+                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+        <ul class="breadcrumb-list">
+            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
+            <li>›</li>
+            <li class="breadcrumb-current">ビジネス分析・収益レポート</li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="system-admin-main">
+        <!-- ページヘッダー -->
+        <div class="page-header">
+            <h1 class="page-title">📈 ビジネス分析・収益レポート</h1>
+            <p class="page-subtitle">Patent Hub の事業パフォーマンスと収益分析</p>
+        </div>
+
+        <!-- 期間選択 -->
+        <div class="period-selector">
+            <div class="period-buttons">
+                <button class="period-btn" onclick="setPeriod(this, '7d')">過去7日</button>
+                <button class="period-btn active" onclick="setPeriod(this, '30d')">過去30日</button>
+                <button class="period-btn" onclick="setPeriod(this, '3m')">過去3ヶ月</button>
+                <button class="period-btn" onclick="setPeriod(this, '1y')">過去1年</button>
+            </div>
+            
+            <div class="date-range">
+                <input type="date" id="startDate" value="2025-07-11">
+                <span>〜</span>
+                <input type="date" id="endDate" value="2025-08-11">
+                <button class="export-btn" onclick="updateReport()">
+                    🔄 更新
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI カード -->
+        <div class="kpi-grid">
+            <div class="kpi-card revenue">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-value" id="totalRevenue">¥2,340,000</div>
+                <div class="kpi-label">総収益（月間）</div>
+                <div class="kpi-change change-up">
+                    <span>↗</span>
+                    <span>+18.5% vs 先月</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card jobs">
+                <div class="kpi-icon">💼</div>
+                <div class="kpi-value" id="totalJobs">47</div>
+                <div class="kpi-label">掲載求人数</div>
+                <div class="kpi-change change-up">
+                    <span>↗</span>
+                    <span>+12 vs 先月</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card companies">
+                <div class="kpi-icon">🏢</div>
+                <div class="kpi-value" id="activeCompanies">12</div>
+                <div class="kpi-label">活動企業数</div>
+                <div class="kpi-change change-up">
+                    <span>↗</span>
+                    <span>+2 vs 先月</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card growth">
+                <div class="kpi-icon">📊</div>
+                <div class="kpi-value" id="conversionRate">24.3%</div>
+                <div class="kpi-label">コンバージョン率</div>
+                <div class="kpi-change change-down">
+                    <span>↘</span>
+                    <span>-2.1% vs 先月</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- チャートセクション -->
+        <div class="charts-grid">
+            <div class="chart-section">
+                <h2 class="chart-title">
+                    📈 収益推移（月間）
+                </h2>
+                <div class="chart-placeholder">
+                    📊 Chart.js または D3.js による収益推移チャートを表示
+                    <br>（実装時にライブラリを導入）
+                </div>
+            </div>
+            
+            <div class="chart-section">
+                <h2 class="chart-title">
+                    🥧 収益内訳
+                </h2>
+                <div class="chart-placeholder">
+                    🥧 収益源別の円グラフ
+                    <br>（求人掲載料・プレミアム機能など）
+                </div>
+            </div>
+        </div>
+
+        <!-- 収益内訳詳細 -->
+        <div class="data-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    💰 収益内訳詳細
+                </h2>
+            </div>
+            
+            <div class="revenue-breakdown">
+                <div class="revenue-item">
+                    <div class="revenue-category">求人掲載料</div>
+                    <div class="revenue-amount">¥1,560,000</div>
+                    <div class="revenue-percentage">66.7%</div>
+                </div>
+                
+                <div class="revenue-item">
+                    <div class="revenue-category">プレミアム機能</div>
+                    <div class="revenue-amount">¥468,000</div>
+                    <div class="revenue-percentage">20.0%</div>
+                </div>
+                
+                <div class="revenue-item">
+                    <div class="revenue-category">広告収入</div>
+                    <div class="revenue-amount">¥234,000</div>
+                    <div class="revenue-percentage">10.0%</div>
+                </div>
+                
+                <div class="revenue-item">
+                    <div class="revenue-category">その他</div>
+                    <div class="revenue-amount">¥78,000</div>
+                    <div class="revenue-percentage">3.3%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 企業別収益 -->
+        <div class="data-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    🏢 企業別収益ランキング
+                </h2>
+                <button class="export-btn" onclick="exportRevenue()">
+                    📥 CSV エクスポート
+                </button>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ランク</th>
+                        <th>企業名</th>
+                        <th>求人数</th>
+                        <th>月間収益</th>
+                        <th>成長率</th>
+                        <th>プラン</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1位</strong></td>
+                        <td>特許事務所ABC</td>
+                        <td>5件</td>
+                        <td><strong>¥312,000</strong></td>
+                        <td style="color: #27ae60;">+25%</td>
+                        <td><span style="background: #ffd700; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Premium</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2位</strong></td>
+                        <td>株式会社XYZ知財部</td>
+                        <td>3件</td>
+                        <td><strong>¥234,000</strong></td>
+                        <td style="color: #27ae60;">+15%</td>
+                        <td><span style="background: #e9ecef; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Standard</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3位</strong></td>
+                        <td>国際特許法律事務所</td>
+                        <td>4件</td>
+                        <td><strong>¥198,000</strong></td>
+                        <td style="color: #e74c3c;">-5%</td>
+                        <td><span style="background: #ffd700; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Premium</span></td>
+                    </tr>
+                    <tr>
+                        <td>4位</td>
+                        <td>グローバル特許事務所</td>
+                        <td>2件</td>
+                        <td>¥156,000</td>
+                        <td style="color: #27ae60;">+8%</td>
+                        <td><span style="background: #e9ecef; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Standard</span></td>
+                    </tr>
+                    <tr>
+                        <td>5位</td>
+                        <td>テクノロジー特許事務所</td>
+                        <td>3件</td>
+                        <td>¥120,000</td>
+                        <td style="color: #f39c12;">±0%</td>
+                        <td><span style="background: #e9ecef; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Standard</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ユーザー行動分析 -->
+        <div class="charts-grid">
+            <div class="chart-section">
+                <h2 class="chart-title">
+                    👥 ユーザー行動分析
+                </h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">89,234</div>
+                        <div style="color: #6c757d;">月間PV</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #9b59b6;">12,456</div>
+                        <div style="color: #6c757d;">月間UU</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #f39c12;">00:03:42</div>
+                        <div style="color: #6c757d;">平均滞在時間</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">34.2%</div>
+                        <div style="color: #6c757d;">直帰率</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-section">
+                <h2 class="chart-title">
+                    📱 デバイス別アクセス
+                </h2>
+                <div style="margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Desktop</span>
+                        <span>45%</span>
+                    </div>
+                    <div style="background: #e9ecef; border-radius: 8px; overflow: hidden; margin-bottom: 1rem;">
+                        <div style="background: #3498db; height: 8px; width: 45%;"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Mobile</span>
+                        <span>40%</span>
+                    </div>
+                    <div style="background: #e9ecef; border-radius: 8px; overflow: hidden; margin-bottom: 1rem;">
+                        <div style="background: #27ae60; height: 8px; width: 40%;"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Tablet</span>
+                        <span>15%</span>
+                    </div>
+                    <div style="background: #e9ecef; border-radius: 8px; overflow: hidden;">
+                        <div style="background: #f39c12; height: 8px; width: 15%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <\!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ビジネス分析機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('ビジネス分析画面が読み込まれました');
+            checkSystemAuthentication();
+            initializeCharts();
+            updateKPIs();
+        });
+
+        // システム管理者認証チェック
+        function checkSystemAuthentication() {
+            const sessionData = localStorage.getItem('system_admin_session');
+            if (!sessionData) {
+                window.location.href = 'system-admin-login.html';
+                return;
+            }
+        }
+
+        // 期間設定
+        function setPeriod(button, period) {
+            // アクティブボタンの変更
+            document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // 日付範囲の自動設定
+            const endDate = new Date();
+            let startDate = new Date();
+            
+            switch(period) {
+                case '7d':
+                    startDate.setDate(endDate.getDate() - 7);
+                    break;
+                case '30d':
+                    startDate.setDate(endDate.getDate() - 30);
+                    break;
+                case '3m':
+                    startDate.setMonth(endDate.getMonth() - 3);
+                    break;
+                case '1y':
+                    startDate.setFullYear(endDate.getFullYear() - 1);
+                    break;
+            }
+            
+            document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+            document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+            
+            updateReport();
+        }
+
+        // レポート更新
+        function updateReport() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            showNotification(`${startDate} 〜 ${endDate} のレポートを更新しました`, 'success');
+            updateKPIs();
+        }
+
+        // KPI更新
+        function updateKPIs() {
+            const currentHour = new Date().getHours();
+            
+            // ランダムなバリエーションを追加（デモ用）
+            const baseRevenue = 2340000;
+            const revenue = baseRevenue + (currentHour * 10000);
+            
+            document.getElementById('totalRevenue').textContent = `¥${revenue.toLocaleString()}`;
+            document.getElementById('totalJobs').textContent = 45 + (currentHour % 8);
+            document.getElementById('activeCompanies').textContent = 11 + (currentHour % 3);
+            
+            const conversionRate = (23.5 + (currentHour * 0.1)).toFixed(1);
+            document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+        }
+
+        // チャート初期化（将来的にChart.jsなどを使用）
+        function initializeCharts() {
+            // 実際の実装では Chart.js や D3.js を使用してチャートを描画
+            console.log('チャートライブラリを初期化（未実装）');
+        }
+
+        // 収益データエクスポート
+        function exportRevenue() {
+            if (!confirm('企業別収益データをCSV形式でエクスポートしますか？')) return;
+            
+            showNotification('収益データのエクスポートを開始しました', 'info');
+            logSystemEvent('収益データエクスポート実行', 'INFO');
+            
+            // 実際の実装ではCSVファイルを生成・ダウンロード
+            setTimeout(() => {
+                showNotification('収益データのエクスポートが完了しました', 'success');
+            }, 2000);
+        }
+
+        // システムイベントログ
+        function logSystemEvent(action, level) {
+            console.log(`🛡️ [${level}] ${new Date().toLocaleString()}: ${action}`);
+        }
+
+        // システム管理者ログアウト
+        function systemLogout() {
+            if (confirm('システム管理者セッションを終了しますか？')) {
+                localStorage.removeItem('system_admin_session');
+                window.location.href = 'system-admin-login.html';
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10001;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                min-width: 300px;
+            `;
+
+            const colors = {
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'warning': '#f39c12',
+                'info': '#3498db'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // 定期的なKPI更新
+        setInterval(updateKPIs, 5 * 60 * 1000); // 5分ごと
+
+        console.log('📈 Patent Hub ビジネス分析・収益レポート - 初期化完了');
+    </script>
+</body>
+</html>

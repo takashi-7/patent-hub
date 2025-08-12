@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約 | Patent Hub</title>
+    <meta name="description" content="Patent Hub 利用規約。サービス利用に関する条件、責任範囲、禁止事項などを定めています。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 利用規約ページ専用スタイル */
+        .terms-body {
+            background: #f8f9fa;
+        }
+        
+        /* ページヘッダー */
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .terms-document {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            line-height: 1.7;
+        }
+        
+        .update-info {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .terms-toc {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .toc-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .toc-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .toc-list a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toc-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .terms-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .terms-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #1e3c72;
+        }
+        
+        .subsection-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        .terms-list {
+            padding-left: 2rem;
+        }
+        
+        .terms-list li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .highlight-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1e3c72;
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .contact-box {
+            background: #f0f8ff;
+            border: 2px solid #1e3c72;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .contact-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1rem;
+            }
+            
+            .terms-document {
+                padding: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body class="terms-body">
+    <!-- ヘッダー（共通） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">📋 利用規約</h1>
+            <p class="page-subtitle">Patent Hub サービス利用に関する条件と規則</p>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <div class="terms-document">
+            <div class="update-info">
+                <strong>最終更新日：2025年8月11日</strong><br>
+                本利用規約は、Patent Hub のサービス利用に関する条件を定めたものです。
+            </div>
+            
+            <!-- 目次 -->
+            <div class="terms-toc">
+                <div class="toc-title">📑 目次</div>
+                <ul class="toc-list">
+                    <li><a href="#section1">第1条 総則</a></li>
+                    <li><a href="#section2">第2条 定義</a></li>
+                    <li><a href="#section3">第3条 利用登録</a></li>
+                    <li><a href="#section4">第4条 サービス内容</a></li>
+                    <li><a href="#section5">第5条 利用料金</a></li>
+                    <li><a href="#section6">第6条 禁止事項</a></li>
+                    <li><a href="#section7">第7条 知的財産権</a></li>
+                    <li><a href="#section8">第8条 免責事項</a></li>
+                    <li><a href="#section9">第9条 サービスの変更・終了</a></li>
+                    <li><a href="#section10">第10条 規約の変更</a></li>
+                    <li><a href="#section11">第11条 準拠法・管轄裁判所</a></li>
+                </ul>
+            </div>
+            
+            <!-- 第1条 総則 -->
+            <div class="terms-section" id="section1">
+                <h2 class="section-title">第1条 総則</h2>
+                <p>本利用規約（以下「本規約」）は、Patent Hub（以下「当サービス」）が提供するサービスの利用に関して、当サービスと利用者との間の権利義務関係を定めるものです。</p>
+                <p>利用者は、当サービスを利用することにより、本規約の全ての条項に同意したものとみなします。</p>
+            </div>
+            
+            <!-- 第2条 定義 -->
+            <div class="terms-section" id="section2">
+                <h2 class="section-title">第2条 定義</h2>
+                <p>本規約において使用する用語の定義は以下のとおりです。</p>
+                <ol class="terms-list">
+                    <li><strong>当サービス</strong>：Patent Hub が運営する知的財産情報プラットフォーム</li>
+                    <li><strong>利用者</strong>：当サービスを利用する全ての個人および法人</li>
+                    <li><strong>登録利用者</strong>：当サービスに利用者登録を行った個人および法人</li>
+                    <li><strong>コンテンツ</strong>：当サービス上に掲載される文字、画像、動画、その他の情報</li>
+                    <li><strong>利用者コンテンツ</strong>：利用者が当サービス上に投稿、送信、アップロード等を行った一切の情報</li>
+                </ol>
+            </div>
+            
+            <!-- 第3条 利用登録 -->
+            <div class="terms-section" id="section3">
+                <h2 class="section-title">第3条 利用登録</h2>
+                
+                <div class="subsection-title">3.1 登録申請</div>
+                <p>当サービスの利用登録を希望する者は、本規約に同意の上、当サービスが定める方法により利用登録の申請を行うものとします。</p>
+                
+                <div class="subsection-title">3.2 登録承認</div>
+                <p>当サービスは、利用登録の申請があった場合、以下の各号のいずれかに該当しない限り、利用登録を承認するものとします。</p>
+                <ul class="terms-list">
+                    <li>申請内容に虚偽、誤記または記載漏れがあった場合</li>
+                    <li>申請者が過去に本規約に違反したことがある場合</li>
+                    <li>申請者が法人の場合で、実在しない法人である場合</li>
+                    <li>その他当サービスが登録を適当でないと判断した場合</li>
+                </ul>
+                
+                <div class="subsection-title">3.3 登録情報の管理</div>
+                <p>登録利用者は、登録情報に変更が生じた場合、速やかに変更手続きを行うものとします。</p>
+            </div>
+            
+            <!-- 第4条 サービス内容 -->
+            <div class="terms-section" id="section4">
+                <h2 class="section-title">第4条 サービス内容</h2>
+                <p>当サービスは、以下のサービスを提供します。</p>
+                <ul class="terms-list">
+                    <li>知的財産に関する最新ニュースの配信</li>
+                    <li>知的財産業界の求人情報の掲載</li>
+                    <li>知的財産関連セミナー・イベント情報の提供</li>
+                    <li>お気に入り機能およびユーザーカスタマイズ機能</li>
+                    <li>その他当サービスが提供する各種機能</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <strong>重要：</strong>当サービスは情報提供を目的としており、法的助言や専門的なコンサルティングサービスを提供するものではありません。
+                </div>
+            </div>
+            
+            <!-- 第5条 利用料金 -->
+            <div class="terms-section" id="section5">
+                <h2 class="section-title">第5条 利用料金</h2>
+                <p>当サービスの基本機能は無料で利用できます。ただし、一部の高度な機能については有料となる場合があります。</p>
+                <p>有料サービスの利用料金および支払い方法については、別途当サービス上で明示するものとします。</p>
+            </div>
+            
+            <!-- 第6条 禁止事項 -->
+            <div class="terms-section" id="section6">
+                <h2 class="section-title">第6条 禁止事項</h2>
+                <p>利用者は、当サービスの利用にあたり、以下の各号に掲げる行為をしてはならないものとします。</p>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 注意：</strong>以下の禁止事項に違反した場合、アカウントの停止または削除、法的措置を取る場合があります。
+                </div>
+                
+                <ul class="terms-list">
+                    <li>法令、裁判所の判決、決定若しくは命令、又は法令上拘束力のある行政措置に違反する行為</li>
+                    <li>公の秩序又は善良の風俗を害するおそれのある行為</li>
+                    <li>犯罪行為に関連する行為</li>
+                    <li>当サービスの運営を妨害するおそれのある行為</li>
+                    <li>他の利用者に関する個人情報等を収集または蓄積する行為</li>
+                    <li>他の利用者に成りすます行為</li>
+                    <li>当サービスのサーバーやネットワークの機能を破壊したり、妨害したりする行為</li>
+                    <li>当サービスによって得られた情報を商業的に利用する行為</li>
+                    <li>当サービスの運営に支障を与える行為</li>
+                    <li>反社会的勢力に対する利益供与その他の協力行為</li>
+                    <li>その他、当サービスが不適切と判断する行為</li>
+                </ul>
+            </div>
+            
+            <!-- 第7条 知的財産権 -->
+            <div class="terms-section" id="section7">
+                <h2 class="section-title">第7条 知的財産権</h2>
+                <p>当サービス上のコンテンツに関する著作権その他の知的財産権は、当サービスまたはコンテンツ提供者に帰属します。</p>
+                <p>利用者は、当サービスが明示的に許諾した場合を除き、当サービス上のコンテンツを複製、転載、配布、販売、翻案等することはできません。</p>
+                
+                <div class="highlight-box">
+                    <strong>📄 著作権について：</strong>当サービスで提供される情報の多くは公的機関や信頼できる情報源から取得していますが、加工・編集された情報については当サービスの著作物となります。
+                </div>
+            </div>
+            
+            <!-- 第8条 免責事項 -->
+            <div class="terms-section" id="section8">
+                <h2 class="section-title">第8条 免責事項</h2>
+                <p>当サービスは、以下の各号について一切の責任を負わないものとします。</p>
+                <ul class="terms-list">
+                    <li>当サービスの内容、情報の正確性、完全性、有用性</li>
+                    <li>当サービスの利用によって生じた損害</li>
+                    <li>当サービスの利用の中断、停止、終了によって生じた損害</li>
+                    <li>当サービスの障害によって生じた損害</li>
+                    <li>第三者による当サービスの利用によって生じた損害</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 免責事項について：</strong>当サービスで提供される情報は一般的な情報提供を目的としており、個別具体的な案件に対する法的助言ではありません。重要な判断を行う際は、必ず専門家にご相談ください。
+                </div>
+            </div>
+            
+            <!-- 第9条 サービスの変更・終了 -->
+            <div class="terms-section" id="section9">
+                <h2 class="section-title">第9条 サービスの変更・終了</h2>
+                <p>当サービスは、利用者に事前に通知することなく、当サービスの内容を変更し、または当サービスの提供を中止することができるものとします。</p>
+                <p>当サービスは、当サービスの提供の終了により利用者に生じた損害について、一切の責任を負わないものとします。</p>
+            </div>
+            
+            <!-- 第10条 規約の変更 -->
+            <div class="terms-section" id="section10">
+                <h2 class="section-title">第10条 規約の変更</h2>
+                <p>当サービスは、利用者の一般の利益に適合する場合、または合理的な理由がある場合、利用者に事前に通知することにより、本規約を変更することができるものとします。</p>
+                <p>変更後の規約は、当サービス上に掲載された時点で効力を生じるものとします。</p>
+            </div>
+            
+            <!-- 第11条 準拠法・管轄裁判所 -->
+            <div class="terms-section" id="section11">
+                <h2 class="section-title">第11条 準拠法・管轄裁判所</h2>
+                <p>本規約は日本法に準拠し、日本法に従って解釈されるものとします。</p>
+                <p>当サービスと利用者との間で紛争が生じた場合、東京地方裁判所を第一審の専属的合意管轄裁判所とします。</p>
+            </div>
+            
+            <!-- お問い合わせ -->
+            <div class="contact-box">
+                <div class="contact-title">📞 お問い合わせ</div>
+                <p>本利用規約に関するご質問やお問い合わせは、以下よりご連絡ください。</p>
+                <a href="contact.html" class="contact-link">お問い合わせフォーム</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 利用規約ページ機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('利用規約ページが読み込まれました');
+            
+            // スムーズスクロール
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+        
+        console.log('📋 Patent Hub 利用規約 - 初期化完了');
+    </script>
+</body>
+</html>

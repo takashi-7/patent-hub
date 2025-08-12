@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ | Patent Hub</title>
+    <meta name="description" content="Patent Hub へのお問い合わせ。ご質問、ご要望、技術的な問題などお気軽にご連絡ください。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* お問い合わせページ専用スタイル */
+        .contact-body {
+            background: #f8f9fa;
+        }
+        
+        /* ページヘッダー */
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* お問い合わせフォーム */
+        .contact-form {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        .checkbox-input {
+            margin: 0;
+        }
+        
+        .checkbox-label {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #6c757d;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 連絡先情報 */
+        .contact-info {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #1e3c72;
+        }
+        
+        .info-icon {
+            font-size: 1.5rem;
+            color: #1e3c72;
+        }
+        
+        .info-content h4 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-content p {
+            color: #6c757d;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .info-content a {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+        
+        .info-content a:hover {
+            text-decoration: underline;
+        }
+        
+        /* FAQ セクション */
+        .faq-section {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .faq-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 1.5rem 0;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .faq-question:hover {
+            color: #1e3c72;
+        }
+        
+        .faq-answer {
+            color: #6c757d;
+            line-height: 1.6;
+            padding-left: 1.5rem;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .contact-form,
+            .contact-info,
+            .faq-section {
+                padding: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="contact-body">
+    <!-- ヘッダー（共通） -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">ホーム</a>
+                    <a href="news.html" class="nav-link">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">📞 お問い合わせ</h1>
+            <p class="page-subtitle">ご質問、ご要望、技術的な問題などお気軽にご連絡ください</p>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <div class="contact-grid">
+            <!-- お問い合わせフォーム -->
+            <div class="contact-form">
+                <h2 class="form-title">📝 お問い合わせフォーム</h2>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label" for="name">お名前 <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">メールアドレス <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="company">会社名・組織名</label>
+                        <input type="text" id="company" name="company" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="category">お問い合わせ種別 <span class="required">*</span></label>
+                        <select id="category" name="category" class="form-select" required>
+                            <option value="">選択してください</option>
+                            <option value="general">一般的なお問い合わせ</option>
+                            <option value="technical">技術的な問題</option>
+                            <option value="account">アカウント・ログイン</option>
+                            <option value="content">コンテンツに関して</option>
+                            <option value="business">事業・提携について</option>
+                            <option value="other">その他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="subject">件名 <span class="required">*</span></label>
+                        <input type="text" id="subject" name="subject" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="message">お問い合わせ内容 <span class="required">*</span></label>
+                        <textarea id="message" name="message" class="form-textarea" placeholder="できるだけ詳細にお書きください" required></textarea>
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="privacy" name="privacy" class="checkbox-input" required>
+                        <label for="privacy" class="checkbox-label">
+                            <a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意します <span class="required">*</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        📨 送信する
+                    </button>
+                </form>
+            </div>
+            
+            <!-- 連絡先情報 -->
+            <div class="contact-info">
+                <h2 class="info-title">📍 連絡先情報</h2>
+                
+                <div class="info-item">
+                    <div class="info-icon">📧</div>
+                    <div class="info-content">
+                        <h4>メールでのお問い合わせ</h4>
+                        <p><a href="mailto:info@patenthub.jp">info@patenthub.jp</a></p>
+                        <p>営業時間内（平日9:00-18:00）に対応いたします</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div class="info-content">
+                        <h4>営業時間</h4>
+                        <p>平日 9:00 - 18:00</p>
+                        <p>土日祝日は休業（緊急時を除く）</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">🚀</div>
+                    <div class="info-content">
+                        <h4>回答時間の目安</h4>
+                        <p>一般的なお問い合わせ: 1-2営業日</p>
+                        <p>技術的な問題: 2-3営業日</p>
+                        <p>事業関連: 3-5営業日</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">💡</div>
+                    <div class="info-content">
+                        <h4>お問い合わせの前に</h4>
+                        <p>よくある質問もご確認ください。</p>
+                        <p>迅速な解決に繋がる場合があります。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FAQ セクション -->
+        <div class="faq-section">
+            <h2 class="faq-title">❓ よくある質問</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q. アカウント登録は必要ですか？</div>
+                <div class="faq-answer">
+                    A. 基本的な情報閲覧にはアカウント登録は不要です。ただし、お気に入り機能や求人応募、セミナー申込みには登録が必要な場合があります。
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q. 求人情報の掲載はどのように行いますか？</div>
+                <div class="faq-answer">
+                    A. 企業様向けの管理画面から求人情報を掲載できます。詳しくは事業・提携についてのお問い合わせからご連絡ください。
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q. ニュース情報の提供はどこから取得していますか？</div>
+                <div class="faq-answer">
+                    A. 特許庁、WIPO、各種知財関連機関、法廷情報などの公式ソースから情報を収集・整理して提供しています。
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q. セミナー情報の掲載基準はありますか？</div>
+                <div class="faq-answer">
+                    A. 知的財産に関連する内容で、信頼できる主催者によるセミナーを掲載対象としています。掲載をご希望の場合はお問い合わせください。
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q. モバイルアプリはありますか？</div>
+                <div class="faq-answer">
+                    A. 現在はWebサイトのみの提供ですが、モバイルアプリの開発も検討中です。最新情報は当サイトでお知らせします。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // お問い合わせフォーム機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('お問い合わせページが読み込まれました');
+            
+            const contactForm = document.getElementById('contactForm');
+            
+            // フォーム送信処理
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // バリデーション
+                if (!validateForm()) {
+                    return;
+                }
+                
+                // 送信処理（デモ用）
+                showSubmissionProcess();
+            });
+        });
+        
+        // フォームバリデーション
+        function validateForm() {
+            const requiredFields = ['name', 'email', 'category', 'subject', 'message'];
+            let isValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    showFieldError(field, `${field.previousElementSibling.textContent}は必須項目です`);
+                    isValid = false;
+                } else {
+                    clearFieldError(field);
+                }
+            });
+            
+            // メールアドレス形式チェック
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() && !emailRegex.test(email.value)) {
+                showFieldError(email, '正しいメールアドレス形式で入力してください');
+                isValid = false;
+            }
+            
+            // プライバシーポリシー同意チェック
+            const privacy = document.getElementById('privacy');
+            if (!privacy.checked) {
+                alert('プライバシーポリシーに同意していただく必要があります');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // フィールドエラー表示
+        function showFieldError(field, message) {
+            field.style.borderColor = '#e74c3c';
+            
+            // 既存のエラーメッセージを削除
+            const existingError = field.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // エラーメッセージを追加
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.color = '#e74c3c';
+            errorDiv.style.fontSize = '0.875rem';
+            errorDiv.style.marginTop = '0.25rem';
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+        
+        // フィールドエラークリア
+        function clearFieldError(field) {
+            field.style.borderColor = '#e9ecef';
+            const errorMessage = field.parentNode.querySelector('.error-message');
+            if (errorMessage) {
+                errorMessage.remove();
+            }
+        }
+        
+        // 送信処理デモ
+        function showSubmissionProcess() {
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            // ローディング状態
+            submitBtn.disabled = true;
+            submitBtn.textContent = '📤 送信中...';
+            
+            setTimeout(() => {
+                submitBtn.textContent = '✅ 送信完了！';
+                submitBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(() => {
+                    alert('お問い合わせを承りました。\n2-3営業日以内にご回答いたします。');
+                    
+                    // フォームリセット
+                    document.getElementById('contactForm').reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.background = 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)';
+                }, 1000);
+            }, 2000);
+        }
+        
+        console.log('📞 Patent Hub お問い合わせ - 初期化完了');
+    </script>
+</body>
+</html>

@@ -11,17 +11,19 @@
     <!-- ヘッダー -->
     <header class="header">
         <div class="container">
-            <h1 class="logo">
-                <a href="/">Patent Hub</a>
-            </h1>
-            <nav class="nav">
-                <ul>
-                    <li><a href="#news">ニュース</a></li>
-                    <li><a href="#jobs">求人</a></li>
-                    <li><a href="#seminars">セミナー</a></li>
-                    <li><a href="#tech-news">テクノロジー</a></li>
-                </ul>
-            </nav>
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">📋</div>
+                    <span class="logo-text">Patent Hub</span>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link active">ホーム</a>
+                    <a href="news.html" class="nav-link">ニュース</a>
+                    <a href="jobs.html" class="nav-link">求人</a>
+                    <a href="seminars.html" class="nav-link">セミナー</a>
+                    <a href="favorites.html" class="nav-link">お気に入り</a>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -30,7 +32,7 @@
         <!-- ヒーローセクション -->
         <section class="hero">
             <div class="container">
-                <h2>知的財産業界の情報を<br>一箇所で</h2>
+                <h2>知財情報を一箇所で</h2>
                 <p>最新ニュース・求人・セミナー情報を毎日更新</p>
             </div>
         </section>
@@ -38,28 +40,136 @@
         <!-- 知財ニュース -->
         <section id="news" class="section">
             <div class="container">
-                <h2 class="section-title">📰 知財ニュース</h2>
-                <div class="news-grid">
-                    <article class="news-item">
-                        <h3>特許庁、AI関連特許の審査基準を改定</h3>
-                        <p class="news-date">2025年8月9日</p>
-                        <p class="news-summary">人工知能技術の発展に対応し、特許審査基準を見直し...</p>
-                        <a href="#" class="read-more">続きを読む</a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 class="section-title">📰 知財ニュース</h2>
+                    <div style="text-align: right;">
+                        <div class="news-last-update" style="color: #6c757d; font-size: 0.9rem;">最終更新: 取得中...</div>
+                        <button onclick="patentNewsScaper.manualRefresh()" style="margin-top: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #1e3c72; background: white; color: #1e3c72; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">🔄 手動更新</button>
+                    </div>
+                </div>
+                <div class="news-list" id="latestnews-list">
+                    <article class="news-item-slim">
+                        <div class="news-date-badge">
+                            <span class="month">8月</span>
+                            <span class="day">9</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>特許庁、AI関連特許の審査基準を改定</h3>
+                            <p class="news-summary">人工知能技術の発展に対応し、特許審査基準を見直し。機械学習アルゴリズムや深層学習技術に関する特許要件を明確化。</p>
+                            <div class="news-meta">
+                                <span class="news-category">📋 制度改正</span>
+                                <span class="news-source">特許庁発表</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=news_001" class="news-link">詳細</a>
                     </article>
-                    <article class="news-item">
-                        <h3>大手製薬会社、新薬特許で訴訟勝利</h3>
-                        <p class="news-date">2025年8月8日</p>
-                        <p class="news-summary">特許侵害を主張していた訴訟で勝訴判決...</p>
-                        <a href="#" class="read-more">続きを読む</a>
+                    
+                    <article class="news-item-slim">
+                        <div class="news-date-badge">
+                            <span class="month">8月</span>
+                            <span class="day">8</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>大手製薬会社、新薬特許で訴訟勝利</h3>
+                            <p class="news-summary">糖尿病治療薬の特許侵害を巡る訴訟で、東京地裁が原告の主張を認定。ジェネリック医薬品の販売差し止めを命令。</p>
+                            <div class="news-meta">
+                                <span class="news-category">⚖️ 裁判</span>
+                                <span class="news-source">東京地裁</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=news_002" class="news-link">詳細</a>
                     </article>
-                    <article class="news-item">
-                        <h3>中国の知的財産権保護強化策発表</h3>
-                        <p class="news-date">2025年8月7日</p>
-                        <p class="news-summary">中国政府が知財保護の新たな取り組みを...</p>
-                        <a href="#" class="read-more">続きを読む</a>
+                    
+                    <article class="news-item-slim">
+                        <div class="news-date-badge">
+                            <span class="month">8月</span>
+                            <span class="day">7</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>中国の知的財産権保護強化策発表</h3>
+                            <p class="news-summary">中国国家知識産権局が2025年度の知財保護計画を発表。外国企業の権利保護強化と模倣品対策に重点。</p>
+                            <div class="news-meta">
+                                <span class="news-category">🌏 国際</span>
+                                <span class="news-source">中国国家知識産権局</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=news_003" class="news-link">詳細</a>
+                    </article>
+                    
+                    <article class="news-item-slim">
+                        <div class="news-date-badge">
+                            <span class="month">8月</span>
+                            <span class="day">6</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>スタートアップ知財支援制度が本格稼働</h3>
+                            <p class="news-summary">経済産業省とJETROが連携し、スタートアップ企業の海外特許出願費用を最大300万円まで補助する制度を開始。</p>
+                            <div class="news-meta">
+                                <span class="news-category">💰 補助金</span>
+                                <span class="news-source">経済産業省</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=news_004" class="news-link">詳細</a>
                     </article>
                 </div>
-                <a href="#" class="view-more">すべてのニュースを見る</a>
+                <a href="news.html" class="view-more">すべてのニュースを見る</a>
+            </div>
+        </section>
+        
+        <!-- テクノロジーニュース -->
+        <section id="tech-news" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">🚀 テクノロジーニュース</h2>
+                <div class="news-list" id="important-news-list">
+                    <article class="news-item-slim">
+                        <div class="news-date-badge tech">
+                            <span class="month">8月</span>
+                            <span class="day">9</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>生成AI技術、新たな特許出願急増</h3>
+                            <p class="news-summary">ChatGPT以降、AI関連の特許出願が前年比300%増加。大手テック企業が基盤技術の特許確保競争を激化。</p>
+                            <div class="news-meta">
+                                <span class="news-category">🤖 AI技術</span>
+                                <span class="news-source">特許庁統計</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=tech_001" class="news-link">詳細</a>
+                    </article>
+                    
+                    <article class="news-item-slim">
+                        <div class="news-date-badge tech">
+                            <span class="month">8月</span>
+                            <span class="day">8</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>量子コンピューター実用化に向けた特許競争激化</h3>
+                            <p class="news-summary">IBM、Google、中国企業の三つ巴の競争。量子エラー訂正技術の特許が実用化の鍵を握る。</p>
+                            <div class="news-meta">
+                                <span class="news-category">⚛️ 量子技術</span>
+                                <span class="news-source">MIT Technology Review</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=tech_002" class="news-link">詳細</a>
+                    </article>
+                    
+                    <article class="news-item-slim">
+                        <div class="news-date-badge tech">
+                            <span class="month">8月</span>
+                            <span class="day">7</span>
+                        </div>
+                        <div class="news-content">
+                            <h3>メタバース関連特許、Apple・Meta・Sonyが上位</h3>
+                            <p class="news-summary">仮想現実技術の特許出願でAppleが首位。没入型インターフェースとハプティック技術で優位性確保。</p>
+                            <div class="news-meta">
+                                <span class="news-category">🥽 VR/AR</span>
+                                <span class="news-source">Patent Analytics</span>
+                            </div>
+                        </div>
+                        <a href="news-detail.html?id=tech_003" class="news-link">詳細</a>
+                    </article>
+                </div>
+                <a href="news.html" class="view-more">すべてのテクノロジーニュースを見る</a>
             </div>
         </section>
 
@@ -74,7 +184,7 @@
                         <p class="location">📍 東京都港区</p>
                         <p class="salary">💰 年収500-800万円</p>
                         <span class="job-tag">未経験歓迎</span>
-                        <a href="#" class="apply-btn">詳細を見る</a>
+                        <a href="job-detail.html" class="apply-btn">詳細を見る</a>
                     </div>
                     <div class="job-item">
                         <h3>弁理士（化学・バイオ）</h3>
@@ -82,7 +192,7 @@
                         <p class="location">📍 大阪府大阪市</p>
                         <p class="salary">💰 年収700-1200万円</p>
                         <span class="job-tag">経験者優遇</span>
-                        <a href="#" class="apply-btn">詳細を見る</a>
+                        <a href="job-detail.html" class="apply-btn">詳細を見る</a>
                     </div>
                     <div class="job-item">
                         <h3>知財翻訳者（英⇔日）</h3>
@@ -90,10 +200,10 @@
                         <p class="location">📍 東京都新宿区（リモート可）</p>
                         <p class="salary">💰 年収400-600万円</p>
                         <span class="job-tag">リモートOK</span>
-                        <a href="#" class="apply-btn">詳細を見る</a>
+                        <a href="job-detail.html" class="apply-btn">詳細を見る</a>
                     </div>
                 </div>
-                <a href="#" class="view-more">すべての求人を見る</a>
+                <a href="jobs.html" class="view-more">すべての求人を見る</a>
             </div>
         </section>
 
@@ -113,7 +223,7 @@
                             <p class="format">📍 オンライン開催</p>
                             <span class="seminar-tag">無料</span>
                         </div>
-                        <a href="#" class="register-btn">詳細・申込</a>
+                        <a href="https://example.com/seminar/SEM001" class="register-btn" target="_blank">詳細を見る</a>
                     </div>
                     <div class="seminar-item">
                         <div class="seminar-date">
@@ -126,34 +236,13 @@
                             <p class="format">📍 東京・品川</p>
                             <span class="seminar-tag">有料</span>
                         </div>
-                        <a href="#" class="register-btn">詳細・申込</a>
+                        <a href="https://example.com/seminar/SEM002" class="register-btn" target="_blank">詳細を見る</a>
                     </div>
                 </div>
-                <a href="#" class="view-more">すべてのセミナーを見る</a>
+                <a href="seminars.html" class="view-more">すべてのセミナーを見る</a>
             </div>
         </section>
 
-        <!-- テクノロジーニュース -->
-        <section id="tech-news" class="section section-alt">
-            <div class="container">
-                <h2 class="section-title">🚀 テクノロジーニュース</h2>
-                <div class="tech-news-grid">
-                    <article class="news-item">
-                        <h3>生成AI技術、新たな特許出願急増</h3>
-                        <p class="news-date">2025年8月9日</p>
-                        <p class="news-summary">ChatGPT以降、AI関連の特許出願が前年比300%増加...</p>
-                        <a href="#" class="read-more">続きを読む</a>
-                    </article>
-                    <article class="news-item">
-                        <h3>量子コンピューター実用化に向けた特許競争激化</h3>
-                        <p class="news-date">2025年8月8日</p>
-                        <p class="news-summary">IBM、Google、中国企業の三つ巴の競争...</p>
-                        <a href="#" class="read-more">続きを読む</a>
-                    </article>
-                </div>
-                <a href="#" class="view-more">すべてのテクノロジーニュースを見る</a>
-            </div>
-        </section>
     </main>
 
     <!-- フッター -->
@@ -167,17 +256,24 @@
                 <div class="footer-section">
                     <h4>コンテンツ</h4>
                     <ul>
-                        <li><a href="#news">ニュース</a></li>
-                        <li><a href="#jobs">求人</a></li>
-                        <li><a href="#seminars">セミナー</a></li>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="seminars.html">セミナー</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>サポート</h4>
                     <ul>
-                        <li><a href="#">お問い合わせ</a></li>
-                        <li><a href="#">利用規約</a></li>
-                        <li><a href="#">プライバシーポリシー</a></li>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>管理者ログイン</h4>
+                    <ul>
+                        <li><a href="admin-login.html">企業管理者</a></li>
+                        <li><a href="system-admin-login.html">システム管理者</a></li>
                     </ul>
                 </div>
             </div>
@@ -188,5 +284,6 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script src="js/news-scraper.js"></script>
 </body>
 </html>

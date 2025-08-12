@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ページが見つかりません - Patent Hub</title>
+    <meta name="description" content="お探しのページが見つかりませんでした。Patent Hub の他のページをご利用ください。">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 404ページ専用スタイル */
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+        }
+
+        .error-content {
+            background: white;
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .error-icon {
+            font-size: 8rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: 900;
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .error-description {
+            font-size: 1.1rem;
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* ナビゲーションボタン */
+        .error-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e3c72;
+            border: 2px solid #1e3c72;
+        }
+
+        .btn-secondary:hover {
+            background: #1e3c72;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-outline:hover {
+            background: #f8f9fa;
+            border-color: #1e3c72;
+            color: #1e3c72;
+        }
+
+        /* クイックナビゲーション */
+        .quick-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #f8f9fa;
+            text-decoration: none;
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .quick-nav-item:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+            color: #1e3c72;
+        }
+
+        .quick-nav-icon {
+            font-size: 2rem;
+        }
+
+        .quick-nav-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .error-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .error-code {
+                font-size: 4rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .error-description {
+                font-size: 1rem;
+            }
+
+            .quick-nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-container {
+                padding: 1rem;
+            }
+
+            .error-content {
+                padding: 2rem 1rem;
+            }
+
+            .error-icon {
+                font-size: 5rem;
+            }
+
+            .error-code {
+                font-size: 3rem;
+            }
+
+            .quick-nav {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-icon">🔍</div>
+            <div class="error-code">404</div>
+            <h1 class="error-title">ページが見つかりません</h1>
+            <p class="error-description">
+                申し訳ございません。お探しのページは存在しないか、<br>
+                移動または削除された可能性があります。<br>
+                以下のリンクから Patent Hub の他のページをご利用ください。
+            </p>
+
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary">
+                    🏠 ホームに戻る
+                </a>
+                <button onclick="history.back()" class="btn btn-secondary">
+                    ← 前のページに戻る
+                </button>
+            </div>
+
+            <div class="quick-nav">
+                <a href="news.html" class="quick-nav-item">
+                    <div class="quick-nav-icon">📰</div>
+                    <div class="quick-nav-text">ニュース</div>
+                </a>
+                <a href="jobs.html" class="quick-nav-item">
+                    <div class="quick-nav-icon">💼</div>
+                    <div class="quick-nav-text">求人情報</div>
+                </a>
+                <a href="seminars.html" class="quick-nav-item">
+                    <div class="quick-nav-icon">🎓</div>
+                    <div class="quick-nav-text">セミナー</div>
+                </a>
+                <a href="contact.html" class="quick-nav-item">
+                    <div class="quick-nav-icon">📞</div>
+                    <div class="quick-nav-text">お問い合わせ</div>
+                </a>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e9ecef;">
+                <a href="index.html" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: #1e3c72; text-decoration: none; font-weight: 600;">
+                    <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">📋</div>
+                    Patent Hub
+                </a>
+                <p style="margin-top: 0.5rem; color: #6c757d; font-size: 0.9rem;">
+                    知的財産業界の情報プラットフォーム
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 404エラーページ機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('404ページが読み込まれました');
+            
+            // 現在のURLを記録（分析用）
+            const currentUrl = window.location.href;
+            const referrer = document.referrer;
+            
+            console.log('404エラー - URL:', currentUrl);
+            console.log('404エラー - リファラー:', referrer);
+            
+            // アニメーション効果
+            const errorContent = document.querySelector('.error-content');
+            errorContent.style.opacity = '0';
+            errorContent.style.transform = 'translateY(50px)';
+            
+            setTimeout(() => {
+                errorContent.style.transition = 'all 0.6s ease';
+                errorContent.style.opacity = '1';
+                errorContent.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 5秒後にホームページへのリダイレクトオプション表示
+            setTimeout(() => {
+                showAutoRedirectOption();
+            }, 5000);
+        });
+
+        // 自動リダイレクトオプション表示
+        function showAutoRedirectOption() {
+            const actions = document.querySelector('.error-actions');
+            
+            const autoRedirectBtn = document.createElement('button');
+            autoRedirectBtn.className = 'btn btn-outline';
+            autoRedirectBtn.innerHTML = '🔄 10秒後にホームに自動移動';
+            autoRedirectBtn.onclick = startAutoRedirect;
+            
+            actions.appendChild(autoRedirectBtn);
+        }
+
+        // 自動リダイレクト開始
+        function startAutoRedirect() {
+            let countdown = 10;
+            const btn = event.target;
+            
+            const interval = setInterval(() => {
+                countdown--;
+                btn.innerHTML = `🔄 ${countdown}秒後にホームに移動`;
+                
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    window.location.href = 'index.html';
+                }
+            }, 1000);
+            
+            // キャンセルボタンを追加
+            btn.onclick = () => {
+                clearInterval(interval);
+                btn.innerHTML = '❌ 自動移動をキャンセル';
+                btn.onclick = null;
+            };
+        }
+
+        // ページ表示時にランダムなtipsを表示（オプション）
+        const tips = [
+            '💡 Patent Hubでは最新の知財ニュースを毎日更新しています',
+            '🔍 求人検索で理想の特許関連職を見つけましょう',
+            '📚 セミナー情報で知財スキルアップを図れます',
+            '⭐ お気に入り機能で重要な情報を保存できます',
+            '📱 Patent HubはPC・スマートフォン両対応です'
+        ];
+
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+        
+        // 3秒後にtip表示
+        setTimeout(() => {
+            const tipElement = document.createElement('div');
+            tipElement.style.cssText = `
+                margin-top: 1rem;
+                padding: 1rem;
+                background: #e8f4fd;
+                border: 1px solid #bee5eb;
+                border-radius: 8px;
+                color: #0c5460;
+                font-size: 0.9rem;
+                animation: fadeIn 0.5s ease;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            tipElement.innerHTML = randomTip;
+            document.querySelector('.error-content').appendChild(tipElement);
+        }, 3000);
+    </script>
+</body>
+</html>

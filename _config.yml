@@ -1,0 +1,13 @@
+# GitHub Pages用設定
+# Jekyll設定（GitHub Pages）
+plugins:
+  - jekyll-redirect-from
+
+# 404ページの設定
+permalink: pretty
+
+# ファイル除外設定
+exclude:
+  - README.md
+  - .gitignore
+  - google-apps-script-sample.js

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム管理者ログイン | Patent Hub</title>
+    <meta name="description" content="Patent Hub システム管理者専用ログイン - 最高管理者権限">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* システム管理画面専用スタイル */
+        .system-admin-body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border-top: 4px solid #e74c3c;
+        }
+        
+        .login-header {
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: #e74c3c;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .security-warning {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-left: 4px solid #e74c3c;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        
+        .security-warning h4 {
+            color: #c53030;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .security-warning p {
+            color: #c53030;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        
+        .login-form {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+        }
+        
+        .login-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .admin-features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        
+        .features-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        
+        .back-to-site {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .back-link {
+            color: #6c757d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="system-admin-body">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    🛡️
+                </div>
+                <h1 class="login-title">システム管理者</h1>
+                <p class="login-subtitle">Patent Hub 最高管理者権限</p>
+            </div>
+            
+            <!-- セキュリティ警告 -->
+            <div class="security-warning">
+                <h4>🔒 セキュリティ警告</h4>
+                <p>この画面はシステム管理者専用です。不正アクセスは法的措置の対象となります。</p>
+            </div>
+            
+            <form class="login-form" id="systemLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="adminId">管理者ID</label>
+                    <input 
+                        type="text" 
+                        id="adminId" 
+                        class="form-input" 
+                        placeholder="システム管理者IDを入力"
+                        required
+                        autocomplete="username"
+                    >
+                    <div class="error-message" id="adminIdError">管理者IDを入力してください</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="adminPassword">管理者パスワード</label>
+                    <input 
+                        type="password" 
+                        id="adminPassword" 
+                        class="form-input" 
+                        placeholder="管理者パスワードを入力"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <div class="error-message" id="passwordError">パスワードを入力してください</div>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    システムにログイン
+                </button>
+            </form>
+            
+            <!-- システム管理機能一覧 -->
+            <div class="admin-features">
+                <div class="features-title">
+                    🚀 システム管理機能
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-title">企業アカウント管理</div>
+                    <div class="feature-desc">全企業の登録・編集・削除・アカウント制御</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-title">求人・応募者統制</div>
+                    <div class="feature-desc">全求人の監視・削除・品質管理</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-title">統計・分析ダッシュボード</div>
+                    <div class="feature-desc">サイト全体の統計・収益・ユーザー分析</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-title">システム設定</div>
+                    <div class="feature-desc">サイト基本設定・SEO・セキュリティ管理</div>
+                </div>
+            </div>
+            
+            <div class="back-to-site">
+                <a href="/" class="back-link">
+                    ← Patent Hub サイトに戻る
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // システム管理者ログイン機能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('システム管理者ログイン画面が読み込まれました');
+            
+            const loginForm = document.getElementById('systemLoginForm');
+            const adminIdInput = document.getElementById('adminId');
+            const passwordInput = document.getElementById('adminPassword');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // システム管理者認証情報（実際の運用では環境変数・暗号化必須）
+            const SYSTEM_ADMIN_CREDENTIALS = {
+                'system-admin': {
+                    password: 'patent-hub-admin-2025',
+                    name: 'システム管理者',
+                    permissions: ['ALL'] // 全権限
+                },
+                'master-admin': {
+                    password: 'master-key-2025',
+                    name: 'マスター管理者',
+                    permissions: ['ALL']
+                }
+            };
+            
+            // ログインフォーム送信
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const adminId = adminIdInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                // バリデーション
+                if (!validateForm(adminId, password)) {
+                    return;
+                }
+                
+                // 認証処理
+                if (authenticateSystemAdmin(adminId, password)) {
+                    // ログイン成功
+                    showLoadingState();
+                    
+                    setTimeout(() => {
+                        // セッション情報を保存
+                        const admin = SYSTEM_ADMIN_CREDENTIALS[adminId];
+                        const sessionData = {
+                            adminId: adminId,
+                            adminName: admin.name,
+                            permissions: admin.permissions,
+                            loginTime: new Date().toISOString(),
+                            sessionType: 'system_admin'
+                        };
+                        
+                        // セッション情報を保存（最高権限用の別キー）
+                        localStorage.setItem('system_admin_session', JSON.stringify(sessionData));
+                        
+                        // システムダッシュボードにリダイレクト
+                        window.location.href = 'system-admin-dashboard.html';
+                    }, 2000);
+                } else {
+                    // ログイン失敗
+                    showLoginError();
+                    
+                    // セキュリティ：失敗回数を記録
+                    recordFailedAttempt(adminId);
+                }
+            });
+            
+            // バリデーション
+            function validateForm(adminId, password) {
+                let isValid = true;
+                
+                // 管理者ID
+                if (!adminId) {
+                    showFieldError('adminId', 'adminIdError', '管理者IDを入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('adminId', 'adminIdError');
+                }
+                
+                // パスワード
+                if (!password) {
+                    showFieldError('adminPassword', 'passwordError', 'パスワードを入力してください');
+                    isValid = false;
+                } else if (password.length < 8) {
+                    showFieldError('adminPassword', 'passwordError', 'パスワードは8文字以上で入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('adminPassword', 'passwordError');
+                }
+                
+                return isValid;
+            }
+            
+            // システム管理者認証
+            function authenticateSystemAdmin(adminId, password) {
+                const admin = SYSTEM_ADMIN_CREDENTIALS[adminId];
+                return admin && admin.password === password;
+            }
+            
+            // フィールドエラー表示
+            function showFieldError(inputId, errorId, message) {
+                const input = document.getElementById(inputId);
+                const error = document.getElementById(errorId);
+                
+                input.classList.add('error');
+                error.textContent = message;
+                error.style.display = 'block';
+            }
+            
+            // フィールドエラークリア
+            function clearFieldError(inputId, errorId) {
+                const input = document.getElementById(inputId);
+                const error = document.getElementById(errorId);
+                
+                input.classList.remove('error');
+                error.style.display = 'none';
+            }
+            
+            // ローディング状態表示
+            function showLoadingState() {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '🔐 認証中...';
+                
+                // 成功アニメーション
+                setTimeout(() => {
+                    loginBtn.innerHTML = '✅ 認証成功！システムにアクセス中...';
+                    loginBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                }, 1200);
+            }
+            
+            // ログインエラー表示
+            function showLoginError() {
+                showFieldError('adminId', 'adminIdError', '認証に失敗しました');
+                showFieldError('adminPassword', 'passwordError', 'IDまたはパスワードが正しくありません');
+                
+                // セキュリティ警告を強調
+                const warning = document.querySelector('.security-warning');
+                warning.style.borderLeftColor = '#dc3545';
+                warning.style.background = '#fff5f5';
+                
+                // ボタンを振動させる
+                loginBtn.style.animation = 'shake 0.8s';
+                setTimeout(() => {
+                    loginBtn.style.animation = '';
+                }, 800);
+                
+                console.warn('🚨 システム管理者ログイン失敗:', new Date().toISOString());
+            }
+            
+            // 失敗回数記録（セキュリティ）
+            function recordFailedAttempt(adminId) {
+                const attempts = JSON.parse(localStorage.getItem('failed_admin_attempts') || '{}');
+                const today = new Date().toDateString();
+                
+                if (!attempts[today]) attempts[today] = {};
+                attempts[today][adminId] = (attempts[today][adminId] || 0) + 1;
+                
+                localStorage.setItem('failed_admin_attempts', JSON.stringify(attempts));
+                
+                // 連続失敗の警告
+                if (attempts[today][adminId] >= 3) {
+                    alert('⚠️ セキュリティ警告: 複数回の認証失敗が検出されました。');
+                    console.error('🚨 セキュリティアラート: 管理者ログイン連続失敗', {
+                        adminId,
+                        attempts: attempts[today][adminId],
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            }
+        });
+        
+        // CSS アニメーション（振動）
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+                20%, 40%, 60%, 80% { transform: translateX(8px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        console.log('🛡️ Patent Hub システム管理者ログイン - セキュリティ機能有効');
+    </script>
+</body>
+</html>

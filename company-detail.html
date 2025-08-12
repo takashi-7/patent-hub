@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特許事務所ABC - 企業詳細 | Patent Hub</title>
+    <meta name="description" content="特許事務所ABCの企業詳細情報。事業概要、求人情報、アクセス情報など - Patent Hub">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <a href="/">Patent Hub</a>
+            </h1>
+            <nav class="nav">
+                <ul>
+                    <li><a href="news.html">ニュース</a></li>
+                    <li><a href="jobs.html">求人</a></li>
+                    <li><a href="/#seminars">セミナー</a></li>
+                    <li><a href="/#tech-news">テクノロジー</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="company-main">
+        <!-- パンくずナビ -->
+        <div class="breadcrumb">
+            <div class="container">
+                <nav>
+                    <a href="/">トップ</a> > 
+                    <a href="jobs.html">求人一覧</a> > 
+                    <span>特許事務所ABC</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- 企業ヘッダーカード -->
+            <section class="company-header-card">
+                <div class="company-header-content">
+                    <div class="company-logo-section">
+                        <div class="company-logo">
+                            <div class="logo-placeholder">
+                                🏢
+                            </div>
+                        </div>
+                        <div class="company-basic-info">
+                            <h1 class="company-name">特許事務所ABC</h1>
+                            <p class="company-tagline">機械・電気分野のスペシャリスト集団</p>
+                            <div class="company-meta">
+                                <span class="company-location">📍 東京都港区赤坂</span>
+                                <span class="company-established">🗓️ 設立：1985年</span>
+                                <span class="company-employees">👥 従業員数：45名</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="company-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">2,500+</span>
+                            <span class="stat-label">年間特許出願数</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">35年</span>
+                            <span class="stat-label">業界実績</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">5件</span>
+                            <span class="stat-label">現在の求人数</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 企業アクション -->
+                <div class="company-actions">
+                    <button class="favorite-company-btn" id="favoriteCompanyBtn">
+                        ❤️ お気に入り企業
+                    </button>
+                    <button class="follow-company-btn" id="followCompanyBtn">
+                        🔔 求人通知を受け取る
+                    </button>
+                    <button class="share-company-btn" id="shareCompanyBtn">
+                        🔗 企業をシェア
+                    </button>
+                </div>
+            </section>
+
+            <!-- タブナビゲーション -->
+            <section class="company-detail-tabs">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" data-tab="company-overview">🏢 企業概要</button>
+                    <button class="tab-btn" data-tab="company-jobs">💼 求人情報</button>
+                    <button class="tab-btn" data-tab="company-access">🚇 アクセス</button>
+                    <button class="tab-btn" data-tab="company-culture">🌟 企業文化</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- 企業概要タブ -->
+                    <div class="tab-pane active" id="company-overview">
+                        <h3>🏢 企業概要</h3>
+                        <div class="content-section">
+                            <div class="company-description">
+                                <p>特許事務所ABCは1985年の設立以来、機械工学・電気電子分野を中心とした知的財産権の保護と活用をサポートしてまいりました。大手メーカーから中小企業、スタートアップまで幅広いクライアントの技術革新を支援しています。</p>
+                            </div>
+
+                            <div class="business-info-grid">
+                                <div class="business-info-card">
+                                    <h4>⚙️ 主要事業分野</h4>
+                                    <ul>
+                                        <li>機械工学関連特許</li>
+                                        <li>電気・電子技術特許</li>
+                                        <li>制御・ソフトウェア特許</li>
+                                        <li>意匠・商標登録</li>
+                                        <li>知的財産戦略コンサルティング</li>
+                                    </ul>
+                                </div>
+
+                                <div class="business-info-card">
+                                    <h4>📊 企業データ</h4>
+                                    <div class="company-data">
+                                        <div class="data-row">
+                                            <span class="data-label">設立年</span>
+                                            <span class="data-value">1985年4月</span>
+                                        </div>
+                                        <div class="data-row">
+                                            <span class="data-label">資本金</span>
+                                            <span class="data-value">3,000万円</span>
+                                        </div>
+                                        <div class="data-row">
+                                            <span class="data-label">従業員数</span>
+                                            <span class="data-value">45名（弁理士12名）</span>
+                                        </div>
+                                        <div class="data-row">
+                                            <span class="data-label">年商</span>
+                                            <span class="data-value">約8億円</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="business-info-card">
+                                    <h4>🏆 知財実績</h4>
+                                    <div class="achievement-stats">
+                                        <div class="achievement-item">
+                                            <span class="achievement-number">2,500+</span>
+                                            <span class="achievement-label">年間特許出願数</span>
+                                        </div>
+                                        <div class="achievement-item">
+                                            <span class="achievement-number">15,000+</span>
+                                            <span class="achievement-label">累計登録特許数</span>
+                                        </div>
+                                        <div class="achievement-item">
+                                            <span class="achievement-number">95%</span>
+                                            <span class="achievement-label">登録成功率</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="business-info-card">
+                                    <h4>🤝 主要クライアント</h4>
+                                    <div class="client-categories">
+                                        <div class="client-category">
+                                            <strong>大手製造業</strong>
+                                            <span>自動車、電機、精密機器メーカー</span>
+                                        </div>
+                                        <div class="client-category">
+                                            <strong>中小企業</strong>
+                                            <span>町工場、技術ベンチャー</span>
+                                        </div>
+                                        <div class="client-category">
+                                            <strong>研究機関</strong>
+                                            <span>大学、国研、企業研究所</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 求人情報タブ -->
+                    <div class="tab-pane" id="company-jobs">
+                        <h3>💼 現在募集中の求人</h3>
+                        <div class="content-section">
+                            <p class="jobs-intro">特許事務所ABCでは、共に成長していく仲間を募集しています。未経験の方も歓迎いたします。</p>
+                            
+                            <div class="company-jobs-grid">
+                                <!-- 求人カード1 -->
+                                <div class="company-job-card">
+                                    <div class="job-card-header">
+                                        <h4 class="job-title">特許技術者（機械・電気）</h4>
+                                        <div class="job-badges">
+                                            <span class="job-badge new">NEW</span>
+                                            <span class="job-badge urgent">急募</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-details">
+                                        <div class="job-detail">
+                                            <span class="detail-icon">💰</span>
+                                            <span>年収500-800万円</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">📍</span>
+                                            <span>東京都港区</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">⭐</span>
+                                            <span>未経験歓迎</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-summary">
+                                        <p>機械・電気分野の特許明細書作成、中間処理業務を担当。丁寧な研修制度で未経験者も安心してスタートできます。</p>
+                                    </div>
+                                    
+                                    <div class="job-card-actions">
+                                        <a href="job-detail.html" class="view-job-btn">詳細を見る</a>
+                                        <button class="quick-apply-btn">簡単応募</button>
+                                    </div>
+                                </div>
+
+                                <!-- 求人カード2 -->
+                                <div class="company-job-card">
+                                    <div class="job-card-header">
+                                        <h4 class="job-title">弁理士（パートナー候補）</h4>
+                                        <div class="job-badges">
+                                            <span class="job-badge manager">管理職候補</span>
+                                            <span class="job-badge high-salary">高年収</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-details">
+                                        <div class="job-detail">
+                                            <span class="detail-icon">💰</span>
+                                            <span>年収800-1500万円</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">📍</span>
+                                            <span>東京都港区</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">⭐</span>
+                                            <span>管理職候補</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-summary">
+                                        <p>将来のパートナー候補として、高度な特許業務と事務所運営に携わっていただきます。経営参画の機会もございます。</p>
+                                    </div>
+                                    
+                                    <div class="job-card-actions">
+                                        <a href="job-detail.html" class="view-job-btn">詳細を見る</a>
+                                        <button class="quick-apply-btn">簡単応募</button>
+                                    </div>
+                                </div>
+
+                                <!-- 求人カード3 -->
+                                <div class="company-job-card">
+                                    <div class="job-card-header">
+                                        <h4 class="job-title">知財事務スタッフ</h4>
+                                        <div class="job-badges">
+                                            <span class="job-badge beginner">未経験OK</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-details">
+                                        <div class="job-detail">
+                                            <span class="detail-icon">💰</span>
+                                            <span>年収300-450万円</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">📍</span>
+                                            <span>東京都港区</span>
+                                        </div>
+                                        <div class="job-detail">
+                                            <span class="detail-icon">⭐</span>
+                                            <span>未経験歓迎</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-summary">
+                                        <p>特許出願手続き、書類作成サポート、顧客対応などの事務業務全般。知財業界への第一歩として最適なポジションです。</p>
+                                    </div>
+                                    
+                                    <div class="job-card-actions">
+                                        <a href="job-detail.html" class="view-job-btn">詳細を見る</a>
+                                        <button class="quick-apply-btn">簡単応募</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="all-jobs-link">
+                                <a href="jobs.html?company=特許事務所ABC" class="view-all-jobs-btn">この企業の求人をすべて見る</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- アクセス情報タブ -->
+                    <div class="tab-pane" id="company-access">
+                        <h3>🚇 アクセス・所在地</h3>
+                        <div class="content-section">
+                            <div class="access-info-grid">
+                                <div class="address-card">
+                                    <h4>📍 所在地</h4>
+                                    <div class="address-details">
+                                        <p class="address-text">
+                                            〒107-0052<br>
+                                            東京都港区赤坂3-21-16<br>
+                                            赤坂ロングビーチビル 7F
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="access-card">
+                                    <h4>🚇 アクセス</h4>
+                                    <div class="access-routes">
+                                        <div class="route-item">
+                                            <span class="route-line">🟦 東京メトロ銀座線</span>
+                                            <span class="route-detail">赤坂見附駅 徒歩3分</span>
+                                        </div>
+                                        <div class="route-item">
+                                            <span class="route-line">🟨 東京メトロ丸ノ内線</span>
+                                            <span class="route-detail">赤坂見附駅 徒歩3分</span>
+                                        </div>
+                                        <div class="route-item">
+                                            <span class="route-line">🟫 東京メトロ千代田線</span>
+                                            <span class="route-detail">赤坂駅 徒歩5分</span>
+                                        </div>
+                                        <div class="route-item">
+                                            <span class="route-line">🚌 都営バス</span>
+                                            <span class="route-detail">赤坂三丁目停留所 徒歩1分</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="contact-card">
+                                    <h4>📞 連絡先</h4>
+                                    <div class="contact-details">
+                                        <div class="contact-item">
+                                            <span class="contact-label">電話</span>
+                                            <span class="contact-value">03-1234-5678</span>
+                                        </div>
+                                        <div class="contact-item">
+                                            <span class="contact-label">FAX</span>
+                                            <span class="contact-value">03-1234-5679</span>
+                                        </div>
+                                        <div class="contact-item">
+                                            <span class="contact-label">メール</span>
+                                            <span class="contact-value">info@abc-patent.com</span>
+                                        </div>
+                                        <div class="contact-item">
+                                            <span class="contact-label">営業時間</span>
+                                            <span class="contact-value">平日 9:00-18:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 地図プレースホルダー -->
+                            <div class="map-section">
+                                <h4>🗺️ 地図</h4>
+                                <div class="map-placeholder">
+                                    <div class="map-content">
+                                        <p>🗺️ Google Maps</p>
+                                        <p>東京都港区赤坂3-21-16</p>
+                                        <p>※実際のサイトではインタラクティブな地図が表示されます</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 企業文化タブ -->
+                    <div class="tab-pane" id="company-culture">
+                        <h3>🌟 企業文化・働く環境</h3>
+                        <div class="content-section">
+                            <div class="culture-intro">
+                                <p>特許事務所ABCは「技術と法律の架け橋として、イノベーションを支える」をミッションに、働きやすい環境づくりに取り組んでいます。</p>
+                            </div>
+
+                            <div class="culture-sections">
+                                <div class="culture-card">
+                                    <h4>💡 働く環境・制度</h4>
+                                    <ul class="culture-list">
+                                        <li><strong>フレックスタイム制</strong> - コアタイム10:00-15:00</li>
+                                        <li><strong>リモートワーク可</strong> - 週2日まで在宅勤務OK</li>
+                                        <li><strong>研修制度充実</strong> - 未経験者向け3ヶ月研修プログラム</li>
+                                        <li><strong>資格取得支援</strong> - 弁理士試験対策講座費用補助</li>
+                                        <li><strong>書籍購入費補助</strong> - 年間3万円まで技術書籍代補助</li>
+                                        <li><strong>学会参加支援</strong> - 業界セミナー・学会参加費補助</li>
+                                    </ul>
+                                </div>
+
+                                <div class="culture-card">
+                                    <h4>🎯 企業理念・価値観</h4>
+                                    <div class="values-grid">
+                                        <div class="value-item">
+                                            <div class="value-icon">🔬</div>
+                                            <div class="value-content">
+                                                <h5>技術への探究心</h5>
+                                                <p>常に最新技術にアンテナを張り、クライアントの技術を深く理解する</p>
+                                            </div>
+                                        </div>
+                                        <div class="value-item">
+                                            <div class="value-icon">⚖️</div>
+                                            <div class="value-content">
+                                                <h5>法的専門性</h5>
+                                                <p>高度な法的知識と経験で、確実な権利保護を実現</p>
+                                            </div>
+                                        </div>
+                                        <div class="value-item">
+                                            <div class="value-icon">🤝</div>
+                                            <div class="value-content">
+                                                <h5>チームワーク</h5>
+                                                <p>多様な専門性を持つメンバーが協力し、最高の成果を追求</p>
+                                            </div>
+                                        </div>
+                                        <div class="value-item">
+                                            <div class="value-icon">🌱</div>
+                                            <div class="value-content">
+                                                <h5>成長支援</h5>
+                                                <p>個人の成長を組織全体でサポートし、共に発展</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="culture-card">
+                                    <h4>🎉 福利厚生</h4>
+                                    <div class="benefits-grid">
+                                        <div class="benefit-category">
+                                            <h5>🏥 健康・医療</h5>
+                                            <ul>
+                                                <li>健康保険・厚生年金</li>
+                                                <li>定期健康診断</li>
+                                                <li>インフルエンザ予防接種補助</li>
+                                            </ul>
+                                        </div>
+                                        <div class="benefit-category">
+                                            <h5>🏖️ 休暇・休日</h5>
+                                            <ul>
+                                                <li>年間休日120日</li>
+                                                <li>有給休暇（入社時10日付与）</li>
+                                                <li>夏季・年末年始休暇</li>
+                                                <li>慶弔休暇</li>
+                                            </ul>
+                                        </div>
+                                        <div class="benefit-category">
+                                            <h5>💰 諸手当</h5>
+                                            <ul>
+                                                <li>交通費支給</li>
+                                                <li>残業手当</li>
+                                                <li>弁理士資格手当</li>
+                                                <li>家族手当</li>
+                                            </ul>
+                                        </div>
+                                        <div class="benefit-category">
+                                            <h5>🎯 その他</h5>
+                                            <ul>
+                                                <li>退職金制度</li>
+                                                <li>慰安旅行</li>
+                                                <li>歓送迎会</li>
+                                                <li>クラブ活動補助</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Patent Hub</h4>
+                    <p>知的財産業界の情報プラットフォーム</p>
+                </div>
+                <div class="footer-section">
+                    <h4>コンテンツ</h4>
+                    <ul>
+                        <li><a href="news.html">ニュース</a></li>
+                        <li><a href="jobs.html">求人</a></li>
+                        <li><a href="/#seminars">セミナー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>サポート</h4>
+                    <ul>
+                        <li><a href="contact.html">お問い合わせ</a></li>
+                        <li><a href="terms.html">利用規約</a></li>
+                        <li><a href="privacy.html">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Patent Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/company-detail.js"></script>
+</body>
+</html>
