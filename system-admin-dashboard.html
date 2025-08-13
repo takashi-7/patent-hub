@@ -419,27 +419,67 @@
         🔒 システム管理者権限でログイン中 - すべての操作がログに記録されます
     </div>
 
-    <!-- ヘッダー -->
-    <header class="system-admin-header">
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
         <div class="container">
-            <div class="system-admin-logo">
-                <div class="system-admin-logo-icon">🛡️</div>
-                <span>Patent Hub システム管理</span>
+            <div class="breadcrumb-content">
+                <a href="index.html">🏠 ホーム</a>
+                <span>›</span>
+                <span class="current">システム管理ダッシュボード</span>
             </div>
-            <nav class="system-admin-nav">
-                <a href="system-admin-dashboard.html" class="system-nav-link active">ダッシュボード</a>
-                <a href="system-company-management.html" class="system-nav-link">企業管理</a>
-                <a href="system-job-management.html" class="system-nav-link">求人統制</a>
-                <a href="system-business-analytics.html" class="system-nav-link">分析レポート</a>
-                <a href="system-site-settings.html" class="system-nav-link">システム設定</a>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header class="system-unified-header">
+        <div class="container">
+            <a href="index.html" class="system-unified-logo">
+                <div class="system-unified-logo-icon">🛡️</div>
+                <span>Patent Hub システム管理</span>
+            </a>
+            <nav class="system-unified-nav">
+                <a href="system-admin-dashboard.html" class="system-unified-nav-link active">ダッシュボード</a>
+                <a href="system-company-management.html" class="system-unified-nav-link">企業管理</a>
+                <a href="system-job-management.html" class="system-unified-nav-link">求人統制</a>
+                <a href="system-business-analytics.html" class="system-unified-nav-link">分析レポート</a>
+                <a href="system-site-settings.html" class="system-unified-nav-link">システム設定</a>
             </nav>
-            <div class="system-admin-user-info">
-                <div class="system-user-avatar" id="systemUserAvatar">S</div>
+            <div class="system-unified-user-info">
+                <div class="system-unified-user-avatar" id="systemUserAvatar">S</div>
                 <span id="systemUserName">システム管理者</span>
-                <button class="system-logout-btn" onclick="systemLogout()">ログアウト</button>
+                <button class="system-unified-logout-btn" onclick="systemLogout()">ログアウト</button>
             </div>
         </div>
     </header>
+
+    <!-- サイドナビゲーション -->
+    <div class="system-admin-main">
+        <div class="system-side-nav">
+            <div class="system-side-nav-title">
+                🛡️ システム管理メニュー
+            </div>
+            <div class="system-side-nav-links">
+                <a href="system-admin-dashboard.html" class="system-side-nav-link active">
+                    📊 ダッシュボード
+                </a>
+                <a href="system-company-management.html" class="system-side-nav-link">
+                    🏢 企業管理
+                </a>
+                <a href="system-job-management.html" class="system-side-nav-link">
+                    💼 求人統制
+                </a>
+                <a href="system-news-management.html" class="system-side-nav-link">
+                    📰 ニュース管理
+                </a>
+                <a href="system-business-analytics.html" class="system-side-nav-link">
+                    📈 分析レポート
+                </a>
+                <a href="system-site-settings.html" class="system-side-nav-link">
+                    ⚙️ システム設定
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- メインコンテンツ -->
     <main class="system-admin-main">
@@ -632,7 +672,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Patent Hub</h4>
+                    <h4><a href="index.html" style="color: inherit; text-decoration: none;">Patent Hub</a></h4>
                     <p>知的財産業界の情報プラットフォーム</p>
                 </div>
                 <div class="footer-section">

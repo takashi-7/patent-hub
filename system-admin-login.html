@@ -224,6 +224,165 @@
                 font-size: 1.5rem;
             }
         }
+        
+        /* パスワード忘れモーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            margin: auto;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #495057;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .reset-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+        }
+        
+        .reset-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .reset-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        
+        .reset-info-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .reset-info-text {
+            color: #6c5730;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-icon {
+            color: #28a745;
+            margin-right: 0.5rem;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline !important;
+        }
     </style>
 </head>
 <body class="system-admin-body">
@@ -270,6 +429,10 @@
                     <div class="error-message" id="passwordError">パスワードを入力してください</div>
                 </div>
                 
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <a href="#" class="forgot-password" onclick="showForgotPasswordModal()" style="color: #e74c3c; text-decoration: none; font-size: 0.9rem;">パスワードを忘れた場合</a>
+                </div>
+                
                 <button type="submit" class="login-btn" id="loginBtn">
                     システムにログイン
                 </button>
@@ -303,9 +466,73 @@
             </div>
             
             <div class="back-to-site">
-                <a href="/" class="back-link">
+                <a href="index.html" class="back-link">
                     ← Patent Hub サイトに戻る
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- パスワード忘れモーダル -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeForgotPasswordModal()">✕</button>
+            
+            <div class="modal-header">
+                <div class="modal-icon">🛡️</div>
+                <h2 class="modal-title">システム管理者パスワードリセット</h2>
+                <p class="modal-subtitle">システム管理者の緊急連絡手順をご案内します</p>
+            </div>
+            
+            <div class="success-message" id="resetSuccessMessage">
+                <span class="success-icon">✅</span>
+                <strong>送信完了！</strong> システム管理者にパスワードリセット要求を送信しました。
+            </div>
+            
+            <form class="reset-form" id="resetForm">
+                <div class="form-group">
+                    <label class="form-label" for="resetAdminId">管理者ID</label>
+                    <input 
+                        type="text" 
+                        id="resetAdminId" 
+                        class="form-input" 
+                        placeholder="システム管理者IDを入力"
+                        required
+                    >
+                    <div class="error-message" id="resetAdminIdError">管理者IDを入力してください</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="emergencyContact">緊急連絡先情報</label>
+                    <input 
+                        type="text" 
+                        id="emergencyContact" 
+                        class="form-input" 
+                        placeholder="社員ID、部署名、または連絡先"
+                        required
+                    >
+                    <div class="error-message" id="emergencyContactError">緊急連絡先情報を入力してください</div>
+                </div>
+                
+                <button type="submit" class="reset-btn" id="resetBtn">
+                    🚨 緊急リセット要求を送信
+                </button>
+                
+                <button type="button" class="reset-btn" style="background: #6c757d;" onclick="closeForgotPasswordModal()">
+                    キャンセル
+                </button>
+            </form>
+            
+            <div class="reset-info">
+                <div class="reset-info-title">
+                    ⚠️ システム管理者パスワードリセットについて
+                </div>
+                <div class="reset-info-text">
+                    • システム管理者パスワードは特別なセキュリティ手順が必要です<br>
+                    • リセット要求は IT部門/セキュリティチームに送信されます<br>
+                    • 身元確認のため、追加の認証手順が必要になる場合があります<br>
+                    • 緊急時は<a href="contact.html" style="color: #856404;">お問い合わせ</a>または内線でご連絡ください
+                </div>
             </div>
         </div>
     </div>
@@ -477,6 +704,142 @@
                         attempts: attempts[today][adminId],
                         timestamp: new Date().toISOString()
                     });
+                }
+            }
+            
+            // パスワード忘れモーダル機能
+            const resetForm = document.getElementById('resetForm');
+            const resetAdminIdInput = document.getElementById('resetAdminId');
+            const emergencyContactInput = document.getElementById('emergencyContact');
+            const resetBtn = document.getElementById('resetBtn');
+            const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+            
+            // リセットフォーム送信
+            resetForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const adminId = resetAdminIdInput.value.trim();
+                const emergencyContact = emergencyContactInput.value.trim();
+                
+                // バリデーション
+                if (!validateResetForm(adminId, emergencyContact)) {
+                    return;
+                }
+                
+                // リセット処理実行
+                processPasswordReset(adminId, emergencyContact);
+            });
+            
+            // リセットフォームバリデーション
+            function validateResetForm(adminId, emergencyContact) {
+                let isValid = true;
+                
+                // 管理者ID
+                if (!adminId) {
+                    showFieldError('resetAdminId', 'resetAdminIdError', '管理者IDを入力してください');
+                    isValid = false;
+                } else if (adminId !== 'system-admin') {
+                    showFieldError('resetAdminId', 'resetAdminIdError', 'このIDは登録されていません');
+                    isValid = false;
+                } else {
+                    clearFieldError('resetAdminId', 'resetAdminIdError');
+                }
+                
+                // 緊急連絡先
+                if (!emergencyContact) {
+                    showFieldError('emergencyContact', 'emergencyContactError', '緊急連絡先情報を入力してください');
+                    isValid = false;
+                } else if (emergencyContact.length < 3) {
+                    showFieldError('emergencyContact', 'emergencyContactError', '詳細な連絡先情報を入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('emergencyContact', 'emergencyContactError');
+                }
+                
+                return isValid;
+            }
+            
+            // パスワードリセット処理
+            function processPasswordReset(adminId, emergencyContact) {
+                // ローディング状態
+                resetBtn.disabled = true;
+                resetBtn.innerHTML = '🚨 送信中...';
+                
+                // 擬似的な送信処理（3秒後に成功）
+                setTimeout(() => {
+                    // 成功状態表示
+                    resetBtn.innerHTML = '✅ 送信完了';
+                    resetBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    
+                    // 成功メッセージ表示
+                    resetSuccessMessage.style.display = 'block';
+                    resetForm.style.display = 'none';
+                    
+                    // ログ記録
+                    console.log(`システム管理者パスワードリセット要求: ${adminId} - 連絡先: ${emergencyContact}`);
+                    
+                    // 8秒後にモーダルを自動で閉じる
+                    setTimeout(() => {
+                        closeForgotPasswordModal();
+                    }, 8000);
+                    
+                }, 3000);
+            }
+        });
+        
+        // パスワード忘れモーダル表示
+        function showForgotPasswordModal() {
+            const modal = document.getElementById('forgotPasswordModal');
+            modal.style.display = 'flex';
+            
+            // フォーカスを管理者IDフィールドに設定
+            setTimeout(() => {
+                document.getElementById('resetAdminId').focus();
+            }, 300);
+            
+            console.log('システム管理者パスワード忘れモーダルを表示');
+        }
+        
+        // パスワード忘れモーダル閉じる
+        function closeForgotPasswordModal() {
+            const modal = document.getElementById('forgotPasswordModal');
+            const resetForm = document.getElementById('resetForm');
+            const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            modal.style.display = 'none';
+            
+            // フォーム状態をリセット
+            resetForm.style.display = 'block';
+            resetSuccessMessage.style.display = 'none';
+            resetForm.reset();
+            
+            // ボタン状態をリセット
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '🚨 緊急リセット要求を送信';
+            resetBtn.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            
+            // エラー状態をクリア
+            clearFieldError('resetAdminId', 'resetAdminIdError');
+            clearFieldError('emergencyContact', 'emergencyContactError');
+            
+            console.log('システム管理者パスワード忘れモーダルを閉じる');
+        }
+        
+        // モーダル外クリックで閉じる
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (e.target === modal) {
+                closeForgotPasswordModal();
+            }
+        });
+        
+        // ESCキーでモーダルを閉じる
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('forgotPasswordModal');
+                if (modal.style.display === 'flex') {
+                    closeForgotPasswordModal();
                 }
             }
         });

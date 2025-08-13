@@ -437,37 +437,74 @@
     </style>
 </head>
 <body class="system-admin-body">
-    <!-- ヘッダー -->
-    <header class="system-admin-header">
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
         <div class="container">
-            <a href="index.html" class="system-admin-logo" style="text-decoration: none; color: inherit;">
-                <div class="system-admin-logo-icon">🛡️</div>
+            <div class="breadcrumb-content">
+                <a href="index.html">🏠 ホーム</a>
+                <span>›</span>
+                <a href="system-admin-dashboard.html">システム管理ダッシュボード</a>
+                <span>›</span>
+                <span class="current">企業アカウント管理</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header class="system-unified-header">
+        <div class="container">
+            <a href="index.html" class="system-unified-logo">
+                <div class="system-unified-logo-icon">🛡️</div>
                 <span>Patent Hub システム管理</span>
             </a>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <span style="color: white; font-weight: 600;">システム管理者</span>
-                <button onclick="systemLogout()" style="background: transparent; border: 2px solid #e74c3c; color: #e74c3c; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
-                    ログアウト
-                </button>
+            <nav class="system-unified-nav">
+                <a href="system-admin-dashboard.html" class="system-unified-nav-link">ダッシュボード</a>
+                <a href="system-company-management.html" class="system-unified-nav-link active">企業管理</a>
+                <a href="system-job-management.html" class="system-unified-nav-link">求人統制</a>
+                <a href="system-business-analytics.html" class="system-unified-nav-link">分析レポート</a>
+                <a href="system-site-settings.html" class="system-unified-nav-link">システム設定</a>
+            </nav>
+            <div class="system-unified-user-info">
+                <div class="system-unified-user-avatar" id="systemUserAvatar">S</div>
+                <span id="systemUserName">システム管理者</span>
+                <button class="system-unified-logout-btn" onclick="systemLogout()">ログアウト</button>
             </div>
         </div>
     </header>
 
-    <!-- パンくずナビゲーション -->
-    <nav class="breadcrumb">
-        <ul class="breadcrumb-list">
-            <li><a href="system-admin-dashboard.html" class="breadcrumb-link">🛡️ システム管理</a></li>
-            <li>›</li>
-            <li class="breadcrumb-current">企業アカウント管理</li>
-        </ul>
-    </nav>
-
     <!-- メインコンテンツ -->
     <main class="system-admin-main">
+        <!-- サイドナビゲーション -->
+        <div class="system-side-nav">
+            <div class="system-side-nav-title">
+                🛡️ システム管理メニュー
+            </div>
+            <div class="system-side-nav-links">
+                <a href="system-admin-dashboard.html" class="system-side-nav-link">
+                    📊 ダッシュボード
+                </a>
+                <a href="system-company-management.html" class="system-side-nav-link active">
+                    🏢 企業管理
+                </a>
+                <a href="system-job-management.html" class="system-side-nav-link">
+                    💼 求人統制
+                </a>
+                <a href="system-news-management.html" class="system-side-nav-link">
+                    📰 ニュース管理
+                </a>
+                <a href="system-business-analytics.html" class="system-side-nav-link">
+                    📈 分析レポート
+                </a>
+                <a href="system-site-settings.html" class="system-side-nav-link">
+                    ⚙️ システム設定
+                </a>
+            </div>
+        </div>
+
         <!-- ページヘッダー -->
-        <div class="page-header">
-            <h1 class="page-title">🏢 企業アカウント管理</h1>
-            <p class="page-subtitle">登録企業の管理・監督・統制</p>
+        <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+            <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">🏢 企業アカウント管理</h1>
+            <p style="opacity: 0.9; font-size: 1.1rem;">登録企業の管理・監督・統制</p>
         </div>
 
         <!-- 統計情報 -->
@@ -671,7 +708,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Patent Hub</h4>
+                    <h4><a href="index.html" style="color: inherit; text-decoration: none;">Patent Hub</a></h4>
                     <p>知的財産業界の情報プラットフォーム</p>
                 </div>
                 <div class="footer-section">

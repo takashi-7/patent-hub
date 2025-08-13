@@ -235,6 +235,161 @@
                 gap: 0.75rem;
             }
         }
+        
+        /* パスワード忘れモーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            margin: auto;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #495057;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .reset-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+        }
+        
+        .reset-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .reset-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        
+        .reset-info-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .reset-info-text {
+            color: #1565c0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-icon {
+            color: #28a745;
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body class="admin-body">
@@ -280,7 +435,7 @@
                         <input type="checkbox" id="rememberMe">
                         <span>ログイン状態を保持</span>
                     </label>
-                    <a href="#" class="forgot-password">パスワードを忘れた場合</a>
+                    <a href="#" class="forgot-password" onclick="showForgotPasswordModal()">パスワードを忘れた場合</a>
                 </div>
                 
                 <button type="submit" class="login-btn" id="loginBtn">
@@ -311,9 +466,73 @@
             </div>
             
             <div class="back-to-site">
-                <a href="/" class="back-link">
+                <a href="index.html" class="back-link">
                     ← Patent Hub サイトに戻る
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- パスワード忘れモーダル -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeForgotPasswordModal()">✕</button>
+            
+            <div class="modal-header">
+                <div class="modal-icon">🔑</div>
+                <h2 class="modal-title">パスワードリセット</h2>
+                <p class="modal-subtitle">登録されたメールアドレスにリセット手順をお送りします</p>
+            </div>
+            
+            <div class="success-message" id="resetSuccessMessage">
+                <span class="success-icon">✅</span>
+                <strong>送信完了！</strong> パスワードリセットの手順をメールでお送りしました。
+            </div>
+            
+            <form class="reset-form" id="resetForm">
+                <div class="form-group">
+                    <label class="form-label" for="resetCompanyId">企業ID</label>
+                    <input 
+                        type="text" 
+                        id="resetCompanyId" 
+                        class="form-input" 
+                        placeholder="登録されている企業IDを入力"
+                        required
+                    >
+                    <div class="error-message" id="resetCompanyIdError">企業IDを入力してください</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="resetEmail">登録メールアドレス</label>
+                    <input 
+                        type="email" 
+                        id="resetEmail" 
+                        class="form-input" 
+                        placeholder="admin@company.com"
+                        required
+                    >
+                    <div class="error-message" id="resetEmailError">正しいメールアドレスを入力してください</div>
+                </div>
+                
+                <button type="submit" class="reset-btn" id="resetBtn">
+                    🔄 リセット手順を送信
+                </button>
+                
+                <button type="button" class="reset-btn" style="background: #6c757d;" onclick="closeForgotPasswordModal()">
+                    キャンセル
+                </button>
+            </form>
+            
+            <div class="reset-info">
+                <div class="reset-info-title">
+                    💡 ご注意
+                </div>
+                <div class="reset-info-text">
+                    • デモ環境のため、実際のメール送信は行われません<br>
+                    • 本番環境では登録済みメールアドレスに手順が送信されます<br>
+                    • メールが届かない場合は迷惑メールフォルダもご確認ください<br>
+                    • お困りの場合は<a href="contact.html" style="color: #1976d2;">お問い合わせ</a>よりご連絡ください
+                </div>
             </div>
         </div>
     </div>
@@ -473,6 +692,143 @@
                 
                 console.log(`デモアカウント選択: ${companyId}`);
             };
+            
+            // パスワード忘れモーダル機能
+            const resetForm = document.getElementById('resetForm');
+            const resetCompanyIdInput = document.getElementById('resetCompanyId');
+            const resetEmailInput = document.getElementById('resetEmail');
+            const resetBtn = document.getElementById('resetBtn');
+            const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+            
+            // リセットフォーム送信
+            resetForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const companyId = resetCompanyIdInput.value.trim();
+                const email = resetEmailInput.value.trim();
+                
+                // バリデーション
+                if (!validateResetForm(companyId, email)) {
+                    return;
+                }
+                
+                // リセット処理実行
+                processPasswordReset(companyId, email);
+            });
+            
+            // リセットフォームバリデーション
+            function validateResetForm(companyId, email) {
+                let isValid = true;
+                
+                // 企業ID
+                if (!companyId) {
+                    showFieldError('resetCompanyId', 'resetCompanyIdError', '企業IDを入力してください');
+                    isValid = false;
+                } else if (!demoAccounts[companyId]) {
+                    showFieldError('resetCompanyId', 'resetCompanyIdError', 'この企業IDは登録されていません');
+                    isValid = false;
+                } else {
+                    clearFieldError('resetCompanyId', 'resetCompanyIdError');
+                }
+                
+                // メールアドレス
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email) {
+                    showFieldError('resetEmail', 'resetEmailError', 'メールアドレスを入力してください');
+                    isValid = false;
+                } else if (!emailPattern.test(email)) {
+                    showFieldError('resetEmail', 'resetEmailError', '正しいメールアドレス形式で入力してください');
+                    isValid = false;
+                } else {
+                    clearFieldError('resetEmail', 'resetEmailError');
+                }
+                
+                return isValid;
+            }
+            
+            // パスワードリセット処理
+            function processPasswordReset(companyId, email) {
+                // ローディング状態
+                resetBtn.disabled = true;
+                resetBtn.innerHTML = '🔄 送信中...';
+                
+                // 擬似的な送信処理（2秒後に成功）
+                setTimeout(() => {
+                    // 成功状態表示
+                    resetBtn.innerHTML = '✅ 送信完了';
+                    resetBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    
+                    // 成功メッセージ表示
+                    resetSuccessMessage.style.display = 'block';
+                    resetForm.style.display = 'none';
+                    
+                    // ログ記録
+                    console.log(`パスワードリセット要求: ${companyId} - ${email}`);
+                    
+                    // 5秒後にモーダルを自動で閉じる
+                    setTimeout(() => {
+                        closeForgotPasswordModal();
+                    }, 5000);
+                    
+                }, 2000);
+            }
+        });
+        
+        // パスワード忘れモーダル表示
+        function showForgotPasswordModal() {
+            const modal = document.getElementById('forgotPasswordModal');
+            modal.style.display = 'flex';
+            
+            // フォーカスを企業IDフィールドに設定
+            setTimeout(() => {
+                document.getElementById('resetCompanyId').focus();
+            }, 300);
+            
+            console.log('パスワード忘れモーダルを表示');
+        }
+        
+        // パスワード忘れモーダル閉じる
+        function closeForgotPasswordModal() {
+            const modal = document.getElementById('forgotPasswordModal');
+            const resetForm = document.getElementById('resetForm');
+            const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            modal.style.display = 'none';
+            
+            // フォーム状態をリセット
+            resetForm.style.display = 'block';
+            resetSuccessMessage.style.display = 'none';
+            resetForm.reset();
+            
+            // ボタン状態をリセット
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '🔄 リセット手順を送信';
+            resetBtn.style.background = 'linear-gradient(135deg, #ffc107 0%, #ff8c00 100%)';
+            
+            // エラー状態をクリア
+            clearFieldError('resetCompanyId', 'resetCompanyIdError');
+            clearFieldError('resetEmail', 'resetEmailError');
+            
+            console.log('パスワード忘れモーダルを閉じる');
+        }
+        
+        // モーダル外クリックで閉じる
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (e.target === modal) {
+                closeForgotPasswordModal();
+            }
+        });
+        
+        // ESCキーでモーダルを閉じる
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('forgotPasswordModal');
+                if (modal.style.display === 'flex') {
+                    closeForgotPasswordModal();
+                }
+            }
         });
         
         // CSS アニメーション（振動）

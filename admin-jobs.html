@@ -391,26 +391,70 @@
 </head>
 <body class="admin-body">
     <div class="admin-container">
-        <!-- ヘッダー -->
-        <header class="admin-header">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h1 class="admin-title">💼 求人管理</h1>
-                <a href="index.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                    🏠 ホームに戻る
-                </a>
-            </div>
-            <p class="admin-subtitle">投稿済み求人の管理・編集・ステータス変更</p>
-        </header>
-
-        <!-- ナビゲーション -->
-        <nav class="admin-nav">
-            <div class="nav-links">
-                <a href="admin-dashboard.html" class="nav-link">📊 ダッシュボード</a>
-                <a href="admin-jobs.html" class="nav-link active">💼 求人管理</a>
-                <a href="admin-job-post.html" class="nav-link">➕ 求人投稿</a>
-                <a href="admin-company.html" class="nav-link">🏢 企業情報</a>
+        <!-- パンくずナビゲーション -->
+        <nav class="breadcrumb">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <a href="index.html">🏠 ホーム</a>
+                    <span>›</span>
+                    <a href="admin-dashboard.html">企業管理ダッシュボード</a>
+                    <span>›</span>
+                    <span class="current">求人管理</span>
+                </div>
             </div>
         </nav>
+
+        <!-- ヘッダー -->
+        <header class="admin-unified-header">
+            <div class="container">
+                <a href="index.html" class="admin-unified-logo">
+                    <div class="admin-unified-logo-icon">🏢</div>
+                    <span>Patent Hub 企業管理</span>
+                </a>
+                <nav class="admin-unified-nav">
+                    <a href="admin-dashboard.html" class="admin-unified-nav-link">ダッシュボード</a>
+                    <a href="admin-jobs.html" class="admin-unified-nav-link active">求人管理</a>
+                    <a href="admin-job-post.html" class="admin-unified-nav-link">求人投稿</a>
+                    <a href="admin-company.html" class="admin-unified-nav-link">企業情報</a>
+                    <a href="index.html" class="admin-unified-nav-link" style="color: #28a745;">フロントサイトに戻る</a>
+                </nav>
+                <div class="admin-unified-user-info">
+                    <div class="admin-unified-user-avatar" id="userAvatar">A</div>
+                    <span class="user-name" id="userName">特許事務所ABC</span>
+                    <button class="admin-unified-logout-btn" onclick="logout()">ログアウト</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- サイドナビゲーション -->
+        <div class="admin-side-nav">
+            <div class="admin-side-nav-title">
+                📋 管理メニュー
+            </div>
+            <div class="admin-side-nav-links">
+                <a href="admin-dashboard.html" class="admin-side-nav-link">
+                    📊 ダッシュボード
+                </a>
+                <a href="admin-jobs.html" class="admin-side-nav-link active">
+                    💼 求人管理
+                </a>
+                <a href="admin-job-post.html" class="admin-side-nav-link">
+                    ➕ 求人投稿
+                </a>
+                <a href="admin-company.html" class="admin-side-nav-link">
+                    🏢 企業情報
+                </a>
+                <a href="index.html" class="admin-side-nav-link" style="border-color: #28a745; color: #28a745;">
+                    🌐 フロントサイトに戻る
+                </a>
+            </div>
+        </div>
+
+        <!-- ページヘッダー -->
+        <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+            <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">💼 求人管理</h1>
+            <p style="opacity: 0.9; font-size: 1.1rem;">投稿済み求人の管理・編集・ステータス変更</p>
+        </div>
 
         <!-- 統計カード -->
         <div class="stats-grid">
@@ -594,7 +638,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Patent Hub</h4>
+                    <h4><a href="index.html" style="color: inherit; text-decoration: none;">Patent Hub</a></h4>
                     <p>知的財産業界の情報プラットフォーム</p>
                 </div>
                 <div class="footer-section">

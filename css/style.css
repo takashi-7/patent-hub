@@ -7,6 +7,387 @@
     box-sizing: border-box;
 }
 
+/* 統一ナビゲーション - 管理画面共通 */
+
+/* パンくずナビゲーション（統一） */
+.breadcrumb {
+    background: white;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.breadcrumb .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.breadcrumb-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-content a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.breadcrumb-content a:hover {
+    color: #1e3c72;
+}
+
+.breadcrumb-content .current {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* 企業管理画面統一ヘッダー */
+.admin-unified-header {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.admin-unified-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.admin-unified-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e3c72;
+    text-decoration: none;
+}
+
+.admin-unified-logo:hover {
+    color: #1e3c72;
+    text-decoration: none;
+}
+
+.admin-unified-logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.admin-unified-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.admin-unified-nav-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.admin-unified-nav-link:hover,
+.admin-unified-nav-link.active {
+    color: #1e3c72;
+    background: rgba(30, 60, 114, 0.1);
+    text-decoration: none;
+}
+
+.admin-unified-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-unified-user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.admin-unified-logout-btn {
+    background: none;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.admin-unified-logout-btn:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* システム管理画面統一ヘッダー */
+.system-unified-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-bottom: 3px solid #e74c3c;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.system-unified-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.system-unified-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.system-unified-logo:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.system-unified-logo-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+}
+
+.system-unified-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.system-unified-nav-link {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.system-unified-nav-link:hover,
+.system-unified-nav-link.active {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+    text-decoration: none;
+}
+
+.system-unified-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+}
+
+.system-unified-user-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.system-unified-logout-btn {
+    background: transparent;
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.system-unified-logout-btn:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* サイドナビゲーション（企業管理画面用） */
+.admin-side-nav {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.admin-side-nav-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-side-nav-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-side-nav-link {
+    padding: 0.75rem 1.5rem;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-side-nav-link:hover {
+    background: #1e3c72;
+    color: white;
+    border-color: #1e3c72;
+    text-decoration: none;
+}
+
+.admin-side-nav-link.active {
+    background: #1e3c72;
+    color: white;
+    border-color: #1e3c72;
+}
+
+/* システム管理側ナビ */
+.system-side-nav {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #e74c3c;
+}
+
+.system-side-nav-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.system-side-nav-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.system-side-nav-link {
+    padding: 0.75rem 1.5rem;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.system-side-nav-link:hover {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+    text-decoration: none;
+}
+
+.system-side-nav-link.active {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .admin-unified-header .container,
+    .system-unified-header .container,
+    .breadcrumb .container {
+        padding: 0 1rem;
+    }
+    
+    .admin-unified-nav,
+    .system-unified-nav {
+        display: none;
+    }
+    
+    .admin-side-nav-links,
+    .system-side-nav-links {
+        flex-direction: column;
+    }
+    
+    .admin-unified-user-info,
+    .system-unified-user-info {
+        gap: 0.5rem;
+    }
+    
+    .admin-unified-user-info .user-name,
+    .system-unified-user-info .user-name {
+        display: none;
+    }
+}
+
 body {
     font-family: 'Hiragino Sans', 'ヒラギノ角ゴ Pro W3', 'Meiryo', 'メイリオ', sans-serif;
     line-height: 1.6;
